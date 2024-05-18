@@ -1,0 +1,57 @@
+http:
+  port: 6000
+https:
+  port: 9876
+  hostname: localhost
+apiEndpoints:
+  api:
+    host: "*"
+    paths: "/ip"
+  account:
+    methods: "GET,POST,PUT"
+    host: "*"
+    paths: "/api/v1/account*"
+  
+serviceEndpoints:
+  httpbin:
+    url: "https://httpbin.org"
+  accountService:
+    url: "http://localhost:5000"
+policies:
+  - basic-auth
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+  - jwt
+  - request-transformer
+pipelines:
+  bin:
+    apiEndpoints:
+      - api
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin
+              changeOrigin: true
+  user:
+    apiEndpoints:
+      - account
+    policies:
+      # - jwt:
+      #     action:
+      #       secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
+      #       checkCredentialExistence: false
+      - log:
+          action:
+            message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          action:
+            headers:
+              add:
+                requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: accountService
