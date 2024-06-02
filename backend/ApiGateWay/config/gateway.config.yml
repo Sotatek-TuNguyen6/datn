@@ -8,15 +8,26 @@ apiEndpoints:
     host: "*"
     paths: "/ip"
   account:
-    methods: "GET,POST,PUT"
+    methods: "GET,POST,PUT,DELETE"
     host: "*"
     paths: "/api/v1/account*"
-  
+  product:
+    methods: "GET,POST,PUT, DELETE"
+    host: "*"
+    paths: "/api/v1/product*"
+  category:
+    methods: "GET,POST,PUT, DELETE"
+    host: "*"
+    paths: "/api/v1/category*"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
   accountService:
     url: "http://localhost:5000"
+  productService:
+    url: "http://localhost:5001"
+  categoryService:
+    url: "http://localhost:5002"
 policies:
   - basic-auth
   - expression
@@ -55,3 +66,47 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: accountService
+  product:
+    apiEndpoints:
+      - product
+    policies:
+      # - jwt:
+      #     action:
+      #       secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
+      #       checkCredentialExistence: false
+      - log:
+          action:
+            message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          action:
+            headers:
+              add:
+                requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: productService
+  category:
+    apiEndpoints:
+      - category
+    policies:
+      - jwt:
+          condition:
+            name: method
+            methods:
+              - DELETE
+              - POST
+              - PUT
+          action:
+            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
+            checkCredentialExistence: false
+      - log:
+          action:
+            message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          action:
+            headers:
+              add:
+                requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: categoryService
