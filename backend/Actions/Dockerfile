@@ -1,6 +1,5 @@
 FROM node:20.5-alpine
 WORKDIR /app
-
 # Set npm registry and increase timeout
 RUN npm config set registry https://registry.npmjs.org/ \
   && npm config set fetch-retry-mintimeout 600000 \
@@ -13,6 +12,6 @@ COPY index.js package-lock.json package.json ./
 # COPY exemple.env ./.env
 
 RUN npm install
-EXPOSE 5000
+EXPOSE 5007
 
 CMD [ "npm", "start" ]

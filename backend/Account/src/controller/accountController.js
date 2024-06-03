@@ -6,6 +6,9 @@ const redis = require('redis');
 const util = require('util');
 
 
+const redisClient = redis.createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+});
 
 // Controller for creating a new account
 exports.createAccount = async (req, res) => {
@@ -88,7 +91,7 @@ exports.login = async (req, res) => {
 // Controller for getting all accounts
 exports.getAllAccounts = async (req, res) => {
   try {
-    const redisClient = redis.createClient();
+    // const redisClient = redis.createClient();
     await redisClient.connect();
     const cachedAccounts = await redisClient.get('accounts');
     if (cachedAccounts) {
@@ -100,7 +103,7 @@ exports.getAllAccounts = async (req, res) => {
 
     const accounts = await Account.find();
 
-    await asyncSet('accounts', JSON.stringify(accounts));
+    await redisClient.set('accounts', JSON.stringify(accounts));
 
     res.status(200).json(accounts);
     logger.info("Retrieved all accounts from database:", accounts);

@@ -21,7 +21,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(helmet());
 app.use(cors());
 
-app.use("/api/v1/product", routerPayment);
+app.use("/api/v1/payment", routerPayment);
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ success: false, message: "An unexpected error occurred", error: err.message });

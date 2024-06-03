@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
 const helmet = require("helmet");
-const routerOrder = require("./src/routes/productRouter");
+const routerOrder = require("./src/routes/orderRouter");
 const db = require("./src/config/connectDb");
 const app = express();
 

@@ -12,13 +12,29 @@ apiEndpoints:
     host: "*"
     paths: "/api/v1/account*"
   product:
-    methods: "GET,POST,PUT, DELETE"
+    methods: "GET,POST,PUT,DELETE"
     host: "*"
     paths: "/api/v1/product*"
   category:
-    methods: "GET,POST,PUT, DELETE"
+    methods: "GET,POST,PUT,DELETE"
     host: "*"
     paths: "/api/v1/category*"
+  order:
+    methods: "GET,POST,PUT,DELETE"
+    host: "*"
+    paths: "/api/v1/order*"
+  review:
+    methods: "GET,POST,PUT,DELETE"
+    host: "*"
+    paths: "/api/v1/review*"
+  payment:
+    methods: "GET,POST,PUT,DELETE"
+    host: "*"
+    paths: "/api/v1/payment*"
+  actions:
+    methods: "GET,POST,PUT,DELETE"
+    host: "*"
+    paths: "/api/v1/actions*"
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -28,6 +44,14 @@ serviceEndpoints:
     url: "http://localhost:5001"
   categoryService:
     url: "http://localhost:5002"
+  orderService:
+    url: "http://localhost:5004"
+  reviewService:
+    url: "http://localhost:5005"
+  paymentService:
+    url: "http://localhost:5006"    
+  actionsService:
+    url: "http://localhost:5007"    
 policies:
   - basic-auth
   - expression
@@ -110,3 +134,103 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: categoryService
+  order:
+    apiEndpoints:
+      - order
+    policies:
+      - jwt:
+          condition:
+            name: method
+            methods:
+              - DELETE
+              - POST
+              - PUT
+          action:
+            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
+            checkCredentialExistence: false
+      - log:
+          action:
+            message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          action:
+            headers:
+              add:
+                requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: orderService
+  review:
+    apiEndpoints:
+      - review
+    policies:
+      - jwt:
+          condition:
+            name: method
+            methods:
+              - DELETE
+              - POST
+              - PUT
+          action:
+            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
+            checkCredentialExistence: false
+      - log:
+          action:
+            message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          action:
+            headers:
+              add:
+                requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: reviewService
+  payment:
+    apiEndpoints:
+      - payment
+    policies:
+      - jwt:
+          condition:
+            name: method
+            methods:
+              - DELETE
+              - POST
+              - PUT
+          action:
+            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
+            checkCredentialExistence: false
+      - log:
+          action:
+            message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          action:
+            headers:
+              add:
+                requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: paymentService
+  actions:
+    apiEndpoints:
+      - actions
+    policies:
+      - jwt:
+          condition:
+            name: method
+            methods:
+              - DELETE
+              - POST
+              - PUT
+          action:
+            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
+            checkCredentialExistence: false
+      - log:
+          action:
+            message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          action:
+            headers:
+              add:
+                requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: actionsService

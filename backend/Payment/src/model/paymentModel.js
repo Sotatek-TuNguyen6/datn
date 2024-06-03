@@ -22,6 +22,10 @@ const paymentSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    orderId:{
+        type:String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Payment', paymentSchema);
