@@ -1,8 +1,10 @@
 http:
   port: 6000
+
 https:
   port: 9876
   hostname: localhost
+
 apiEndpoints:
   api:
     host: "*"
@@ -35,33 +37,32 @@ apiEndpoints:
     methods: "GET,POST,PUT,DELETE"
     host: "*"
     paths: "/api/v1/actions*"
+
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
   accountService:
-    url: "http://localhost:5000"
+    url: "http://account:5000"
   productService:
-    url: "http://localhost:5001"
+    url: "http://product:5001"
   categoryService:
-    url: "http://localhost:5002"
+    url: "http://category:5002"
   orderService:
-    url: "http://localhost:5004"
+    url: "http://order:5004"
   reviewService:
-    url: "http://localhost:5005"
+    url: "http://review:5005"
   paymentService:
-    url: "http://localhost:5006"    
+    url: "http://payment:5006"    
   actionsService:
-    url: "http://localhost:5007"    
+    url: "http://actions:5007"    
+
 policies:
-  - basic-auth
-  - expression
-  - key-auth
+  - cors
   - log
-  - oauth2
   - proxy
-  - rate-limit
-  - jwt
   - request-transformer
+  - jwt
+
 pipelines:
   bin:
     apiEndpoints:
@@ -71,22 +72,24 @@ pipelines:
           - action:
               serviceEndpoint: httpbin
               changeOrigin: true
-  user:
+  account:
     apiEndpoints:
       - account
     policies:
-      # - jwt:
-      #     action:
-      #       secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
-      #       checkCredentialExistence: false
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+              preflightContinue: false
+              optionsSuccessStatus: 204
       - log:
-          action:
-            message: "${req.method} ${req.originalUrl}"
+          - action:
+              message: "${req.method} ${req.originalUrl}"
       - request-transformer:
-          action:
-            headers:
-              add:
-                requestID: "requestID"
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
       - proxy:
           - action:
               serviceEndpoint: accountService
@@ -94,18 +97,20 @@ pipelines:
     apiEndpoints:
       - product
     policies:
-      # - jwt:
-      #     action:
-      #       secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
-      #       checkCredentialExistence: false
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+              preflightContinue: false
+              optionsSuccessStatus: 204
       - log:
-          action:
-            message: "${req.method} ${req.originalUrl}"
+          - action:
+              message: "${req.method} ${req.originalUrl}"
       - request-transformer:
-          action:
-            headers:
-              add:
-                requestID: "requestID"
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
       - proxy:
           - action:
               serviceEndpoint: productService
@@ -113,24 +118,20 @@ pipelines:
     apiEndpoints:
       - category
     policies:
-      - jwt:
-          condition:
-            name: method
-            methods:
-              - DELETE
-              - POST
-              - PUT
-          action:
-            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
-            checkCredentialExistence: false
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+              preflightContinue: false
+              optionsSuccessStatus: 204
       - log:
-          action:
-            message: "${req.method} ${req.originalUrl}"
+          - action:
+              message: "${req.method} ${req.originalUrl}"
       - request-transformer:
-          action:
-            headers:
-              add:
-                requestID: "requestID"
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
       - proxy:
           - action:
               serviceEndpoint: categoryService
@@ -138,24 +139,20 @@ pipelines:
     apiEndpoints:
       - order
     policies:
-      - jwt:
-          condition:
-            name: method
-            methods:
-              - DELETE
-              - POST
-              - PUT
-          action:
-            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
-            checkCredentialExistence: false
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+              preflightContinue: false
+              optionsSuccessStatus: 204
       - log:
-          action:
-            message: "${req.method} ${req.originalUrl}"
+          - action:
+              message: "${req.method} ${req.originalUrl}"
       - request-transformer:
-          action:
-            headers:
-              add:
-                requestID: "requestID"
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
       - proxy:
           - action:
               serviceEndpoint: orderService
@@ -163,24 +160,20 @@ pipelines:
     apiEndpoints:
       - review
     policies:
-      - jwt:
-          condition:
-            name: method
-            methods:
-              - DELETE
-              - POST
-              - PUT
-          action:
-            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
-            checkCredentialExistence: false
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+              preflightContinue: false
+              optionsSuccessStatus: 204
       - log:
-          action:
-            message: "${req.method} ${req.originalUrl}"
+          - action:
+              message: "${req.method} ${req.originalUrl}"
       - request-transformer:
-          action:
-            headers:
-              add:
-                requestID: "requestID"
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
       - proxy:
           - action:
               serviceEndpoint: reviewService
@@ -188,24 +181,20 @@ pipelines:
     apiEndpoints:
       - payment
     policies:
-      - jwt:
-          condition:
-            name: method
-            methods:
-              - DELETE
-              - POST
-              - PUT
-          action:
-            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
-            checkCredentialExistence: false
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+              preflightContinue: false
+              optionsSuccessStatus: 204
       - log:
-          action:
-            message: "${req.method} ${req.originalUrl}"
+          - action:
+              message: "${req.method} ${req.originalUrl}"
       - request-transformer:
-          action:
-            headers:
-              add:
-                requestID: "requestID"
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
       - proxy:
           - action:
               serviceEndpoint: paymentService
@@ -213,24 +202,20 @@ pipelines:
     apiEndpoints:
       - actions
     policies:
-      - jwt:
-          condition:
-            name: method
-            methods:
-              - DELETE
-              - POST
-              - PUT
-          action:
-            secretOrPublicKey: "9aFb3cH1iLp2sO8qR"
-            checkCredentialExistence: false
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+              preflightContinue: false
+              optionsSuccessStatus: 204
       - log:
-          action:
-            message: "${req.method} ${req.originalUrl}"
+          - action:
+              message: "${req.method} ${req.originalUrl}"
       - request-transformer:
-          action:
-            headers:
-              add:
-                requestID: "requestID"
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
       - proxy:
           - action:
               serviceEndpoint: actionsService

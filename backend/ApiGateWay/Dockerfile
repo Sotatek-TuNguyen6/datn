@@ -11,10 +11,11 @@ RUN npm config set registry https://registry.npmjs.org/ \
   && npm cache clean --force
 
 # Copy package.json and package-lock.json.
-COPY package*.json ./
+COPY package.json ./
 
 # Install dependencies.
-RUN npm install
+
+RUN npm install 
 
 # Copy the rest of the application code.
 COPY . .

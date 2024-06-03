@@ -23,6 +23,14 @@ const AccountSchema = mongoose.Schema({
       message: "Please enter a valid email address.",
     },
   },
+  phone: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (phone) => /^\d{10,15}$/.test(phone), // Adjust regex as needed
+      message: "Please enter a valid phone number.",
+    },
+  },
   password: {
     type: String,
     required: true,

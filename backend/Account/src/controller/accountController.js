@@ -4,11 +4,7 @@ const logger = require('../utils/logger');
 const Joi = require("joi");
 const redis = require('redis');
 const util = require('util');
-
-
-const redisClient = redis.createClient({
-  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
-});
+const redisClient = require("../utils/redisClient")
 
 // Controller for creating a new account
 exports.createAccount = async (req, res) => {
@@ -92,7 +88,7 @@ exports.login = async (req, res) => {
 exports.getAllAccounts = async (req, res) => {
   try {
     // const redisClient = redis.createClient();
-    await redisClient.connect();
+    // await redisClient.connect();
     const cachedAccounts = await redisClient.get('accounts');
     if (cachedAccounts) {
       const accounts = JSON.parse(cachedAccounts);

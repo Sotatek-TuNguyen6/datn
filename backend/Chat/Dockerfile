@@ -7,10 +7,9 @@ RUN npm config set registry https://registry.npmjs.org/ \
   && npm config set fetch-timeout 1800000 \
   && npm cache clean --force
 COPY src src
-COPY index.js package-lock.json package.json ./
+COPY index.js  package.json ./
 # COPY exemple.env ./.env
-
-RUN npm install
+RUN npm install 
 EXPOSE 5003
 
 CMD [ "npm", "start" ]
