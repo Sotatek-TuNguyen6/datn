@@ -1,0 +1,16 @@
+@import "src/Styles/mixins";
+
+.color {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  outline: solid 2px var(--website-bg);
+  transition: border-color .1s, outline-color .1s .2s ease;
+
+  &.active {
+    border: solid 3px var(--white) !important;
+    outline: solid 2px var(--black);
+  }
+}
