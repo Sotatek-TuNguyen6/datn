@@ -25,7 +25,7 @@ const AccountSchema = mongoose.Schema({
   },
   phone: {
     type: String,
-    required: true,
+    // required: true,
     validate: {
       validator: (phone) => /^\d{10,15}$/.test(phone), // Adjust regex as needed
       message: "Please enter a valid phone number.",

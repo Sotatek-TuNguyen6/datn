@@ -55,118 +55,103 @@ services:
       redis:
         condition: service_healthy
 
-  actions:
-    build:
-      context: ./Actions
-      dockerfile: Dockerfile
-    ports:
-      - "5007:5000"
-    volumes:
-      - ./Actions:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/actions
-      - PORT=5007
-    depends_on:
-      mongo:
-        condition: service_healthy
+  # category:
+  #   build:
+  #     context: ./Category
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5002:5000"
+  #   volumes:
+  #     - ./Category:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/category
+  #     - PORT=5002
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
 
-  category:
-    build:
-      context: ./Category
-      dockerfile: Dockerfile
-    ports:
-      - "5002:5000"
-    volumes:
-      - ./Category:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/category
-      - PORT=5002
-    depends_on:
-      mongo:
-        condition: service_healthy
+  # chat:
+  #   build:
+  #     context: ./Chat
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5003:5000"
+  #   volumes:
+  #     - ./Chat:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/chat
+  #     - PORT=5003
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
 
-  chat:
-    build:
-      context: ./Chat
-      dockerfile: Dockerfile
-    ports:
-      - "5003:5000"
-    volumes:
-      - ./Chat:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/chat
-      - PORT=5003
-    depends_on:
-      mongo:
-        condition: service_healthy
+  # order:
+  #   build:
+  #     context: ./Order
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5004:5000"
+  #   volumes:
+  #     - ./Order:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/order
+  #     - PORT=5004
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
 
-  order:
-    build:
-      context: ./Order
-      dockerfile: Dockerfile
-    ports:
-      - "5004:5000"
-    volumes:
-      - ./Order:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/order
-      - PORT=5004
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    depends_on:
-      mongo:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+  # payment:
+  #   build:
+  #     context: ./Payment
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5006:5000"
+  #   volumes:
+  #     - ./Payment:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/payment
+  #     - PORT=5006
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
 
-  payment:
-    build:
-      context: ./Payment
-      dockerfile: Dockerfile
-    ports:
-      - "5006:5000"
-    volumes:
-      - ./Payment:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/payment
-      - PORT=5006
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    depends_on:
-      mongo:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+  # product:
+  #   build:
+  #     context: ./Product
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5001:5000"
+  #   volumes:
+  #     - ./Product:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/product
+  #     - PORT=5001
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
 
-  product:
-    build:
-      context: ./Product
-      dockerfile: Dockerfile
-    ports:
-      - "5001:5000"
-    volumes:
-      - ./Product:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/product
-      - PORT=5001
-    depends_on:
-      mongo:
-        condition: service_healthy
-
-  review:
-    build:
-      context: ./Review
-      dockerfile: Dockerfile
-    ports:
-      - "5005:5000"
-    volumes:
-      - ./Review:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/review
-      - PORT=5005
-    depends_on:
-      mongo:
-        condition: service_healthy
+  # review:
+  #   build:
+  #     context: ./Review
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5005:5000"
+  #   volumes:
+  #     - ./Review:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/review
+  #     - PORT=5005
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
 
   apigateway:
     build:
@@ -180,13 +165,13 @@ services:
       - NODE_ENV=production
     depends_on:
       - account
-      - actions
-      - category
-      - chat
-      - order
-      - payment
-      - product
-      - review
+      # - actions
+      # - category
+      # - chat
+      # - order
+      # - payment
+      # - product
+      # - review
 
 volumes:
   mongo-data:
