@@ -30,11 +30,11 @@ const Nav = (props) => {
     }, [props.openNav])
 
 
-    const closeNav=()=>{
+    const closeNav = () => {
         props.closeNav();
     }
 
-    const openDropdownFun=(index)=>{
+    const openDropdownFun = (index) => {
         setDropdownMenu(!openDropdownMenu)
         setDropdownMenuIndex(index)
     }
@@ -58,18 +58,18 @@ const Nav = (props) => {
                                     <li className='list-inline-item'>
                                         <Button><Link to={'/'} onClick={props.closeNav}>Home</Link></Button>
                                     </li>
-                                    
+
                                     {
                                         navData.length !== 0 &&
                                         navData.map((item, index) => {
                                             return (
                                                 <li className='list-inline-item' key={index}>
-                                                    <Button onClick={()=>openDropdownFun(index)}><a href={`${windowWidth>992 ? `/cat/${item.cat_name.toLowerCase()}` : '#'}`}
+                                                    <Button onClick={() => openDropdownFun(index)}><a href={`${windowWidth > 992 ? `/cat/${item.cat_name.toLowerCase()}` : '#'}`}
                                                         onClick={() => sessionStorage.setItem('cat', item.cat_name.toLowerCase())}
-                                                    >{item.cat_name}  <KeyboardArrowDownIcon  className={`${openDropdownMenu===true && openDropdownMenuIndex===index && 'rotateIcon'}`}/></a></Button>
+                                                    >{item.cat_name}  <KeyboardArrowDownIcon className={`${openDropdownMenu === true && openDropdownMenuIndex === index && 'rotateIcon'}`} /></a></Button>
                                                     {
                                                         item.items.length !== 0 &&
-                                                        <div className={`dropdown_menu ${openDropdownMenu===true && openDropdownMenuIndex===index && 'open'}`}>
+                                                        <div className={`dropdown_menu ${openDropdownMenu === true && openDropdownMenuIndex === index && 'open'}`}>
 
                                                             <ul>
                                                                 {
@@ -105,8 +105,8 @@ const Nav = (props) => {
 
 
                                     <li className='list-inline-item position-static'>
-                                        <Button onClick={()=>setOpenMegaMenu(!openMegaMenu)}><Link>Shop <KeyboardArrowDownIcon   className={`${openMegaMenu===true &&  'rotateIcon'}`}/></Link></Button>
-                                        <div className={`dropdown_menu megaMenu w-100 ${openMegaMenu===true && 'open'}`}>
+                                        <Button onClick={() => setOpenMegaMenu(!openMegaMenu)}><Link>Shop <KeyboardArrowDownIcon className={`${openMegaMenu === true && 'rotateIcon'}`} /></Link></Button>
+                                        <div className={`dropdown_menu megaMenu w-100 ${openMegaMenu === true && 'open'}`}>
                                             <div className='row'>
                                                 {
                                                     props.data.length !== 0 &&
@@ -171,16 +171,16 @@ const Nav = (props) => {
                                 {
                                     windowWidth < 992 &&
                                     <>
-                                    {
-                                        context.isLogin!=="true" &&
-                                         <div className='pl-3 pr-3'>
-                                            <br />
-                                            <Link to={'/signIn'}>
-                                                <Button className="btn btn-g btn-lg w-100" onClick={closeNav}>Sign In</Button>
-                                            </Link>
-                                        </div>
-                                    }
-                                       
+                                        {
+                                            context.isLogin !== "true" &&
+                                            <div className='pl-3 pr-3'>
+                                                <br />
+                                                <Link to={'/signIn'}>
+                                                    <Button className="btn btn-g btn-lg w-100" onClick={closeNav}>Sign In</Button>
+                                                </Link>
+                                            </div>
+                                        }
+
                                     </>
                                 }
 

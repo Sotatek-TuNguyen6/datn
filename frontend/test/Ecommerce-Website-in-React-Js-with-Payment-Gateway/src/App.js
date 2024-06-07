@@ -26,7 +26,6 @@ function App() {
 
   const [productData, setProductData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
-  console.log("🚀 ~ App ~ cartItems:", cartItems)
   const [isLoading, setIsloading] = useState(true);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -58,7 +57,6 @@ function App() {
   const getCartData = async (url) => {
     try {
       await axios.get(url).then((response) => {
-        console.log("🚀 ~ awaitaxios.get ~ response:", response)
         setCartItems(response.data);
       })
 
@@ -72,7 +70,6 @@ function App() {
 
     try {
       await axios.post("http://localhost:9000/cartItems", item).then((res) => {
-        console.log("🚀 ~ awaitaxios.post ~ axios:", axios)
         if (res !== undefined) {
           setCartItems([...cartItems, { ...item, quantity: 1 }])
         }
