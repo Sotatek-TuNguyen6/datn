@@ -1,17 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './style.css';
-import Box from '@mui/material/Box';
+import * as UserService from "../../services/UserService/index"
 import TextField from '@mui/material/TextField';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { Button } from '@mui/material';
 import { useState } from 'react';
-import GoogleImg from '../../assets/images/google.png';
-import { initializeApp } from "firebase/app";
-// import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider , signInWithPopup } from "firebase/auth";
-// import { app } from '../../firebase';
-
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -32,7 +29,7 @@ const SignIn = () => {
 
 
     const [formFields, setFormFields] = useState({
-        email: '',
+        username: '',
         password: '',
     })
 
@@ -53,40 +50,28 @@ const SignIn = () => {
     }
 
 
-    // const signIn = () => {
-    //     if(formFields.email!=="" && formFields.password!==""){
-    //         setShowLoader(true);
-    //         signInWithEmailAndPassword(auth, formFields.email, formFields.password)
-    //             .then((userCredential) => {
-    //                 // Signed in 
-    //                 const user = userCredential.user;
-    //                 setShowLoader(false);
-    //                 setFormFields({
-    //                     email: '',
-    //                     password: '',
-    //                 });
-    
-    //                 localStorage.setItem('isLogin',true); 
-    //                 context.signIn();   
-    
-    //                 history('/');
-    
-    
-    //                 // ...
-    //             })
-    //             .catch((error) => {
-    //                 const errorCode = error.code;
-    //                 const errorMessage = error.message;
-    //                 alert(errorMessage);
-    //                 setShowLoader(false);
-    //             });
-    //     }
-        
-    //     else{
-    //         alert("Please fill all the details");
-    //     }
+    const signIn = async () => {
+        if (formFields.email !== "" && formFields.password !== "") {
+            setShowLoader(true);
+            setShowLoader(true);
+            try {
+                const data = await UserService.loginUser({ username: formFields.username, password: formFields.password });
 
-    // }
+                console.log('Login successful:', data);
+
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed. Please check your credentials and try again.');
+            } finally {
+                setShowLoader(false);
+            }
+        }
+
+        else {
+            alert("Please fill all the details");
+        }
+
+    }
 
 
 
@@ -148,7 +133,7 @@ const SignIn = () => {
                         <h3>Sign In</h3>
                         <form className='mt-4'>
                             <div className='form-group mb-4 w-100'>
-                                <TextField id="email" type="email" name='email' label="Email" className='w-100'
+                                <TextField id="username" type="username" name='username' label="User Name" className='w-100'
                                     onChange={onChangeField} value={formFields.email} />
                             </div>
                             <div className='form-group mb-4 w-100'>
@@ -167,7 +152,7 @@ const SignIn = () => {
 
 
                             <div className='form-group mt-5 mb-4 w-100'>
-                                <Button className='btn btn-g btn-lg w-100' >Sign In</Button>
+                                <Button className='btn btn-g btn-lg w-100' onClick={signIn} >Sign In</Button>
                             </div>
 
 

@@ -12,8 +12,6 @@ COPY src src
 COPY logs logs
 COPY index.js package.json ./
 # COPY exemple.env ./.env
-
-RUN npm  cache clear --force
 RUN npm install
 EXPOSE 5000
 

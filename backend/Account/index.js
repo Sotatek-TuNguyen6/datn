@@ -28,7 +28,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(morgan('combined', { stream: accessLogStream }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(helmet());
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 
