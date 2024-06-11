@@ -1,5 +1,6 @@
 const Order = require('../model/orderModel'); // Adjust the path as needed
 const logger = require('../utils/logger'); // Adjust the path as needed
+const redisClient = require('../utils/redisClient');
 
 // Get all orders
 exports.getAllOrders = async (req, res) => {
@@ -7,13 +8,15 @@ exports.getAllOrders = async (req, res) => {
         const cachedOrders = await redisClient.get('orders');
         if (cachedOrders) {
             const orders = JSON.parse(cachedOrders);
-            res.status(200).json(orders);
-            logger.info("Retrieved all orders from cache");
-            return;
+            if(orders.length > 0){
+                res.status(200).json(orders);
+                logger.info("Retrieved all orders from cache");
+                return;
+            }
         }
 
         const orders = await Order.find();
-        await redisClient.set('orders', JSON.stringify(orders));
+        await redisClient.setEx('orders', 10, JSON.stringify(orders));
 
         res.status(200).json(orders);
         logger.info("Retrieved all orders from database:", orders);

@@ -7,30 +7,28 @@ import { Button } from '@mui/material';
 import QuantityBox from '../../components/quantityBox';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { MyContext } from '../../App';
-import axios from 'axios';
-
 import { useNavigate } from 'react-router-dom';
-
-import { loadStripe } from '@stripe/stripe-js';
+import { useSelector } from 'react-redux';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([])
     const context = useContext(MyContext);
     const history = useNavigate();
-
+    const userLogin = useSelector((state) => state.user);
+    const { access_token } = userLogin
     useEffect(() => {
-       if(context.isLogin!=="true"){
-        history("/signIn");
-       }else{
-        setCartItems(context.cartItems);
-       }
-       
+        if (!access_token) {
+            history("/signIn");
+        } else {
+            setCartItems(context.cartItems);
+        }
+
 
         window.scrollTo(0, 0);
 
-    }, [context.cartItems])
+    }, [access_token])
 
-  
+
 
 
 
@@ -56,7 +54,7 @@ const Cart = () => {
     }
 
 
-  
+
 
 
     return (
@@ -217,7 +215,7 @@ const Cart = () => {
                                 <Link to={'/checkout'}>
                                     <Button className='btn-g btn-lg'
                                         onClick={() => {
-                                            context.setCartTotalAmount( cartItems.length !== 0 &&
+                                            context.setCartTotalAmount(cartItems.length !== 0 &&
                                                 cartItems.map(item => parseInt(item.price.split(",").join("")) * item.quantity).reduce((total, value) => total + value, 0))
                                         }}
                                     >Proceed To CheckOut</Button>

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const productSchema = mongoose.Schema({
-    productName:{
+    productName: {
         type: String,
         require: true,
         unique: true,
@@ -10,6 +10,9 @@ const productSchema = mongoose.Schema({
     price: {
         type: Number,
         required: true,
+    },
+    percentSale: {
+        type: Number,
     },
     description: {
         type: String,
@@ -30,10 +33,10 @@ const productSchema = mongoose.Schema({
     },
     images: {
         type: [String],
-        validate: [arrayLimit, '{PATH} exceeds the limit of 10'] 
+        validate: [arrayLimit, '{PATH} exceeds the limit of 10']
     },
     mainImage: {
-        type: String, 
+        type: String,
         required: true,
     },
     stockQuantity: {
@@ -41,22 +44,30 @@ const productSchema = mongoose.Schema({
         required: true,
         min: [0, 'Stock quantity cannot be less than 0'],
     },
-    category: {
+    categoryId: {
         type: String,
         required: true,
     },
+    categoryName: {
+        type: String,
+        require: true,
+    },
     brand: {
         type: String,
-        trim: true,
+        // trim: true,
     },
     isActive: {
         type: Boolean,
         default: true,
     },
+    specifications: {
+        type: [String],
+        default: []
+    }
 })
 
 function arrayLimit(val) {
-    return val.length <= 5;
+    return val.length <= 10;
 }
 const Product = mongoose.model("Product", productSchema);
 

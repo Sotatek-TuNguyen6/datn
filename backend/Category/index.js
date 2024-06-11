@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(morgan('combined', { stream: accessLogStream }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(helmet());
-app.use(cors());
+// app.use(cors());
 
 app.use("/api/v1/category", routerCategory);
 app.use((err, req, res, next) => {

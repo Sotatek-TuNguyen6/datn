@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_URL = process.env.REACT_APP_API_URL;
+export const API_URL = process.env.REACT_APP_API_URL;
 
 export const createdUser = async (data) => {
     try {
@@ -30,3 +30,15 @@ export const loginUser = async (data) => {
         throw error;
     }
 }
+
+export const getDetailUser = async (id, header) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/v1/account/detail/${id}`, {
+            headers: header
+        });
+        return response.data; 
+    } catch (error) {
+        console.error('Error fetching user details:', error); 
+        throw error;
+    }
+};

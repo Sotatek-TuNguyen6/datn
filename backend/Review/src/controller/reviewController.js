@@ -26,9 +26,7 @@ exports.getAllReviews = async (req, res) => {
         res.status(200).json({
             status: 'success',
             results: reviews.length,
-            data: {
-                reviews
-            }
+            data: reviews
         });
     } catch (err) {
         res.status(500).json({
@@ -44,9 +42,7 @@ exports.getReview = async (req, res) => {
         const review = await Review.findById(req.params.id);
         res.status(200).json({
             status: 'success',
-            data: {
-                review
-            }
+            data: review
         });
     } catch (err) {
         res.status(404).json({
@@ -65,9 +61,7 @@ exports.updateReview = async (req, res) => {
         });
         res.status(200).json({
             status: 'success',
-            data: {
-                review
-            }
+            data: review
         });
     } catch (err) {
         res.status(400).json({

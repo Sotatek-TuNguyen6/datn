@@ -1,15 +1,12 @@
 const Payment = require('../model/paymentModel');
 
-
 // Create a new payment
 exports.createPayment = async (req, res) => {
     try {
         const payment = await Payment.create(req.body);
         res.status(201).json({
             status: 'success',
-            data: {
-                payment
-            }
+            data: payment
         });
     } catch (err) {
         res.status(400).json({
@@ -26,9 +23,7 @@ exports.getAllPayments = async (req, res) => {
         res.status(200).json({
             status: 'success',
             results: payments.length,
-            data: {
-                payments
-            }
+            data: payments
         });
     } catch (err) {
         res.status(500).json({
@@ -44,9 +39,8 @@ exports.getPayment = async (req, res) => {
         const payment = await Payment.findById(req.params.id);
         res.status(200).json({
             status: 'success',
-            data: {
-                payment
-            }
+            data: payment
+
         });
     } catch (err) {
         res.status(404).json({
@@ -65,9 +59,7 @@ exports.updatePayment = async (req, res) => {
         });
         res.status(200).json({
             status: 'success',
-            data: {
-                payment
-            }
+            data: payment
         });
     } catch (err) {
         res.status(400).json({

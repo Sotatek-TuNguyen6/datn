@@ -5,7 +5,7 @@ const router = express.Router();
 router.post("/", createReview);
 router.get("/", getAllReviews)
 router.get("/:id", getReview);
-router.delete("/:id", updateReview);
-router.put("/:id", deleteReview);
+router.put("/:id", updateReview);
+router.delete("/:id", deleteReview);
 
 module.exports = router;

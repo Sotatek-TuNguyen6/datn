@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './style.css';
 import * as UserService from "../../services/UserService/index"
@@ -11,31 +11,22 @@ import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-
 import { useNavigate } from 'react-router-dom';
-
-import { useContext } from 'react';
-
-import { MyContext } from '../../App';
-
-// const auth = getAuth(app);
-// const googleProvider = new GoogleAuthProvider();
+import { useMutationHooks } from '../../hooks/useMutationHook';
+import { jwtDecode } from "jwt-decode";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from '../../features/userSlice/userSlice';
 
 const SignIn = () => {
-
     const [showPassword, setShowPassword] = useState(false);
-
     const [showLoader, setShowLoader] = useState(false);
-
-
     const [formFields, setFormFields] = useState({
         username: '',
         password: '',
     })
-
-    const context = useContext(MyContext);
-
-
+    const userLogin = useSelector((state) => state.user);
+    const { access_token } = userLogin
+    const dispatch = useDispatch();
     const history = useNavigate();
 
     const onChangeField = (e) => {
@@ -49,65 +40,95 @@ const SignIn = () => {
 
     }
 
+    const onSuccess = (data) => {
+        toast('Login Success!', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+        });
+        setShowLoader(false);
+    };
 
-    const signIn = async () => {
-        if (formFields.email !== "" && formFields.password !== "") {
-            setShowLoader(true);
-            setShowLoader(true);
-            try {
-                const data = await UserService.loginUser({ username: formFields.username, password: formFields.password });
+    const onError = (error) => {
+        toast.error('Login Fail', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+            className: 'custom-toast',
+        });
+        setShowLoader(false);
+    };
 
-                console.log('Login successful:', data);
-
-            } catch (error) {
-                console.error('Login error:', error);
-                alert('Login failed. Please check your credentials and try again.');
-            } finally {
-                setShowLoader(false);
-            }
+    const mutation = useMutationHooks(
+        async ({ username, password }) => {
+            return await UserService.loginUser({ username, password });
+        },
+        {
+            onMutate: () => {
+                setShowLoader(true);
+            },
+            onSuccess,
+            onError,
         }
+    );
 
-        else {
+    const handleSubmit = () => {
+        if (formFields.username !== "" && formFields.password !== "") {
+            mutation.mutate({ username: formFields.username, password: formFields.password });
+        } else {
             alert("Please fill all the details");
         }
+    };
 
-    }
+    const { error, isLoading, isSuccess, isError, data } = mutation;
 
+    const handleGetDetailsUser = async (id, accessToken) => {
+        const header = {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        };
 
+        try {
+            const userDetails = await UserService.getDetailUser(id, header);
 
-    // const signInWithGoogle=()=>{
-    //     setShowLoader(true);
-    //     signInWithPopup(auth, googleProvider)
-    //     .then((result) => {
+            dispatch(updateUser({ ...userDetails, access_token: accessToken }))
+        } catch (error) {
+            console.error('Failed to fetch user details:', error);
+        }
+    };
 
-    //       const credential = GoogleAuthProvider.credentialFromResult(result);
-    //       const token = credential.accessToken;
-    //       // The signed-in user info.
-    //       const user = result.user;
-
-    //       setShowLoader(false);
-
-
-    //       localStorage.setItem('isLogin',true); 
-    //       context.signIn();   
-
-    //       history('/');
-
-    //     }).catch((error) => {
-    //       // Handle Errors here.
-    //       const errorCode = error.code;
-    //       const errorMessage = error.message;
-    //       // The email of the user's account used.
-    //       const email = error.customData.email;
-    //       // The AuthCredential type that was used.
-    //       const credential = GoogleAuthProvider.credentialFromError(error);
-    //       // ...
-    //     });
-    // }
-
+    useEffect(() => {
+        if (!error && isSuccess) {
+            localStorage.setItem("access_token", JSON.stringify(data.access_token));
+            if (data?.access_token) {
+                const decoded = jwtDecode(data?.access_token);
+                if (decoded?.id) {
+                    handleGetDetailsUser(decoded?.id, data?.access_token);
+                }
+            }
+            history("/");
+        }
+        if (access_token) {
+            history("/");
+        }
+    }, [error, isSuccess, access_token])
 
     return (
         <>
+            <ToastContainer />
+
             <section className='signIn mb-5'>
                 <div class="breadcrumbWrapper">
                     <div class="container-fluid">
@@ -152,7 +173,7 @@ const SignIn = () => {
 
 
                             <div className='form-group mt-5 mb-4 w-100'>
-                                <Button className='btn btn-g btn-lg w-100' onClick={signIn} >Sign In</Button>
+                                <Button className='btn btn-g btn-lg w-100' onClick={handleSubmit} >Sign In</Button>
                             </div>
 
 

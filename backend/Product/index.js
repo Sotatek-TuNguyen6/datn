@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const helmet = require("helmet");
 const routerProduct = require("./src/routes/productRouter");
-const db = require("../Order/src/config/connectDb");
+const db = require("./src/config/connectDb");
 const app = express();
 
 dotenv.config();
@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(morgan('combined', { stream: accessLogStream }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(helmet());
-app.use(cors());
+// app.use(cors());
 
 app.use("/api/v1/product", routerProduct);
 app.use((err, req, res, next) => {

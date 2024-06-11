@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const helmet = require("helmet");
 const routerReview = require("./src/routes/reviewRouter");
-const db = require("../Order/src/config/connectDb");
+const db = require("./src/config/connectDb");
 const app = express();
 
 dotenv.config();

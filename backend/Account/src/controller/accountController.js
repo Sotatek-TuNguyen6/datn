@@ -25,6 +25,9 @@ exports.createAccount = async (req, res) => {
     name: Joi.string().required().messages({
       "any.required": "Name is required",
     }),
+    role: Joi.string(),
+    addresses: Joi.array(),
+    phone: Joi.string()
   });
   const { error } = schema.validate(req.body);
   if (error) {
@@ -36,14 +39,14 @@ exports.createAccount = async (req, res) => {
     const { email, password, username, name } = req.body;
 
     const checkEmail = await Account.findOne({ email });
-    const checkuserName = await  Account.findOne({ username });
-    if(checkEmail){
+    const checkuserName = await Account.findOne({ username });
+    if (checkEmail) {
       return res.status(409).json({
         message: "Email is exits",
         error: true
       })
     }
-    if(checkuserName){
+    if (checkuserName) {
       return res.status(409).json({
         message: "UserName is exits",
         error: true
@@ -51,7 +54,6 @@ exports.createAccount = async (req, res) => {
     }
     const newAccount = new Account(req.body);
     const savedAccount = await newAccount.save();
-    req.app.io.emit('newAccountAdded');
     res.status(201).json(savedAccount);
     logger.info("New account created:", savedAccount);
   } catch (error) {
@@ -62,11 +64,15 @@ exports.createAccount = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
     const userCheck = await Account.findOne({ username });
     if (userCheck && (await userCheck.matchPassword(password))) {
+      if (role && userCheck.role !== role) {
+        return res.status(403).json({ message: "Unauthorized access" });
+      }
       const access_token = await generateToken({
         id: userCheck._id,
+        role: userCheck.role,
       });
 
       return res.json({
@@ -84,22 +90,23 @@ exports.login = async (req, res) => {
   }
 }
 
-// Controller for getting all accounts
 exports.getAllAccounts = async (req, res) => {
   try {
-    // const redisClient = redis.createClient();
-    // await redisClient.connect();
+
     const cachedAccounts = await redisClient.get('accounts');
+
     if (cachedAccounts) {
       const accounts = JSON.parse(cachedAccounts);
-      res.status(200).json(accounts);
-      logger.info("Retrieved all accounts from cache");
-      return;
+      if (accounts.length > 0) {
+        res.status(200).json(accounts);
+        logger.info("Retrieved all accounts from cache");
+        return;
+      }
     }
 
     const accounts = await Account.find();
 
-    await redisClient.set('accounts', JSON.stringify(accounts));
+    await redisClient.setEx('accounts', 5, JSON.stringify(accounts));
 
     res.status(200).json(accounts);
     logger.info("Retrieved all accounts from database:", accounts);
@@ -109,7 +116,6 @@ exports.getAllAccounts = async (req, res) => {
   }
 };
 
-// Controller for getting an account by ID
 exports.getAccountById = async (req, res) => {
   const accountId = req.params.id;
   try {
@@ -126,7 +132,6 @@ exports.getAccountById = async (req, res) => {
   }
 };
 
-// Controller for updating an account
 exports.updateAccount = async (req, res) => {
   const accountId = req.params.id;
   try {
@@ -143,7 +148,6 @@ exports.updateAccount = async (req, res) => {
   }
 };
 
-// Controller for deleting an account
 exports.deleteAccount = async (req, res) => {
   const accountId = req.params.id;
   try {

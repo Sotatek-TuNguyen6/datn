@@ -29,21 +29,23 @@ import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetUser } from '../../features/userSlice/userSlice';
 
 const Header = (props) => {
 
     const [isOpenDropDown, setisOpenDropDown] = useState(false);
     const [isOpenAccDropDown, setisOpenAccDropDown] = useState(false);
-    
+
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [isopenSearch, setOpenSearch] = useState(false);
     const [isOpenNav, setIsOpenNav] = useState(false);
-
+    const userLogin = useSelector((state) => state.user);
     const headerRef = useRef();
     const searchInput = useRef()
+    const dispatch = useDispatch();
 
     const context = useContext(MyContext);
-    console.log("🚀 ~ Header ~ context:", context)
     const history = useNavigate();
 
     useEffect(() => {
@@ -92,7 +94,6 @@ const Header = (props) => {
         }
     }
 
-
     useEffect(() => {
         window.addEventListener("scroll", () => {
             let position = window.pageYOffset;
@@ -106,7 +107,9 @@ const Header = (props) => {
 
 
     const signOut = () => {
-        context.signOut();
+        dispatch(resetUser());
+        localStorage.removeItem("access_token");
+        // history("/login")
         history('/');
     }
 
@@ -162,7 +165,7 @@ const Header = (props) => {
                                         </ul>
                                         <div className='navbarToggle mr-2' onClick={openNav}><MenuIcon /></div>
                                         {
-                                            context.isLogin === "true" &&
+                                            userLogin.access_token &&
                                             <div className='myAccDrop' onClick={() => setisOpenAccDropDown(!isOpenAccDropDown)}><PersonOutlineOutlinedIcon /></div>
                                         }
 
@@ -230,7 +233,7 @@ const Header = (props) => {
                                             </li>
 
                                             {
-                                                context.isLogin === "true" ?
+                                                userLogin.access_token ?
 
                                                     <li className='list-inline-item'>
 
@@ -275,30 +278,30 @@ const Header = (props) => {
                 </header>
 
 
-                <Nav data={props.data} openNav={isOpenNav} closeNav={closeNav} />
+                {/* <Nav data={props.data} openNav={isOpenNav} closeNav={closeNav} /> */}
             </div>
 
 
 
-            
+
 
             <div className='afterHeader'></div>
 
-           
+
 
             {
                 isOpenAccDropDown !== false &&
                 <>
-                <div className='navbarOverlay' onClick={closeNav}></div>
-                <ul className='dropdownMenu dropdownMenuAcc' onClick={closeNav}>
-                    <li><Button className='align-items-center'><Link to=""><Person2OutlinedIcon /> My Account</Link></Button></li>
-                    <li><Button className='align-items-center'><Link to=""> <img src={IconCompare} />Compare</Link></Button></li>
-                    <li><Button className='align-items-center'><Link to=""> <img src={IconCart} />Cart</Link></Button></li>
-                    <li><Button><Link to=""><LocationOnOutlinedIcon /> Order Tracking</Link></Button></li>
-                    <li><Button><Link to=""><FavoriteBorderOutlinedIcon /> My Wishlist</Link></Button></li>
-                    <li><Button><Link to=""><SettingsOutlinedIcon /> Setting</Link></Button></li>
-                    <li><Button onClick={signOut}><Link to=""><LogoutOutlinedIcon /> Sign out</Link></Button></li>
-                </ul>
+                    <div className='navbarOverlay' onClick={closeNav}></div>
+                    <ul className='dropdownMenu dropdownMenuAcc' onClick={closeNav}>
+                        <li><Button className='align-items-center'><Link to=""><Person2OutlinedIcon /> My Account</Link></Button></li>
+                        <li><Button className='align-items-center'><Link to=""> <img src={IconCompare} />Compare</Link></Button></li>
+                        <li><Button className='align-items-center'><Link to=""> <img src={IconCart} />Cart</Link></Button></li>
+                        <li><Button><Link to=""><LocationOnOutlinedIcon /> Order Tracking</Link></Button></li>
+                        <li><Button><Link to=""><FavoriteBorderOutlinedIcon /> My Wishlist</Link></Button></li>
+                        <li><Button><Link to=""><SettingsOutlinedIcon /> Setting</Link></Button></li>
+                        <li><Button onClick={signOut}><Link to=""><LogoutOutlinedIcon /> Sign out</Link></Button></li>
+                    </ul>
                 </>
             }
 

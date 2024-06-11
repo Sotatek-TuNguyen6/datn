@@ -14,3 +14,7 @@
 
 
 .formLoader{position: absolute !important; background: rgba(255,255,255,0.5) !important;}
+
+.custom-toast {
+    width: 400px; /* Set your desired width */
+}

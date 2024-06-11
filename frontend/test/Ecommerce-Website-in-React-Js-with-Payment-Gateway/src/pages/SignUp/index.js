@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 import TextField from '@mui/material/TextField';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -11,14 +11,17 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const SignUp = () => {
+import { useMutationHooks } from '../../hooks/useMutationHook';
+import { useSelector } from 'react-redux';
 
+
+const SignUp = () => {
+    const history = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword1, setShowPassword1] = useState(false);
-
+    const userLogin = useSelector((state) => state.user);
+    const { access_token } = userLogin
     const [showLoader, setShowLoader] = useState(false);
-
-
     const [formFields, setFormFields] = useState({
         email: '',
         password: '',
@@ -27,59 +30,57 @@ const SignUp = () => {
         fullname: ""
     })
 
-    const signUp = async () => {
-        try {
-            if (formFields.email !== "" && formFields.password !== "" && formFields.conformPassword !== "" && formFields.username !== "" && formFields.fullname !== "") {
+    const onSuccess = (data) => {
+        setShowLoader(false);
+        toast('Sign Up Success!', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+            className: 'custom-toast', // Apply the custom CSS class
+        });
+    };
+
+    const onError = () => {
+        setShowLoader(false);
+        toast.error('Sign Up Failed', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+            className: 'custom-toast', // Apply the custom CSS class
+        });
+    };
+
+    const mutation = useMutationHooks(
+        async (userData) => {
+            return await UserService.createdUser(userData);
+        },
+        {
+            onMutate: () => {
                 setShowLoader(true);
-                const { conformPassword, fullname, ...otherFields } = formFields;
+            },
+            onSuccess,
+            onError,
+        }
+    );
 
-                const userData = { ...otherFields, name: fullname };
+    const handleSubmit = () => {
+        const { conformPassword, fullname, ...otherFields } = formFields;
+        const userData = { ...otherFields, name: fullname };
 
-                const data = await UserService.createdUser(userData);
-                if (data) {
-                    setShowLoader(false);
-                    toast('Login Success!', {
-                        position: "bottom-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Bounce,
-                    });
-                }
-                else {
-                    setShowLoader(false);
-                    toast.error('Login Fail', {
-                        position: "bottom-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Bounce,
-                    });
-                }
-            }
-            else {
-                toast.error('Please fill all the details', {
-                    position: "bottom-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    transition: Bounce,
-                });
-            }
-        } catch (error) {
-            toast.error('Login Fail', {
+        if (Object.values(formFields).some(field => field === "")) {
+            toast.error('Please fill all the details', {
                 position: "bottom-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -89,11 +90,29 @@ const SignUp = () => {
                 progress: undefined,
                 theme: "light",
                 transition: Bounce,
+                className: 'custom-toast', // Apply the custom CSS class
             });
+            return;
         }
 
-    }
+        if (formFields.password !== formFields.conformPassword) {
+            toast.error('Passwords do not match', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+                className: 'custom-toast',
+            });
+            return;
+        }
 
+        mutation.mutate(userData);
+    };
 
     const onChangeField = (e) => {
         const name = e.target.name;
@@ -106,6 +125,11 @@ const SignUp = () => {
 
     }
 
+    useEffect(() => {
+        if (access_token) {
+            history("/");
+        }
+    }, [access_token])
 
     return (
         <>
@@ -119,8 +143,6 @@ const SignUp = () => {
                         </ul>
                     </div>
                 </div>
-
-
 
                 <div className='loginWrapper'>
                     <div className='card shadow'>
@@ -171,9 +193,8 @@ const SignUp = () => {
 
                             </div>
 
-
                             <div className='form-group mt-5 mb-4 w-100'>
-                                <Button className='btn btn-g btn-lg w-100' onClick={signUp}>Sign Up</Button>
+                                <Button className='btn btn-g btn-lg w-100' onClick={handleSubmit}>Sign Up</Button>
                             </div>
 
                             <p className='text-center'>Already have an account

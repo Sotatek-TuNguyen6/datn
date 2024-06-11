@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true
-    },
+    // title: {
+    //     type: String,
+    //     required: true
+    // },
     body: {
         type: String,
         required: true
@@ -20,11 +20,15 @@ const reviewSchema = new mongoose.Schema({
         default: Date.now
     },
     product: {
-        type: "string",
+        type: String,
         required: true
     },
-    author: {
-        type: "string",
+    authorId: {
+        type: String,
+        required: true
+    },
+    authorName: {
+        type: String,
         required: true
     }
 });
