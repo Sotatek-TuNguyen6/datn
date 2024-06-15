@@ -10,6 +10,8 @@ import * as CategoryService from "../../Services/CategoryService";
 
 const AddProductMain = () => {
   const [name, setName] = useState("");
+  const [subCategories, setSubCategories] = useState([{ name: '' }]);
+
   const toastId = React.useRef(null);
   const Toastobjects = {
     position: "top-right",
@@ -35,13 +37,34 @@ const AddProductMain = () => {
       }
     } else {
       const access_token = JSON.parse(localStorage.getItem("access_token"));
+      const subCategoryObjects = subCategories
+        .filter(sub => sub.name.trim() !== "")
+        .map(sub => ({
+          subCategoryName: sub.name,
+        }));
+
       await mutationAddCategory.mutate({
         categoryName: name,
+        subCategories: subCategoryObjects,
         access_token,
       });
     }
   };
 
+
+  const handleSubCategoryChange = (index, event) => {
+    const newSubCategories = subCategories.map((subCategory, subIndex) => {
+      if (subIndex === index) {
+        return { ...subCategory, name: event.target.value };
+      }
+      return subCategory;
+    });
+    setSubCategories(newSubCategories);
+  };
+
+  const handleAddSubCategory = () => {
+    setSubCategories([...subCategories, { name: '' }]);
+  };
   const { error, isLoading, isSuccess, isError } = mutationAddCategory;
   useEffect(() => {
     if (!error && isSuccess) {
@@ -78,22 +101,39 @@ const AddProductMain = () => {
             <div className="col-xl-12 col-lg-12">
               <div className="card mb-4 shadow-sm">
                 <div className="card-body">
-                  {/* {error && <Message variant="alert-danger">{error}</Message>}
-                  {loading && <Loading />} */}
                   <div className="mb-4">
-                    <label htmlFor="product_title" className="form-label">
+                    <label htmlFor="category_title" className="form-label">
                       Tên danh mục
                     </label>
                     <input
                       type="text"
                       placeholder="Type here"
                       className="form-control"
-                      id="product_title"
+                      id="category_title"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
+                  {subCategories.map((subCategory, index) => (
+                    <div key={index} className="mb-4">
+                      <label htmlFor={`sub_category_${index}`} className="form-label">
+                        Sub Category {index + 1}
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Type here"
+                        className="form-control"
+                        id={`sub_category_${index}`}
+                        required
+                        value={subCategory.name}
+                        onChange={(e) => handleSubCategoryChange(index, e)}
+                      />
+                    </div>
+                  ))}
+                  <button type="button" className="btn btn-primary" onClick={handleAddSubCategory}>
+                    Them Sub Category
+                  </button>
                 </div>
               </div>
             </div>

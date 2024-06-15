@@ -13,4 +13,16 @@ function useGetProduct() {
     return getListQuery;
 }
 
-export { useGetProduct };
+function useGetProductDetail(id) {
+    const getListQuery = useQuery({
+        queryKey: ['productDetail', id],
+        queryFn: () => ProductService.getProductDetail(id),
+        cacheTime: 5000,
+        refetchOnWindowFocus: false,
+        staleTime: 5000,
+        refetchInterval: 60000,
+    });
+    return getListQuery;
+}
+
+export { useGetProduct, useGetProductDetail };

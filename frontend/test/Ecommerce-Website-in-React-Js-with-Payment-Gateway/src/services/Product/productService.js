@@ -10,3 +10,16 @@ export const getProduct = async () => {
         throw error
     }
 }
+
+export const getProductDetail = async (id) => {
+    try {
+        const getDetails = await axios.get(`${API_URL}/api/v1/product/${id}`);
+        return getDetails.data;
+    } catch (error) {
+        console.log(error);
+        if (error.response && error.response.status === 404) {
+            throw new Error("NOT_FOUND");
+        }
+        throw error;
+    }
+}

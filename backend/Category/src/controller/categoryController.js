@@ -3,9 +3,9 @@ const Category = require("../models/categoryModel.js");
 // Tạo danh mục mới
 exports.createCategory = async (req, res, next) => {
     try {
-        const { categoryName } = req.body;
+        const { categoryName, subCategories } = req.body;
 
-        const newCategory = new Category({ categoryName });
+        const newCategory = new Category({ categoryName, subCategories });
         await newCategory.save();
 
         res.status(201).json({ success: true, message: "Category created successfully", data: newCategory });

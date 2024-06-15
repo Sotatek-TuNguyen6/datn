@@ -15,14 +15,13 @@ import { MyContext } from '../../App';
 import { useGetCategoru } from '../../hooks/categoryFetching';
 
 const Home = (props) => {
-    console.log("🚀 ~ Home ~ props:", props.data)
     const getListQuery = useGetCategoru();
 
     const { data, isLoading: isLoadingCallApi, isError } = getListQuery
-    
+
     const [prodData, setprodData] = useState(props.data)
     const [catArray, setcatArray] = useState([])
-    const [activeTab, setactiveTab] = useState();
+    const [activeTab, setactiveTab] = useState("");
     const [activeTabIndex, setactiveTabIndex] = useState(0);
     const [activeTabData, setActiveTabData] = useState([]);
 
@@ -42,26 +41,42 @@ const Home = (props) => {
         arrows: context.windowWidth < 992 ? false : true,
     };
 
-    const catArr = [];
-
     useEffect(() => {
+        if (activeTab) {
+            const filteredData = props.data
+                .filter(item => item.categoryId === activeTab)
+                .map(item => ({
+                    ...item,
+                    parentCatName: item.categoryName,
+                    subCatName: item.categoryName
+                }));
+            
+            setActiveTabData(filteredData);
+            setIsLoadingProducts(false);
+        }
+    }, [activeTab, props.data]);
 
-        prodData.length !== 0 &&
-            prodData.map((item) => {
-                item.items.length !== 0 &&
-                    item.items.map((item_) => {
-                        catArr.push(item_.cat_name);
-                    })
-            })
+    useEffect(()=>{
+        setactiveTab(data?.data[0]._id)
+    },[isLoadingCallApi])
+    // useEffect(() => {
 
-        const list2 = catArr.filter((item, index) => catArr.indexOf(item) === index);
-        setcatArray(list2)
+    //     prodData.length !== 0 &&
+    //         prodData.map((item) => {
+    //             item.items.length !== 0 &&
+    //                 item.items.map((item_) => {
+    //                     catArr.push(item_.cat_name);
+    //                 })
+    //         })
 
-        setactiveTab(list2[0])
+    //     const list2 = catArr.filter((item, index) => catArr.indexOf(item) === index);
+    //     setcatArray(list2)
 
-        window.scrollTo(0, 0);
+    //     setactiveTab(list2[0])
 
-    }, [])
+    //     window.scrollTo(0, 0);
+
+    // }, [])
 
     // useEffect(() => {
     //     var arr = [];
@@ -124,20 +139,20 @@ const Home = (props) => {
                                 <h2 className='hd mb-0 mt-0 res-full'>Popular Products</h2>
                                 <ul className='list list-inline ml-auto filterTab mb-0 res-full'>
                                     {
-                                        catArray.length !== 0 &&
-                                        catArray.map((cat, index) => {
+                                        data?.data?.length !== 0 &&
+                                        data?.data.map((item, index) => {
                                             return (
                                                 <li className="list list-inline-item">
                                                     <a className={`cursor text-capitalize 
                                                 ${activeTabIndex === index ? 'act' : ''}`}
                                                         onClick={() => {
-                                                            setactiveTab(cat)
+                                                            setactiveTab(item._id)
                                                             setactiveTabIndex(index);
                                                             productRow.current.scrollLeft = 0;
                                                             setIsLoadingProducts(true);
                                                         }}
                                                     >
-                                                        {cat}
+                                                        {item.categoryName}
                                                     </a>
                                                 </li>
                                             )
@@ -155,7 +170,7 @@ const Home = (props) => {
                                         return (
                                             <div className='item' key={index}>
 
-                                                <Product tag={item.type} item={item} />
+                                                <Product item={item} />
                                             </div>
                                         )
                                     })

@@ -1,3 +1,4 @@
+const req = require("express/lib/request");
 const mongoose = require("mongoose")
 
 const productSchema = mongoose.Schema({
@@ -11,7 +12,7 @@ const productSchema = mongoose.Schema({
         type: Number,
         required: true,
     },
-    percentSale: {
+    priceSale: {
         type: Number,
     },
     description: {
@@ -51,6 +52,10 @@ const productSchema = mongoose.Schema({
     categoryName: {
         type: String,
         require: true,
+    },
+    subCategoryName:{
+        type: String,
+        require: true
     },
     brand: {
         type: String,

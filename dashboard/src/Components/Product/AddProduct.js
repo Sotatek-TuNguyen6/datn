@@ -20,11 +20,13 @@ const AddProductMain = () => {
         categoryId: "",
         categoryName: ""
     });
-    const [specifications, setSpeciFicaTions] = useState("")
+    const [subCategory, setSubCategory] = useState('');
+    const [specifications, setSpecifications] = useState("")
     const [description, setDescription] = useState("");
     const [images, setImages] = useState([]);
     const [rating, setRating] = useState(0);
     const [brand, setBrand] = useState("")
+    const [subCategories, setSubCategories] = useState([]);
     const [stockQuantity, setStockQuantity] = useState("")
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [loading, setLoading] = useState(false);
@@ -78,9 +80,10 @@ const AddProductMain = () => {
                 productName: name,
                 categoryId: category.categoryId,
                 categoryName: category.categoryName,
+                subCategoryName: subCategory,
                 description,
                 price,
-                percentSale: priceSale,
+                priceSale: priceSale,
                 images: uploadedImageUrls,
                 mainImage: uploadedImageUrls[0],
                 ratings: rating,
@@ -132,6 +135,14 @@ const AddProductMain = () => {
             });
         }
     };
+    useEffect(() => {
+        if(listCategory){
+            const selectedCategory = listCategory?.data.find(cat => cat._id === category.categoryId);
+            if (selectedCategory) {
+                setSubCategories(selectedCategory.subCategories || []);
+            }
+        }
+    }, [category, listCategory]);
     return (
         <>
             <Toast />
@@ -187,7 +198,7 @@ const AddProductMain = () => {
                                         />
                                     </div>
                                     <div className="mb-4">
-                                        <label htmlFor="product_price" className="form-label">
+                                        <label htmlFor="product_category" className="form-label">
                                             Danh mục
                                         </label>
                                         <select
@@ -195,8 +206,9 @@ const AddProductMain = () => {
                                             aria-label="Default select example"
                                             value={category.categoryId}
                                             onChange={handleCategoryChange}
+                                            required
                                         >
-                                            <option value="1">Choose category</option>
+                                            <option value="">Choose category</option>
                                             {listCategory?.data?.map((item, index) => (
                                                 <option
                                                     key={index}
@@ -209,7 +221,30 @@ const AddProductMain = () => {
                                         </select>
                                     </div>
                                     <div className="mb-4">
-                                        <label htmlFor="product_price" className="form-label">
+                                        <label htmlFor="product_sub_category" className="form-label">
+                                            Sub Category
+                                        </label>
+                                        <select
+                                            className="form-select text-capitalize"
+                                            aria-label="Default select example"
+                                            value={subCategory}
+                                            onChange={(e) => setSubCategory(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Choose sub category</option>
+                                            {subCategories.map((sub, index) => (
+                                                <option
+                                                    key={index}
+                                                    value={sub.subCategoryName}
+                                                    className="text-capitalize"
+                                                >
+                                                    {sub.subCategoryName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="product_description" className="form-label">
                                             Mô tả
                                         </label>
                                         <Editor
@@ -218,7 +253,6 @@ const AddProductMain = () => {
                                             editorClassName="demo-editor"
                                             onEditorStateChange={onEditorStateChange}
                                         />
-
                                     </div>
                                     <div className="mb-4">
                                         <label className="form-label">Giá Gốc</label>
@@ -227,7 +261,8 @@ const AddProductMain = () => {
                                             placeholder="Type here"
                                             className="form-control"
                                             onChange={(e) => setPrice(e.target.value)}
-                                        ></input>
+                                            required
+                                        />
                                     </div>
                                     <div className="mb-4">
                                         <label className="form-label">Giá sale</label>
@@ -236,7 +271,7 @@ const AddProductMain = () => {
                                             placeholder="Type here"
                                             className="form-control"
                                             onChange={(e) => setPriceSale(e.target.value)}
-                                        ></input>
+                                        />
                                     </div>
                                     <div className="mb-4">
                                         <label className="form-label">Rating</label>
@@ -245,7 +280,8 @@ const AddProductMain = () => {
                                             placeholder="Type here"
                                             className="form-control"
                                             onChange={(e) => setRating(e.target.value)}
-                                        ></input>
+                                            required
+                                        />
                                     </div>
                                     <div className="mb-4">
                                         <label className="form-label">Số lượng</label>
@@ -254,7 +290,8 @@ const AddProductMain = () => {
                                             placeholder="Type here"
                                             className="form-control"
                                             onChange={(e) => setStockQuantity(e.target.value)}
-                                        ></input>
+                                            required
+                                        />
                                     </div>
                                     <div className="mb-4">
                                         <label className="form-label">Thông số kĩ thuật</label>
@@ -262,8 +299,9 @@ const AddProductMain = () => {
                                             type="text"
                                             placeholder="Type here"
                                             className="form-control"
-                                            onChange={(e) => setSpeciFicaTions(e.target.value)}
-                                        ></input>
+                                            onChange={(e) => setSpecifications(e.target.value)}
+                                            required
+                                        />
                                     </div>
                                     <div className="mb-4">
                                         <label className="form-label">Brand</label>
@@ -272,20 +310,21 @@ const AddProductMain = () => {
                                             placeholder="Type here"
                                             className="form-control"
                                             onChange={(e) => setBrand(e.target.value)}
-                                        ></input>
+                                            required
+                                        />
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="formFileMultiple" class="form-label">
-                                            Ảnh
-                                        </label>
+                                    <div className="mb-4">
+                                        <label className="form-label">Ảnh</label>
                                         <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="file"
                                             id="formFileMultiple"
                                             onChange={handleFileInputChange}
                                             multiple
+                                            required
                                         />
                                     </div>
+
                                 </div>
                             </div>
                         </div>

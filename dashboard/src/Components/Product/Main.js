@@ -81,7 +81,7 @@ const MainProducts = () => {
     },
     {
       name: "Giá Sale",
-      selector: (row) => row.percentSale,
+      selector: (row) => row.priceSale,
     },
     {
       name: "Đánh giá",

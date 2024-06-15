@@ -6,7 +6,7 @@ const redisClient = require("../utils/redisClient")
 const productSchema = Joi.object({
     productName: Joi.string().trim().required(),
     price: Joi.number().required(),
-    percentSale: Joi.number(),
+    priceSale: Joi.number(),
     description: Joi.string().trim(),
     images: Joi.array().items(Joi.string().uri()),
     mainImage: Joi.string().uri().required(),
@@ -16,6 +16,7 @@ const productSchema = Joi.object({
     brand: Joi.string(),
     ratings: Joi.number().min(0).max(5),
     isActive: Joi.boolean(),
+    subCategoryName:Joi.string(),
     specifications: Joi.array()
 });
 

@@ -1,11 +1,9 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-
-const categorySchema = mongoose.Schema({
-    categoryName: {
+const subCategorySchema = mongoose.Schema({
+    subCategoryName: {
         type: String,
-        require: true,
-        unique: true,
+        required: true,
         trim: true,
     },
     createdDate: {
@@ -16,7 +14,25 @@ const categorySchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     }
-})
+});
+
+const categorySchema = mongoose.Schema({
+    categoryName: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+    },
+    subCategories: [subCategorySchema],
+    createdDate: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedDate: {
+        type: Date,
+        default: Date.now,
+    }
+});
 
 categorySchema.pre('save', function(next) {
     this.updatedDate = Date.now();
