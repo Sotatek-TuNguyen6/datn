@@ -1,4 +1,5 @@
 import axios from "axios"
+import Wishlist from "../../pages/Wishlist";
 
 export const API_URL = process.env.REACT_APP_API_URL;
 
@@ -36,9 +37,62 @@ export const getDetailUser = async (id, header) => {
         const response = await axios.get(`${API_URL}/api/v1/account/detail/${id}`, {
             headers: header
         });
-        return response.data; 
+        return response.data;
     } catch (error) {
-        console.error('Error fetching user details:', error); 
+        console.error('Error fetching user details:', error);
         throw error;
     }
 };
+
+export const updateWishlist = async (idProduct, access_token) => {
+    try {
+        const headers = {
+            Authorization: `Bearer ${access_token}`,
+        };
+        const response = await axios.put(
+            `${API_URL}/api/v1/account/wishlist/${idProduct}`,
+            {},
+            { headers }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating wishlist:', error);
+        throw error;
+    }
+}
+
+export const addWishlist = async (data, access_token) => {
+    try {
+        const headers = {
+            Authorization: `Bearer ${access_token}`,
+        };
+        const response = await axios.post(
+            `${API_URL}/api/v1/account`,
+            {
+                wishlist: data
+            },
+            { headers }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating wishlist:', error);
+        throw error;
+    }
+}
+
+export const updateUser = async (data, access_token) => {
+    try {
+        const headers = {
+            Authorization: `Bearer ${access_token}`,
+        };
+        const response = await axios.post(
+            `${API_URL}/api/v1/account`,
+            data,
+            { headers }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating User:', error);
+        throw error;
+    }
+}

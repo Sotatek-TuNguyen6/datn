@@ -30,7 +30,6 @@ export const userSlide = createSlice({
         access_token,
         wishlist
       } = action.payload;
-      console.log("🚀 ~ action.payload:", action.payload)
       state.username = username;
       state.name = name;
       state.phone = phone;
@@ -40,24 +39,34 @@ export const userSlide = createSlice({
       state.id = _id;
       state.orders = orders;
       state.access_token = access_token;
-      state.wishlist = wishlist
+      state.wishlist = wishlist;
+    },
+    addToWishList: (state, action) => {
+      const newItem = action.payload;
+      const existingItemIndex = state.wishlist.findIndex(item => item._id === newItem._id);
+
+      if (existingItemIndex === -1) {
+        state.wishlist.push(newItem);
+      } else {
+        state.wishlist[existingItemIndex] = newItem;
+      }
     },
     resetUser: (state) => {
-        state.username = "";
-        state.name = "";
-        state.phone = "";
-        state.email = "";
-        state.addresses = [];
-        state.role = "";
-        state.id = "";
-        state.orders = [];
-        state.access_token = "";
-        state.wishlist = []
+      state.username = "";
+      state.name = "";
+      state.phone = "";
+      state.email = "";
+      state.addresses = [];
+      state.role = "unknown";
+      state.id = "";
+      state.orders = [];
+      state.access_token = "";
+      state.wishlist = [];
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateUser, resetUser } = userSlide.actions;
+export const { updateUser, addToWishList, resetUser } = userSlide.actions;
 
 export default userSlide.reducer;

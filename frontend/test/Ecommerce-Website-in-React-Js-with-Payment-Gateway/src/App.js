@@ -1,34 +1,40 @@
-import React, { useEffect, useState, createContext } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import './responsive.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState, createContext } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import "./responsive.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Header from './components/header/header';
-import Footer from './components/footer/footer';
-import Home from './pages/Home/index';
-import About from './pages/About/index';
-import Listing from './pages/Listing';
-import NotFound from './pages/NotFound';
-import DetailsPage from './pages/Details';
-import Checkout from './pages/checkout';
-import axios from 'axios';
-import Cart from './pages/cart';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
-import Loader from './assets/images/loading.gif';
+import Header from "./components/header/header";
+import Footer from "./components/footer/footer";
+import Home from "./pages/Home/index";
+import About from "./pages/About/index";
+import Listing from "./pages/Listing";
+import NotFound from "./pages/NotFound";
+import DetailsPage from "./pages/Details";
+import Checkout from "./pages/checkout";
+import axios from "axios";
+import Cart from "./pages/cart";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Loader from "./assets/images/loading.gif";
 
-import data from './data';
-import { useGetProduct } from './hooks/productFetching';
+import data from "./data";
+import { useGetProduct } from "./hooks/productFetching";
+import Wishlist from "./pages/Wishlist";
+import AccountPage from "./pages/AccountPage/AccountPage";
+import MyOrdersPage from "./pages/OrderTracking/order";
+import PaymentSuccess from "./pages/PaymentSucces/paymentSucces";
 
 const MyContext = createContext();
 
 function App() {
-
   const getListQuery = useGetProduct();
 
-  const { data: dataProduct, isLoading: isLoadingCallApi, isError } = getListQuery
-  console.log("🚀 ~ App ~ data:", dataProduct?.data)
+  const {
+    data: dataProduct,
+    isLoading: isLoadingCallApi,
+    isError,
+  } = getListQuery;
 
   const [productData, setProductData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
@@ -43,33 +49,27 @@ function App() {
   const [cartTotalAmount, setCartTotalAmount] = useState();
 
   useEffect(() => {
-    console.log("---- vao day r")
     // getData('http://localhost:5000/productData');
     getCartData("http://localhost:9000/cartItems");
 
-    const is_Login = localStorage.getItem('isLogin');
+    const is_Login = localStorage.getItem("isLogin");
     setIsLogin(is_Login);
-
 
     setTimeout(() => {
       setProductData(data[1]);
       setIsloading(false);
     }, 3000);
-
-
-
   }, []);
 
   const getCartData = async (url) => {
     try {
       await axios.get(url).then((response) => {
         setCartItems(response.data);
-      })
-
+      });
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   const addToCart = async (item) => {
     item.quantity = 1;
@@ -77,39 +77,40 @@ function App() {
     try {
       await axios.post("http://localhost:9000/cartItems", item).then((res) => {
         if (res !== undefined) {
-          setCartItems([...cartItems, { ...item, quantity: 1 }])
+          setCartItems([...cartItems, { ...item, quantity: 1 }]);
         }
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
-  }
+  };
 
   const removeItemsFromCart = async (id) => {
-    const response = await axios.delete(`http://localhost:9000/cartItems/${id}`);
+    const response = await axios.delete(
+      `http://localhost:9000/cartItems/${id}`
+    );
     if (response !== null) {
       getCartData("http://localhost:9000/cartItems");
     }
-  }
+  };
 
   const emptyCart = () => {
-    setCartItems([])
-  }
+    setCartItems([]);
+  };
 
   const signIn = () => {
-    const is_Login = localStorage.getItem('isLogin');
+    const is_Login = localStorage.getItem("isLogin");
     setIsLogin(is_Login);
-  }
+  };
 
   const signOut = () => {
-    localStorage.removeItem('isLogin');
+    localStorage.removeItem("isLogin");
     setIsLogin(false);
-  }
+  };
 
   const openFilters = () => {
-    setIsopenFilters(!isOpenFilters)
-  }
+    setIsopenFilters(!isOpenFilters);
+  };
 
   const value = {
     cartItems,
@@ -127,38 +128,62 @@ function App() {
     setCartTotalAmount,
     cartTotalAmount,
     setCartItems,
-    cartItems
-  }
+    cartItems,
+  };
 
   return (
-
     <>
-      {
-        isLoadingCallApi === true ? <div className='loader'><img src={Loader} /></div>
-          :
-          <BrowserRouter>
-            <MyContext.Provider value={value}>
-
-              <Header data={data.productData} />
-              <Routes>
-                <Route exact={true} path="/" element={<Home data={dataProduct?.data ?? []} />} />
-                <Route exact={true} path="/cat/:id" element={<Listing data={data.productData} single={true} />} />
-                <Route exact={true} path="/cat/:id/:id" element={<Listing data={data.productData} single={false} />} />
-                <Route exact={true} path="/product/:id" element={<DetailsPage/>} />
-                <Route exact={true} path="/cart" element={<Cart />} />
-                <Route exact={true} path="/signIn" element={<SignIn />} />
-                <Route exact={true} path="/signUp" element={<SignUp />} />
-                <Route exact={true} path="/checkout" element={<Checkout />} />
-                <Route exact={true} path="*" element={<NotFound />} />
-              </Routes>
-              <Footer />
-            </MyContext.Provider>
-          </BrowserRouter>
-      }
+      {isLoadingCallApi === true ? (
+        <div className="loader">
+          <img src={Loader} />
+        </div>
+      ) : (
+        <BrowserRouter>
+          <MyContext.Provider value={value}>
+            <Header data={data.productData} />
+            <Routes>
+              <Route
+                exact={true}
+                path="/"
+                element={<Home data={dataProduct?.data ?? []} />}
+              />
+              <Route
+                exact={true}
+                path="/cat/:id"
+                element={<Listing data={data.productData} single={true} />}
+              />
+              <Route
+                exact={true}
+                path="/cat/:id/:id"
+                element={<Listing data={data.productData} single={false} />}
+              />
+              <Route
+                exact={true}
+                path="/product/:id"
+                element={<DetailsPage />}
+              />
+              <Route exact={true} path="/cart" element={<Cart />} />
+              <Route exact={true} path="/wishlist" element={<Wishlist />} />
+              <Route exact={true} path="/signIn" element={<SignIn />} />
+              <Route exact={true} path="/signUp" element={<SignUp />} />
+              <Route exact={true} path="/checkout" element={<Checkout />} />
+              <Route exact={true} path="/account" element={<AccountPage />} />
+              <Route exact={true} path="/orderSuccess" element={<PaymentSuccess />} />
+              <Route
+                exact={true}
+                path="/order-tracking"
+                element={<MyOrdersPage />}
+              />
+              <Route exact={true} path="*" element={<NotFound />} />
+            </Routes>
+            <Footer />
+          </MyContext.Provider>
+        </BrowserRouter>
+      )}
     </>
   );
 }
 
 export default App;
 
-export { MyContext }
+export { MyContext };

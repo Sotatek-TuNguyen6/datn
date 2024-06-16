@@ -1,87 +1,55 @@
-
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-
+import { updateCart } from '../../features/cart/cartSlice';
 
 const QuantityBox = (props) => {
-    const [inputValue, setinputValue] = useState(1);
-    const [cartItems, setcartItems] = useState([]);
+  const [inputValue, setInputValue] = useState(props.item.quantity);
+  const dispatch = useDispatch();
+  const { listCart } = useSelector((state) => state.cart);
 
-    useEffect(() => {
-        setcartItems(props.cartItems);
-        //setinputValue(props.item.quantity)
-    }, [props.cartItems])
+  const plus = () => {
+    const newQuantity = inputValue + 1;
+    setInputValue(newQuantity);
+    updateCartQuantity(newQuantity);
+  };
 
-
-    const updateCart=(items)=>{
-        props.updateCart(items)
+  const minus = () => {
+    if (inputValue > 1) {
+      const newQuantity = inputValue - 1;
+      setInputValue(newQuantity);
+      updateCartQuantity(newQuantity);
     }
+  };
 
+  const updateCartQuantity = (newQuantity) => {
+    const updatedCart = listCart.map((cartItem) => {
+      return cartItem._id === props.item._id
+        ? { ...cartItem, quantity: newQuantity }
+        : cartItem;
+    });
 
+    dispatch(updateCart(updatedCart[0]));
+  };
 
-    // const plus = () => {
-    //     setinputValue(inputValue + 1)
-    // }
-
-    // const minus = () => {
-    //     if (inputValue !== 1) {
-    //         setinputValue(inputValue - 1)
-    //     }
-    // }
-
-
-
-    return (
-        <div className='addCartSection pt-4 pb-4 d-flex align-items-center '>
-            <div className='counterSec mr-3'>
-                <input type='number' value={inputValue} />
-                <span className='arrow plus'
-                   
-                   onClick={
-                    () => {
-                        setinputValue(inputValue + 1);
-                        const _cart = props.cartItems?.map((cartItem, key) => {
-                            return key === parseInt(props.index) ? { ...cartItem, quantity: inputValue+1 } : {...cartItem}
-                           
-                        });
-                            
-                        updateCart(_cart);
-                        setcartItems(_cart);
-                       
-                    }
-                }      
-                
-                ><KeyboardArrowUpIcon /></span>
-
-
-                <span className='arrow minus'
-                 onClick={
-                        () => {
-                            if (inputValue !== 1) {
-                                setinputValue(inputValue - 1)
-                            }
-                            
-                            const _cart = props.cartItems?.map((cartItem, key) => {
-                                return key === parseInt(props.index) ? { ...cartItem, quantity: cartItem.quantity !== 1 ? inputValue-1 : cartItem.quantity } : {...cartItem}
-                            });
-
-                          
-                            
-                            updateCart(_cart);
-                            setcartItems(_cart);
-
-
-
-                        }
-                    }
-                ><KeyboardArrowDownIcon /></span>
-            </div>
-
-        </div>
-    )
-}
+  return (
+    <div className="addCartSection pt-4 pb-4 d-flex align-items-center">
+      <div className="counterSec mr-3">
+        <input
+          type="number"
+          value={inputValue}
+          readOnly
+        />
+        <span className="arrow plus" onClick={plus}>
+          <KeyboardArrowUpIcon />
+        </span>
+        <span className="arrow minus" onClick={minus}>
+          <KeyboardArrowDownIcon />
+        </span>
+      </div>
+    </div>
+  );
+};
 
 export default QuantityBox;

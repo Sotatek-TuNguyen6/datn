@@ -18,12 +18,15 @@ const paymentSchema = new mongoose.Schema({
         enum: ['pending', 'completed', 'failed'],
         default: 'pending'
     },
+    paymentInfo: {
+        type: String,
+    },
     createdAt: {
         type: Date,
         default: Date.now
     },
-    orderId:{
-        type:String,
+    orderId: {
+        type: String,
         required: true
     }
 });

@@ -9,6 +9,7 @@ const routerPayment = require("./src/routes/paymentRouter");
 const db = require("./src/config/connectDb");
 const app = express();
 
+
 dotenv.config();
 db();
 const port = process.env.PORT || 3000;
@@ -19,9 +20,10 @@ app.use(express.json());
 app.use(morgan('combined', { stream: accessLogStream }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(helmet());
-// app.use(cors());
+app.use(cors());
 
 app.use("/api/v1/payment", routerPayment);
+
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ success: false, message: "An unexpected error occurred", error: err.message });

@@ -49,10 +49,13 @@ services:
       - PORT=5000
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       mongo:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
 
   category:
@@ -70,21 +73,6 @@ services:
       mongo:
         condition: service_healthy
 
-  # chat:
-  #   build:
-  #     context: ./Chat
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5003:5000"
-  #   volumes:
-  #     - ./Chat:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/chat
-  #     - PORT=5003
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-
   order:
     build:
       context: ./Order
@@ -98,12 +86,14 @@ services:
       - PORT=5004
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       mongo:
         condition: service_healthy
       redis:
         condition: service_healthy
-
+      rabbitmq:
+        condition: service_healthy
   payment:
     build:
       context: ./Payment
@@ -117,12 +107,18 @@ services:
       - PORT=5006
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - VNP_TMN_CODE=BFOVPGBI
+      - VNP_HASH_SECRET=JPJI1NRURNH39ZRZOWQYKJ3Q7GWL5302
+      - VNP_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      - VNP_RETURN_URL=http://localhost:3006/orderSuccess
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       mongo:
         condition: service_healthy
       redis:
         condition: service_healthy
-
+      rabbitmq:
+        condition: service_healthy
   product:
     build:
       context: ./Product
@@ -136,10 +132,12 @@ services:
       - PORT=5001
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       mongo:
         condition: service_healthy
-
+      rabbitmq:
+        condition: service_healthy
   review:
     build:
       context: ./Review
@@ -151,29 +149,44 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongo:27017/review
       - PORT=5005
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       mongo:
         condition: service_healthy
-
+      rabbitmq:
+        condition: service_healthy
+  actions:
+    build:
+      context: ./Actions
+      dockerfile: Dockerfile
+    ports:
+      - "5007:5000"
+    volumes:
+      - ./Actions:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/actions
+      - PORT=5007
+    depends_on:
+      mongo:
+        condition: service_healthy
   apigateway:
     build:
       context: ./ApiGateWay
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8080:8080"
     volumes:
       - ./ApiGateWay:/app
     environment:
       - NODE_ENV=production
     depends_on:
       - account
-      # - actions
       - category
-      # - chat
       - order
       - payment
       - product
       - review
+      - actions
 
 volumes:
   mongo-data:

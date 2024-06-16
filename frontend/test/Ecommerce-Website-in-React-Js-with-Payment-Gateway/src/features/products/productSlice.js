@@ -14,7 +14,7 @@ const initialState = {
 };
 
 export const userSlide = createSlice({
-  name: "user",
+  name: "",
   initialState,
   reducers: {
     updateUser: (state, action) => {

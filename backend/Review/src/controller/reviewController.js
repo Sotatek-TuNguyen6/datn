@@ -86,3 +86,23 @@ exports.deleteReview = async (req, res) => {
         });
     }
 };
+
+
+exports.getReviewByProduct = async (req, res) => {
+    try {
+        const { product } = req.params
+        console.log("🚀 ~ exports.getReviewByProduct= ~ product:", product)
+
+        const review = await Review.find({ product: product });
+        res.status(200).json({
+            status: 'success',
+            data: review
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({
+            status: 'fail',
+            message: 'Review not found'
+        });
+    }
+}

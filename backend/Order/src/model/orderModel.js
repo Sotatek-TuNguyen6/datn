@@ -5,15 +5,17 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    productId: {
-        type: String,
-        required: true,
-    },
-    quantity: {
-        type: Number,
-        required: true,
-        default: 1,
-    },
+    products: [{
+        productId: {
+            type: String,
+            required: true,
+        },
+        quantity: {
+            type: Number,
+            required: true,
+            default: 1,
+        }
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
