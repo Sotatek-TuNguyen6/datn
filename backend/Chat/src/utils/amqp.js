@@ -15,22 +15,24 @@ async function publishToQueue(queueName, message) {
   }
 }
 
-async function consumeQueue(queueName, callback) {
+async function consumeQueue(queueName, timeout = 10000) {
   try {
     const connection = await amqp.connect(process.env.RABBITMQ_URL);
     const channel = await connection.createChannel();
     await channel.assertQueue(queueName, { durable: true });
 
-    channel.consume(queueName, (msg) => {
-      if (msg !== null) {
-        const messageContent = JSON.parse(msg.content.toString());
-        logger.info(`Message received from queue: ${queueName}`, { messageContent });
-        callback(messageContent);
-        channel.ack(msg);
-      }
-    }, { noAck: false });
-
-    logger.info(`Started consuming queue: ${queueName}`);
+    return new Promise((resolve, reject) => {
+      channel.consume(queueName, (msg) => {
+        if (msg !== null) {
+          const messageContent = JSON.parse(msg.content.toString());
+          logger.info(`Message received from queue: ${queueName}`, { messageContent });
+          channel.ack(msg);
+          resolve(messageContent);
+          channel.close();
+          connection.close();
+        }
+      }, { noAck: false });
+    });
   } catch (error) {
     logger.error(`Error consuming queue: ${queueName}`, { error: error.message });
     throw error;

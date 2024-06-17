@@ -8,7 +8,7 @@ router.post("/login", AccountController.login)
 router.get("/", AccountController.getAllAccounts)
 router.get("/detail/:id", AccountController.getAccountById)
 router.delete("/:id", AccountController.deleteAccount)
-router.post("/", protect, AccountController.updateAccount)
+router.post("/:id", protect, AccountController.updateAccount)
 router.put('/wishlist/:product', protect, AccountController.updateWishlist);
 
 module.exports = router

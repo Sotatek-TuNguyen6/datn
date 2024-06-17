@@ -36,6 +36,7 @@
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "rn-range-slider": "^2.2.2",
+    "socket.io-client": "^4.7.5",
     "styled-components": "^5.3.11",
     "web-vitals": "^2.1.4"
   },

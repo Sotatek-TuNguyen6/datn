@@ -95,6 +95,18 @@ const Sidebar = () => {
               </NavLink>
             </li>
 
+
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/chat"
+              >
+                <i className="icon fas fa-comments"></i>
+                <span className="text">Chat</span>
+              </NavLink>
+            </li>
+
             {/* <li className="menu-item">
               <NavLink
                   activeClassName="active"

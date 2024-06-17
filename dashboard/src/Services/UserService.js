@@ -44,7 +44,7 @@ export const updateUser = async (id, data, access_token) => {
   const headers = {
     Authorization: `Bearer ${access_token}`,
   };
-  const res = await axiosJWT.put(
+  const res = await axiosJWT.post(
     `${API}/api/v1/account/${id}`,
     data,
     {

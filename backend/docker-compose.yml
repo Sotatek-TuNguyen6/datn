@@ -83,8 +83,15 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongo:27017/chat
       - PORT=5003
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
   order:
     build:
@@ -187,7 +194,7 @@ services:
       context: ./ApiGateWay
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8080:8080"
     volumes:
       - ./ApiGateWay:/app
     environment:

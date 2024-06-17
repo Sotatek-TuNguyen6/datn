@@ -1,25 +1,58 @@
-import React, { useState } from 'react';
-import { Button, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import SendIcon from '@mui/icons-material/Send';
-import './ChatWindow.css';
+import React, { useState, useEffect } from "react";
+import { Button, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import SendIcon from "@mui/icons-material/Send";
+import { io } from "socket.io-client";
+import "./ChatWindow.css";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
+const socket = io("http://localhost:8080"); // Thay đổi URL phù hợp với cấu hình của bạn
 
 const ChatWindow = ({ onClose }) => {
-  const [messages, setMessages] = useState([
-    { text: 'Xin chào 👋\nTôi có thể giúp gì cho bạn?', sender: 'bot' },
-    { text: 'Tôi đang thất tình', sender: 'user' },
-    {
-      text: 'Tôi rất tiếc khi biết bạn đang trải qua khoảng thời gian khó khăn. Chia tay chưa bao giờ là dễ dàng. Tuy nhiên, thay vì ủ rũ, hãy tự thưởng cho bản thân một khởi đầu mới đầy năng lượng. Một đôi giày mới từ ThuThaoShoes có thể là liều thuốc tinh thần bạn cần lúc này!',
-      sender: 'bot',
-    },
-  ]);
+  const user = useSelector((state) => state.user);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
 
-  const [newMessage, setNewMessage] = useState('');
+  useEffect(() => {
+    const fetchChatHistory = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/messages", {
+          params: {
+            userId: user.id,
+            adminId: "666331cfd4db5a08e6948e6d", // ID của admin
+          },
+        });
+        setMessages(response.data);
+      } catch (error) {
+        console.error("Error fetching chat history:", error);
+      }
+    };
+
+    fetchChatHistory();
+    // Join the chat room for the user
+    socket.emit("join", { userId: user.id });
+
+    // Lắng nghe sự kiện 'chat message' từ server
+    socket.on("chat message", (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    return () => {
+      socket.off("chat message");
+    };
+  }, [user]);
 
   const handleSendMessage = () => {
-    if (newMessage.trim() !== '') {
-      setMessages([...messages, { text: newMessage, sender: 'user' }]);
-      setNewMessage('');
+    if (newMessage.trim() !== "") {
+      const message = {
+        sender: user.id,
+        receiver: "666331cfd4db5a08e6948e6d", // ID của admin
+        message: newMessage,
+      };
+      setMessages((prevMessages) => [...prevMessages, message]);
+      socket.emit("chat message", message);
+      setNewMessage("");
     }
   };
 
@@ -27,7 +60,7 @@ const ChatWindow = ({ onClose }) => {
     <div className="chat-window">
       <div className="chat-header">
         <span>Chat với Admin</span>
-        <IconButton onClick={onClose} size="small">
+        <IconButton size="small" onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </div>
@@ -35,9 +68,23 @@ const ChatWindow = ({ onClose }) => {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`chat-message ${message.sender === 'bot' ? 'bot-message' : 'user-message'}`}
+            className={`chat-message ${
+              message.sender === user.id ? "user-message" : "admin-message"
+            }`}
           >
-            <span>{message.text}</span>
+            <img
+              src={
+                message.sender === user.id
+                  ? user.avatar
+                  : "/path/to/admin/avatar.jpg"
+              } // Cập nhật đường dẫn ảnh đại diện phù hợp
+              alt="avatar"
+              className="avatar"
+            />
+            <div className="message-content">
+              <span>{message.message}</span>
+              <div className="message-time">just now</div>
+            </div>
           </div>
         ))}
       </div>
@@ -48,12 +95,17 @@ const ChatWindow = ({ onClose }) => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               handleSendMessage();
             }
           }}
         />
-        <Button variant="contained" color="primary" endIcon={<SendIcon />} onClick={handleSendMessage}>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<SendIcon />}
+          onClick={handleSendMessage}
+        >
           Gửi
         </Button>
       </div>

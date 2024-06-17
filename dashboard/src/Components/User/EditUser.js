@@ -63,6 +63,7 @@ const EditOrderMain = (props) => {
       addresses,
       orders,
       wishlist,
+      role
     }
     mutation.mutate({
       id: id,
