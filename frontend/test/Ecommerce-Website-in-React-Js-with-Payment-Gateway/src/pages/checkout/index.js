@@ -13,6 +13,7 @@ import { Add as AddIcon } from "@mui/icons-material";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { resetCart } from "../../features/cart/cartSlice";
+import { formatMoneyVND } from "../../functions/formatVND";
 
 const Checkout = () => {
   const user = useSelector((state) => state.user);
@@ -103,16 +104,6 @@ const Checkout = () => {
     //clear cart ...
     dispatch(resetCart())
   };
-
-  function formatMoneyVND(amount) {
-    if (!amount || isNaN(amount)) {
-      return "Invalid amount";
-    }
-    return amount.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  }
 
   return (
     <section className="cartSection mb-5 checkoutPage">

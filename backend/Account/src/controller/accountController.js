@@ -145,6 +145,7 @@ exports.updateAccount = async (req, res) => {
   const accountId = req.user._id;
   try {
     const allowedUpdates = ['name', 'email', 'phone', 'addresses', 'orders', 'wishlist'];
+    
     const updates = Object.keys(req.body);
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 

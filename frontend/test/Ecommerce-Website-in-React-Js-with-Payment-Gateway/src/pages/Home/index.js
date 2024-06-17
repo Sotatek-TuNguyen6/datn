@@ -19,8 +19,6 @@ const Home = (props) => {
 
   const { data, isLoading: isLoadingCallApi, isError } = getListQuery;
 
-  const [prodData, setprodData] = useState(props.data);
-  const [catArray, setcatArray] = useState([]);
   const [activeTab, setactiveTab] = useState("");
   const [activeTabIndex, setactiveTabIndex] = useState(0);
   const [activeTabData, setActiveTabData] = useState([]);

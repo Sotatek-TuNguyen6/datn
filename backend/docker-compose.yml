@@ -72,7 +72,20 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-
+  chat:
+    build:
+      context: ./Chat
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5000"
+    volumes:
+      - ./Chat:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/chat
+      - PORT=5003
+    depends_on:
+      mongo:
+        condition: service_healthy
   order:
     build:
       context: ./Order
@@ -174,7 +187,7 @@ services:
       context: ./ApiGateWay
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
       - ./ApiGateWay:/app
     environment:
@@ -187,6 +200,7 @@ services:
       - product
       - review
       - actions
+      - chat
 
 volumes:
   mongo-data:

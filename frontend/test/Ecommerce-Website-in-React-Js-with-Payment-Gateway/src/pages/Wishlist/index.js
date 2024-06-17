@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as UserService from "../../services/UserService/index";
 import { updateUser } from "../../features/userSlice/userSlice";
+import { formatMoneyVND } from "../../functions/formatVND";
 
 const Wishlist = () => {
   const context = useContext(MyContext);
@@ -26,12 +27,7 @@ const Wishlist = () => {
     window.scrollTo(0, 0);
   }, [access_token]);
 
-  function formatMoneyVND(amount) {
-    return amount?.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  }
+
   const handleGetDetailsUser = async (id, accessToken) => {
     const header = {
       Authorization: `Bearer ${accessToken}`,

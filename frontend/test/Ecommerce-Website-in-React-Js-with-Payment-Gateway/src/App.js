@@ -24,6 +24,7 @@ import Wishlist from "./pages/Wishlist";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import MyOrdersPage from "./pages/OrderTracking/order";
 import PaymentSuccess from "./pages/PaymentSucces/paymentSucces";
+import ChatButton from "./components/Chatbot/ChatButton";
 
 const MyContext = createContext();
 
@@ -177,6 +178,7 @@ function App() {
               <Route exact={true} path="*" element={<NotFound />} />
             </Routes>
             <Footer />
+            <ChatButton/>
           </MyContext.Provider>
         </BrowserRouter>
       )}

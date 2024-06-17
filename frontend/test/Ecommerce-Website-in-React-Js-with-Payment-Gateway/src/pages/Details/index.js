@@ -22,6 +22,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as UserService from "../../services/UserService/index";
 import { updateUser } from "../../features/userSlice/userSlice";
 import { addToCart } from "../../features/cart/cartSlice";
+import { formatMoneyVND } from "../../functions/formatVND";
 
 const DetailsPage = (props) => {
   const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
@@ -176,12 +177,6 @@ const DetailsPage = (props) => {
 
   var reviews_Arr2 = [];
 
-  function formatMoneyVND(amount) {
-    return amount?.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  }
   const handleAddToCart = (item) => {
     dispatch(addToCart({ ...item, quantity: 1 }));
     mutationAddActions.mutate({

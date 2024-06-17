@@ -10,6 +10,7 @@ import { MyContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {  removeFromCart, updateCart } from "../../features/cart/cartSlice";
+import { formatMoneyVND } from "../../functions/formatVND";
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const context = useContext(MyContext);
@@ -33,16 +34,6 @@ const Cart = () => {
   const updateQuantityCart = (items) => {
     dispatch(updateCart(items[0]));
   };
-  function formatMoneyVND(amount, quantity) {
-    if (!amount || isNaN(amount) || !quantity || isNaN(quantity)) {
-      return "Invalid amount or quantity";
-    }
-    const total = amount * quantity;
-    return total.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  }
 
   const tottalAmount = listCart
     ?.map((item) => parseInt(item.priceSale) * item.quantity)

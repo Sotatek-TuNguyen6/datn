@@ -19,7 +19,7 @@ border-bottom-right-radius: 50px; border-top-left-radius: 5px; text-transform: c
 
 .productThumb:hover .imgWrapper .overlay{opacity: 1; transform: scale(1); }
 
-.productThumb .imgWrapper .overlay ul{background: #fff; width: 140px; height: auto; border-radius: 10px; border: 1px solid #BCE3C9; }
+.productThumb .imgWrapper .overlay ul{background: #fff; height: auto; border-radius: 10px; border: 1px solid #BCE3C9; }
 .productThumb .imgWrapper .overlay ul li{margin-right: 0px !important;}
 .productThumb .imgWrapper .overlay ul li a{display: block; padding: 10px; border-right:  1px solid #BCE3C9;}
 .productThumb .imgWrapper .overlay ul li a svg{color: #3bb77e !important;}

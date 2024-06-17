@@ -103,8 +103,7 @@ const AccountPage = () => {
   const isActive = (path) => location.pathname === path;
 
   const handleChangeUser = async () => {
-    const { access_token, wishlist, username, id, ...userWithoutToken } =
-      editUser;
+    const { access_token, wishlist, username, id, position, roles, fullname, phone_number, ...userWithoutToken } = editUser;
     mutationChangeUser.mutate({ data: userWithoutToken, token: access_token });
   };
   const onLogout = async () => {

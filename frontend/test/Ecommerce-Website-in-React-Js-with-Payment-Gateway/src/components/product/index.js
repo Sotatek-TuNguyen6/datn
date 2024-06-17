@@ -7,16 +7,22 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import * as ActionsService from "../../services/Actions/actionService";
+import * as UserService from "../../services/UserService/index";
 
 import { MyContext } from "../../App";
+import { formatMoneyVND } from "../../functions/formatVND";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../features/cart/cartSlice";
+import { useMutation } from "@tanstack/react-query";
+import { updateUser } from "../../features/userSlice/userSlice";
 
 const Product = (props) => {
   const [productData, setProductData] = useState();
-  console.log("🚀 ~ Product ~ productData:", productData);
   const [isAdded, setIsadded] = useState(false);
-
+  const dispatch = useDispatch()
   const context = useContext(MyContext);
-
+  const { id: idUser, name, access_token } = useSelector((state) => state.user);
   useEffect(() => {
     setProductData(props.item);
   }, [props.item]);
@@ -26,9 +32,60 @@ const Product = (props) => {
     sessionStorage.setItem("subCatName", productData.subCategoryName);
   };
 
-  const addToCart = (item) => {
-    context.addToCart(item);
-    setIsadded(true);
+  // const addToCart = (item) => {
+  //   context.addToCart(item);
+  //   setIsadded(true);
+  // };
+  const handleGetDetailsUser = async (id, accessToken) => {
+    const header = {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const userDetails = await UserService.getDetailUser(id, header);
+
+      dispatch(updateUser({ ...userDetails, access_token: accessToken }));
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+    }
+  };
+  const mutationAddActions = useMutation({
+    mutationFn: (data) => ActionsService.createAction(data),
+    onSuccess: () => {
+      alert("Action created successfully");
+    },
+    onError: (error) => {
+      console.error("Error submitting action:", error);
+    },
+  });
+  const mutationAddWishlist = useMutation({
+    mutationFn: ({ wishlist }) =>
+      UserService.addWishlist(wishlist, access_token),
+    onSuccess: () => {
+      handleGetDetailsUser(idUser, access_token);
+    },
+    onError: (error) => {
+      console.error("Error submitting review:", error);
+    },
+  });
+
+  const handleAddWishList = (item) => {
+    mutationAddWishlist.mutate({ wishlist: item._id });
+  };
+
+  const handleAddToCart = (item) => {
+    const { _id } = item
+    dispatch(addToCart({ ...item, quantity: 1 }));
+
+    mutationAddActions.mutate({
+      userId: idUser,
+      productId: _id,
+      actionType: "add_to_cart",
+    });
+  };
+  const handleIconClick = (event) => {
+    event.stopPropagation();
   };
 
   return (
@@ -48,15 +105,15 @@ const Product = (props) => {
               <div className="overlay transition">
                 <ul className="list list-inline mb-0">
                   <li className="list-inline-item">
-                    <a className="cursor" tooltip="Add to Wishlist">
-                      <FavoriteBorderOutlinedIcon />
+                    <a className="cursor" tooltip="Add to Wishlist" onClick={() => {handleAddWishList(productData)}}>
+                    <FavoriteBorderOutlinedIcon onClick={handleAddWishList} />
                     </a>
                   </li>
-                  <li className="list-inline-item">
+                  {/* <li className="list-inline-item">
                     <a className="cursor" tooltip="Compare">
                       <CompareArrowsOutlinedIcon />
                     </a>
-                  </li>
+                  </li> */}
                   <li className="list-inline-item">
                     <a className="cursor" tooltip="Quick View">
                       <RemoveRedEyeOutlinedIcon />
@@ -85,17 +142,17 @@ const Product = (props) => {
             <div className="d-flex align-items-center mt-3">
               <div className="d-flex align-items-center w-100">
                 <span className="price text-g font-weight-bold">
-                  Rs {productData.price}
+                  {formatMoneyVND(productData.priceSale)}
                 </span>{" "}
                 <span className="oldPrice ml-auto">
-                  Rs {productData.oldPrice}
+                  {formatMoneyVND(productData.price)}
                 </span>
               </div>
             </div>
 
             <Button
               className="w-100 transition mt-3"
-              onClick={() => addToCart(productData)}
+              onClick={() => handleAddToCart(productData)}
             >
               <ShoppingCartOutlinedIcon />
               {isAdded === true ? "Added" : "Add"}
