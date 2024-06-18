@@ -268,7 +268,7 @@ const DetailsPage = (props) => {
                           <InnerImageZoom
                             zoomType="hover"
                             zoomScale={1}
-                            src={`${imgUrl}?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`}
+                            src={`${imgUrl}`}
                           />
                         </div>
                       );
@@ -282,7 +282,7 @@ const DetailsPage = (props) => {
                     return (
                       <div className="item">
                         <img
-                          src={`${imgUrl}?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}
+                          src={`${imgUrl}`}
                           className="w-100"
                           onClick={() => goto(index)}
                         />
@@ -328,13 +328,13 @@ const DetailsPage = (props) => {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <p
                   dangerouslySetInnerHTML={{
                     __html: detailProduct?.data?.description,
                   }}
                 ></p>
-              </div>
+              </div> */}
               {detailProduct?.data?.weight !== undefined &&
                 detailProduct?.data?.weight.length !== 0 && (
                   <div className="productSize d-flex align-items-center">

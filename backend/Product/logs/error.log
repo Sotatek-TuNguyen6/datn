@@ -16,3 +16,5 @@ error: Error handling product details request: amqp is not defined {"stack":"Ref
 error: Error handling product details request: amqp is not defined {"stack":"ReferenceError: amqp is not defined\n    at handleProductDetailsRequest (/app/src/service/productConsumer.js:13:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
 error: Error handling product details request: amqp is not defined {"stack":"ReferenceError: amqp is not defined\n    at handleProductDetailsRequest (/app/src/service/productConsumer.js:13:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
 error: Error handling product details request: amqp is not defined {"stack":"ReferenceError: amqp is not defined\n    at handleProductDetailsRequest (/app/src/service/productConsumer.js:13:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: request entity too large {"expected":485799,"length":485799,"limit":102400,"type":"entity.too.large"}
+error: request entity too large {"expected":141137,"length":141137,"limit":102400,"type":"entity.too.large"}

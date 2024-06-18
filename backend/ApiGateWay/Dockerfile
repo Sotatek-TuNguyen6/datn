@@ -21,7 +21,7 @@ RUN npm install
 COPY . .
 
 # Expose the port the application runs on.
-EXPOSE 8000
+EXPOSE 8080
 
 # Set the environment variable to production.
 # ENV NODE_ENV=production

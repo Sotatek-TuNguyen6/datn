@@ -16,7 +16,7 @@ const productSchema = Joi.object({
     brand: Joi.string(),
     ratings: Joi.number().min(0).max(5),
     isActive: Joi.boolean(),
-    subCategoryName:Joi.string(),
+    subCategoryName: Joi.string(),
     specifications: Joi.array()
 });
 
@@ -116,3 +116,21 @@ exports.updateProduct = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.importData = async (req, res, next) => {
+    try {
+        const { data } = req.body;
+
+        const importedProducts = await Product.insertMany(data);
+
+        logger.info(`${importedProducts.length} products imported successfully`);
+
+        res.status(200).json({
+            success: true,
+            message: `${importedProducts.length} products imported successfully`,
+            data: importedProducts
+        });
+    } catch (error) {
+        next(error);
+    }
+}

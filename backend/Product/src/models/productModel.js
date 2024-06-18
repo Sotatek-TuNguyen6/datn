@@ -65,6 +65,9 @@ const productSchema = mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    type:{
+        type: String,
+    },
     specifications: {
         type: [String],
         default: []
