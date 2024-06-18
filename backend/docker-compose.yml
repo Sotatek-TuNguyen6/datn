@@ -194,7 +194,7 @@ services:
       context: ./ApiGateWay
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
       - ./ApiGateWay:/app
     environment:
