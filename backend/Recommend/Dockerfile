@@ -1,20 +1,31 @@
-# Sử dụng Python 3.9 làm image cơ bản
+# Use the official Python image as a base image
 FROM python:3.9-slim
 
-# Thiết lập thư mục làm việc
+# Install wget and other necessary tools
+RUN apt-get update && \
+    apt-get install -y wget gnupg procps && \
+    apt-get clean
+
+# Install AdoptOpenJDK
+RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
+    add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
+    apt-get update && \
+    apt-get install -y adoptopenjdk-11-hotspot && \
+    apt-get clean
+
+# Set JAVA_HOME environment variable
+ENV JAVA_HOME /usr/lib/jvm/adoptopenjdk-11-hotspot-amd64
+ENV PATH $JAVA_HOME/bin:$PATH
+
+# Set the working directory
 WORKDIR /app
 
-# Sao chép yêu cầu vào thư mục làm việc
-COPY requirements.txt .
+# Copy the requirements file and install dependencies
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-# Cài đặt các gói yêu cầu
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Sao chép toàn bộ nội dung của dự án vào thư mục làm việc
+# Copy the application code
 COPY . .
 
-# Mở cổng cho Flask
-EXPOSE 5000
-
-# Chạy ứng dụng
+# Command to run the application
 CMD ["python", "app.py"]

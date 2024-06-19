@@ -4,7 +4,8 @@ const {
     getAllCategories,
     getCategoryById,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    importData
 } = require("../controller/categoryController");
 const router = express.Router();
 
@@ -13,5 +14,5 @@ router.get("/", getAllCategories);
 router.get("/:id", getCategoryById);
 router.put("/:id", updateCategory);
 router.delete("/:id", deleteCategory);
-
+router.post("/importData", importData)
 module.exports = router;

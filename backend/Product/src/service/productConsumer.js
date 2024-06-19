@@ -21,8 +21,29 @@ async function handleProductDetailsRequest({ productId }) {
     logger.error('Error handling product details request:', error);
   }
 }
+async function handleProductGetAll(msg) {
+  try {
+    logger.info("Handling product request");
+    const products = await Product.find().lean();
+    if (!products) {
+      throw new Error('Products not found');
+    }
+    console.log("Products found:", products); // Log the products found
 
-console.log("vao day r")
+
+    const response = {
+      products: products
+    };
+
+    await publishToQueue(replyQueue, response);
+    console.log("Message sent to response queue"); // Log after sending the message
+  } catch (error) {
+    logger.error('Error handling product details request:', error);
+  }
+}
+
 // Ensure the consumer starts
+
+consumeQueue('productRequestQueue', handleProductGetAll);
 consumeQueue('productDetailsRequestQueue', handleProductDetailsRequest);
 logger.info("Consumer for productDetailsRequestQueue has started.");

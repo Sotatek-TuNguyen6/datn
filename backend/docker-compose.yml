@@ -63,7 +63,7 @@ services:
       context: ./Category
       dockerfile: Dockerfile
     ports:
-      - "5002:5000"
+      - "5002:5002"
     volumes:
       - ./Category:/app
     environment:
@@ -72,12 +72,13 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+
   chat:
     build:
       context: ./Chat
       dockerfile: Dockerfile
     ports:
-      - "5003:5000"
+      - "5003:5003"
     volumes:
       - ./Chat:/app
     environment:
@@ -93,12 +94,13 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+
   order:
     build:
       context: ./Order
       dockerfile: Dockerfile
     ports:
-      - "5004:5000"
+      - "5004:5004"
     volumes:
       - ./Order:/app
     environment:
@@ -114,12 +116,13 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+
   payment:
     build:
       context: ./Payment
       dockerfile: Dockerfile
     ports:
-      - "5006:5000"
+      - "5006:5006"
     volumes:
       - ./Payment:/app
     environment:
@@ -139,12 +142,13 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+
   product:
     build:
       context: ./Product
       dockerfile: Dockerfile
     ports:
-      - "5001:5000"
+      - "5001:5001"
     volumes:
       - ./Product:/app
     environment:
@@ -158,12 +162,13 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+
   review:
     build:
       context: ./Review
       dockerfile: Dockerfile
     ports:
-      - "5005:5000"
+      - "5005:5005"
     volumes:
       - ./Review:/app
     environment:
@@ -175,12 +180,13 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+
   actions:
     build:
       context: ./Actions
       dockerfile: Dockerfile
     ports:
-      - "5007:5000"
+      - "5007:5007"
     volumes:
       - ./Actions:/app
     environment:
@@ -189,12 +195,28 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+
+  recommender:
+    build:
+      context: ./Recommend
+      dockerfile: Dockerfile
+    ports:
+      - "5008:5008"
+    volumes:
+      - ./Recommend:/app
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+
   apigateway:
     build:
       context: ./ApiGateWay
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
       - ./ApiGateWay:/app
     environment:
@@ -208,6 +230,7 @@ services:
       - review
       - actions
       - chat
+      - recommender
 
 volumes:
   mongo-data:

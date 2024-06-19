@@ -1,5 +1,5 @@
 http:
-  port: 8080
+  port: 8000
 
 https:
   port: 9876
@@ -37,11 +37,15 @@ apiEndpoints:
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     host: "*"
     paths: "/api/v1/actions*"
+  recommender:
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    host: "*"
+    paths: "/api/v1/recommend*"
   chat:
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     host: "*"
     paths: "/*"
-
+ 
 serviceEndpoints:
   httpbin:
     url: "https://httpbin.org"
@@ -51,6 +55,8 @@ serviceEndpoints:
     url: "http://product:5001"
   categoryService:
     url: "http://category:5002"
+  # chatService:
+  #   url: "http://chat:5003"
   orderService:
     url: "http://order:5004"
   reviewService:
@@ -59,8 +65,8 @@ serviceEndpoints:
     url: "http://payment:5006"
   actionsService:
     url: "http://actions:5007"
-  chatService:
-    url: "http://chat:5003"
+  recommenderService:
+    url: "http://recommender:5008"
 policies:
   - cors
   - log
@@ -245,9 +251,51 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: actionsService
-  chat:
+  # chat:
+  #   apiEndpoints:
+  #     - chat
+  #   policies:
+  #     - cors:
+  #         - action:
+  #             origin: "*"
+  #             credentials: true
+  #             methods: GET,POST,PUT,DELETE,OPTIONS
+  #             allowedHeaders:
+  #               [
+  #                 "Content-type",
+  #                 "Authorization",
+  #                 "Origin",
+  #                 "Access-Control-Allow-Origin",
+  #                 "Accept",
+  #                 "Options",
+  #               ]
+  #             exposedHeaders:
+  #               [
+  #                 "Content-type",
+  #                 "Authorization",
+  #                 "Origin",
+  #                 "Access-Control-Allow-Origin",
+  #                 "Accept",
+  #                 "Options",
+  #               ]
+  #             #exposedHeaders : ['Content-type','Authorization','Origin','Access-Control-Allow-Origin','Origin', 'Accept', 'X-Requested-With', 'Content-Type', 'Access-Control-Request-Method', 'Access-Control-Request-Headers','Authorization', 'Access-Control-Allow-Origin','X-TEST']
+  #             preflightContinue: false
+  #             optionsSuccessStatus: 204
+  #             #maxAge: 600
+  #     - log:
+  #         - action:
+  #             message: "${req.method} ${req.originalUrl}"
+  #     - request-transformer:
+  #         - action:
+  #             headers:
+  #               add:
+  #                 requestID: "requestID"
+  #     - proxy:
+  #         - action:
+  #             serviceEndpoint: chatService
+  recommender:
     apiEndpoints:
-      - chat
+      - recommender
     policies:
       - cors:
           - action:
@@ -286,4 +334,4 @@ pipelines:
                   requestID: "requestID"
       - proxy:
           - action:
-              serviceEndpoint: chatService
+              serviceEndpoint: recommenderService

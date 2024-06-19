@@ -74,3 +74,19 @@ exports.deleteCategory = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.importData = async (req, res, next) => {
+    try {
+        const { data } = req.body;
+
+        const importedProducts = await Category.insertMany(data);
+
+        res.status(200).json({
+            success: true,
+            message: `${importedProducts.length} products imported successfully`,
+            data: importedProducts
+        });
+    } catch (error) {
+        next(error);
+    }
+}
