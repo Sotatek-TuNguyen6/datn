@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY src src
 COPY logs logs
-COPY index.js package-lock.json package.json ./
+COPY index.js  package.json ./
 # COPY exemple.env ./.env
 
 # RUN npm  cache clear --force

@@ -2139,3 +2139,8 @@
 ::ffff:172.23.0.13 - - [19/Jun/2024:07:10:41 +0000] "POST /api/v1/product/importData HTTP/1.1" 200 28653 "-" "PostmanRuntime/7.37.3"
 ::ffff:172.23.0.13 - - [19/Jun/2024:07:10:58 +0000] "POST /api/v1/product/importData HTTP/1.1" 200 7682 "-" "PostmanRuntime/7.37.3"
 ::ffff:192.168.0.14 - - [19/Jun/2024:10:56:48 +0000] "GET /api/v1/product HTTP/1.1" 200 431499 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+::ffff:172.18.0.13 - - [19/Jun/2024:16:41:42 +0000] "GET /api/v1/product HTTP/1.1" 200 430755 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::ffff:172.19.0.14 - - [19/Jun/2024:17:14:10 +0000] "GET /api/v1/product HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::ffff:172.19.0.14 - - [19/Jun/2024:17:15:27 +0000] "GET /api/v1/product HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::ffff:172.21.0.7 - - [19/Jun/2024:17:26:42 +0000] "GET /api/v1/product HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::ffff:172.21.0.7 - - [19/Jun/2024:17:39:57 +0000] "GET /api/v1/product HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"

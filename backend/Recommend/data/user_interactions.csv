@@ -1,6 +1,13 @@
 user_id,item_id,interaction
 1,6671b02eabcdcba57f9fe5e3,click
-1,6671b02eabcdcba57f9fe5e4,add_to_cart
+1,16671b02eabcdcba57f9fe5dd,click
+1,6671afe8abcdcba57f9fe5d2,click
+1,6671b02eabcdcba57f9fe5df,click
+1,6671b02eabcdcba57f9fe5dc,click
+1,6671b02eabcdcba57f9fe5da,click
+1,6671b02eabcdcba57f9fe5d9,click
+1,6671b02eabcdcba57f9fe5d7,click
+1,6671afe8abcdcba57f9fe5d4,add_to_cart
 1,6671b02eabcdcba57f9fe5e0,purchase
 2,16671b02eabcdcba57f9fe5dd,click
 2,6671b02eabcdcba57f9fe5db,purchase

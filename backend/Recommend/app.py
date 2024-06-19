@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from models import RecommenderSystem
 
 app = Flask(__name__)
-recommender = RecommenderSystem()
+# recommender = RecommenderSystem()
 
 @app.route('/api/v1/recommend/<int:user_id>', methods=['GET'])
 def recommend(user_id):

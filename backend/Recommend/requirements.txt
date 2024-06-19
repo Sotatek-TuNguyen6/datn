@@ -6,3 +6,4 @@ surprise
 Flask
 pika
 python-dotenv
+requests

@@ -54,12 +54,23 @@ class RpcClient:
         except Exception as e:
             print(f"Error in call method: {e}")
 
-def fetch_data(REQUEST_QUEUE, RESPONSE_QUEUE, message):
+def send_and_receive_all_products():
     try:
         rpc_client = RpcClient()
-        response = rpc_client.call(REQUEST_QUEUE, message)
+        print("Requesting all products...")
+        response = rpc_client.call(REQUEST_QUEUE, {})
         print(response)
+
+        if response:
+            with open('response.json', 'w') as f:
+                json.dump(response, f, indent=4)
+            print("Response written to response.json")
+        
+        if response and 'data' in response:
+            df_items_data = response['data']
+            print(df_items_data)
         return response
     except Exception as e:
-        print(f"Error in fetch_data: {e}")
+        print(f"Error in send_and_receive_all_products: {e}")
         return None
+# send_and_receive_all_products()
