@@ -1,4 +1,4 @@
-const { consumeQueue } = require('../utils/amqp');
+const { consumeQueue, publishToQueue } = require('../utils/amqp');
 const Product = require('../models/productModel');
 const logger = require('../utils/logger');
 const amqp = require('amqplib');
@@ -28,14 +28,13 @@ async function handleProductGetAll(msg) {
     if (!products) {
       throw new Error('Products not found');
     }
-    console.log("Products found:", products); // Log the products found
-
+    console.log("Products found:", products); // Log the products foun
 
     const response = {
       products: products
     };
 
-    await publishToQueue(replyQueue, response);
+    await publishToQueue('productResponseQueue', response);
     console.log("Message sent to response queue"); // Log after sending the message
   } catch (error) {
     logger.error('Error handling product details request:', error);

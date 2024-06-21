@@ -23,6 +23,7 @@ import * as UserService from "../../services/UserService/index";
 import { updateUser } from "../../features/userSlice/userSlice";
 import { addToCart } from "../../features/cart/cartSlice";
 import { formatMoneyVND } from "../../functions/formatVND";
+import { useGetRecommend } from "../../hooks/recommendFetching";
 
 const DetailsPage = (props) => {
   const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
@@ -49,6 +50,10 @@ const DetailsPage = (props) => {
 
   const getListQuery = useGetProductDetail(id);
   const getListReview = useGetReview(id);
+
+  const getListProductRecommend = useGetRecommend(idUser);
+  const { data: detailProductRecommend, isLoading: isLoadingRecommend } = getListProductRecommend;
+
   const { data: detailProduct, isLoading, error } = getListQuery;
   const {
     data: dataReview,
@@ -344,9 +349,8 @@ const DetailsPage = (props) => {
                         return (
                           <li className="list-inline-item">
                             <a
-                              className={`tag ${
-                                activeSize === index ? "active" : ""
-                              }`}
+                              className={`tag ${activeSize === index ? "active" : ""
+                                }`}
                               onClick={() => isActive(index)}
                             >
                               {item}g
@@ -367,9 +371,8 @@ const DetailsPage = (props) => {
                         return (
                           <li className="list-inline-item">
                             <a
-                              className={`tag ${
-                                activeSize === index ? "active" : ""
-                              }`}
+                              className={`tag ${activeSize === index ? "active" : ""
+                                }`}
                               onClick={() => isActive(index)}
                             >
                               {RAM} GB
@@ -390,9 +393,8 @@ const DetailsPage = (props) => {
                         return (
                           <li className="list-inline-item">
                             <a
-                              className={`tag ${
-                                activeSize === index ? "active" : ""
-                              }`}
+                              className={`tag ${activeSize === index ? "active" : ""
+                                }`}
                               onClick={() => isActive(index)}
                             >
                               {SIZE}
@@ -408,9 +410,8 @@ const DetailsPage = (props) => {
                 <div className="d-flex align-items-center">
                   {context.windowWidth > 992 && (
                     <Button
-                      className={`btn-g btn-lg addtocartbtn ${
-                        isAlreadyAddedInCart === true && "no-click"
-                      }`}
+                      className={`btn-g btn-lg addtocartbtn ${isAlreadyAddedInCart === true && "no-click"
+                        }`}
                       onClick={() => handleAddToCart(detailProduct?.data)}
                     >
                       <ShoppingCartOutlinedIcon />
@@ -761,16 +762,16 @@ const DetailsPage = (props) => {
           <div className="relatedProducts homeProductsRow2  pt-5 pb-4">
             <h2 class="hd mb-0 mt-0">Related products</h2>
             <br className="res-hide" />
-            <Slider {...related} className="prodSlider">
-              {relatedProducts.length !== 0 &&
-                relatedProducts.map((product, index) => {
+            {!isLoadingRecommend && <Slider {...related} className="prodSlider">
+              {detailProductRecommend.length !== 0 &&
+                detailProductRecommend.map((product, index) => {
                   return (
                     <div className="item" key={index}>
                       <Product tag={product.type} item={product} />
                     </div>
                   );
                 })}
-            </Slider>
+            </Slider>}
           </div>
         </div>
       </section>

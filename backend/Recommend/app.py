@@ -2,11 +2,12 @@ from flask import Flask, request, jsonify
 from models import RecommenderSystem
 
 app = Flask(__name__)
-recommender = RecommenderSystem()
+# recommender = RecommenderSystem()
 
-@app.route('/api/v1/recommend/<int:user_id>', methods=['GET'])
+@app.route('/api/v1/recommend/<string:user_id>', methods=['GET'])
 def recommend(user_id):
     try:
+        recommender = RecommenderSystem()
         recommendations = recommender.get_hybrid_recommendations(user_id)
         return jsonify(recommendations)
     except Exception as e:

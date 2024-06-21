@@ -1,0 +1,427 @@
+{
+    "actions": [
+        {
+            "_id": "6673b0aae447813fec6e8f59",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671aa76abcdcba57f9fe54a",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T04:31:38.125Z",
+            "updatedAt": "2024-06-20T04:31:38.125Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673b0ade447813fec6e8f5c",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671aa76abcdcba57f9fe54a",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T04:31:41.915Z",
+            "updatedAt": "2024-06-20T04:31:41.915Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673b0b7e447813fec6e8f5f",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671aa76abcdcba57f9fe54b",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T04:31:51.309Z",
+            "updatedAt": "2024-06-20T04:31:51.309Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673b0c5e447813fec6e8f62",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671aa76abcdcba57f9fe54d",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T04:32:05.506Z",
+            "updatedAt": "2024-06-20T04:32:05.506Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673b0cfe447813fec6e8f65",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671aa76abcdcba57f9fe549",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T04:32:15.208Z",
+            "updatedAt": "2024-06-20T04:32:15.208Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673b0d7e447813fec6e8f68",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671aa76abcdcba57f9fe55a",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T04:32:23.376Z",
+            "updatedAt": "2024-06-20T04:32:23.376Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ce70e447813fec6e8f6c",
+            "userId": "6673ce5a791cb1cfc767874f",
+            "productId": "6671aa76abcdcba57f9fe55e",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T06:38:40.452Z",
+            "updatedAt": "2024-06-20T06:38:40.452Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ce77e447813fec6e8f6f",
+            "userId": "6673ce5a791cb1cfc767874f",
+            "productId": "6671b106abcdcba57f9fe5f6",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T06:38:47.860Z",
+            "updatedAt": "2024-06-20T06:38:47.860Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ce83e447813fec6e8f72",
+            "userId": "6673ce5a791cb1cfc767874f",
+            "productId": "6671b2a3abcdcba57f9fe632",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T06:38:59.967Z",
+            "updatedAt": "2024-06-20T06:38:59.967Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ce8be447813fec6e8f75",
+            "userId": "6673ce5a791cb1cfc767874f",
+            "productId": "6671b106abcdcba57f9fe5f8",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T06:39:07.024Z",
+            "updatedAt": "2024-06-20T06:39:07.024Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ce8de447813fec6e8f78",
+            "userId": "6673ce5a791cb1cfc767874f",
+            "productId": "6671b106abcdcba57f9fe5fc",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T06:39:09.774Z",
+            "updatedAt": "2024-06-20T06:39:09.774Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ce8fe447813fec6e8f7b",
+            "userId": "6673ce5a791cb1cfc767874f",
+            "productId": "6671b106abcdcba57f9fe602",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T06:39:11.884Z",
+            "updatedAt": "2024-06-20T06:39:11.884Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673cea4e447813fec6e8f7e",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b6d3abcdcba57f9fe6c9",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T06:39:32.389Z",
+            "updatedAt": "2024-06-20T06:39:32.389Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ceabe447813fec6e8f81",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b6d3abcdcba57f9fe6c2",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T06:39:39.210Z",
+            "updatedAt": "2024-06-20T06:39:39.210Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ceade447813fec6e8f84",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b6d3abcdcba57f9fe6ca",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T06:39:41.986Z",
+            "updatedAt": "2024-06-20T06:39:41.986Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ceafe447813fec6e8f87",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b6d3abcdcba57f9fe6c7",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T06:39:43.908Z",
+            "updatedAt": "2024-06-20T06:39:43.908Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ceb5e447813fec6e8f8a",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b106abcdcba57f9fe5fa",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T06:39:49.853Z",
+            "updatedAt": "2024-06-20T06:39:49.853Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673ceb8e447813fec6e8f8d",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b106abcdcba57f9fe602",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T06:39:52.929Z",
+            "updatedAt": "2024-06-20T06:39:52.929Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673d2eee447813fec6e8f92",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b106abcdcba57f9fe5f6",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T06:57:50.990Z",
+            "updatedAt": "2024-06-20T06:57:50.990Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673d452e447813fec6e8f98",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b106abcdcba57f9fe5f8",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:03:46.817Z",
+            "updatedAt": "2024-06-20T07:03:46.817Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673d551e447813fec6e8f9d",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b106abcdcba57f9fe5fd",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:08:01.219Z",
+            "updatedAt": "2024-06-20T07:08:01.219Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673d5cce447813fec6e8fa0",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671aa76abcdcba57f9fe54a",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:10:04.408Z",
+            "updatedAt": "2024-06-20T07:10:04.408Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673de00e447813fec6e8fa3",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671aa76abcdcba57f9fe54d",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:45:04.166Z",
+            "updatedAt": "2024-06-20T07:45:04.166Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673de20e447813fec6e8fa6",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671b106abcdcba57f9fe601",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:45:36.642Z",
+            "updatedAt": "2024-06-20T07:45:36.642Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673df46e447813fec6e8fad",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671aa76abcdcba57f9fe551",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:50:30.029Z",
+            "updatedAt": "2024-06-20T07:50:30.029Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e06ee447813fec6e8fb4",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b2a3abcdcba57f9fe635",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:55:26.334Z",
+            "updatedAt": "2024-06-20T07:55:26.334Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e07de447813fec6e8fb7",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b33eabcdcba57f9fe675",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:55:41.019Z",
+            "updatedAt": "2024-06-20T07:55:41.019Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e084e447813fec6e8fba",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b33eabcdcba57f9fe678",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:55:48.572Z",
+            "updatedAt": "2024-06-20T07:55:48.572Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e086e447813fec6e8fbd",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b33eabcdcba57f9fe67e",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:55:50.767Z",
+            "updatedAt": "2024-06-20T07:55:50.767Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e088e447813fec6e8fc0",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b33eabcdcba57f9fe681",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:55:52.995Z",
+            "updatedAt": "2024-06-20T07:55:52.995Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e08be447813fec6e8fc3",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b33eabcdcba57f9fe688",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:55:55.228Z",
+            "updatedAt": "2024-06-20T07:55:55.228Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e08ce447813fec6e8fc6",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b33eabcdcba57f9fe685",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:55:56.934Z",
+            "updatedAt": "2024-06-20T07:55:56.934Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e08ee447813fec6e8fc9",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b33eabcdcba57f9fe68d",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:55:58.844Z",
+            "updatedAt": "2024-06-20T07:55:58.844Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e090e447813fec6e8fcc",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b3d5abcdcba57f9fe695",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:00.796Z",
+            "updatedAt": "2024-06-20T07:56:00.796Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e092e447813fec6e8fcf",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b3d5abcdcba57f9fe69b",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:02.980Z",
+            "updatedAt": "2024-06-20T07:56:02.980Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e095e447813fec6e8fd2",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b3d5abcdcba57f9fe6a4",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:05.016Z",
+            "updatedAt": "2024-06-20T07:56:05.016Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e097e447813fec6e8fd5",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b3d5abcdcba57f9fe6ab",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:07.150Z",
+            "updatedAt": "2024-06-20T07:56:07.150Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e099e447813fec6e8fd8",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671b3d5abcdcba57f9fe6ad",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:09.280Z",
+            "updatedAt": "2024-06-20T07:56:09.280Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e0a5e447813fec6e8fdb",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671af8dabcdcba57f9fe5c0",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:21.735Z",
+            "updatedAt": "2024-06-20T07:56:21.735Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e0a8e447813fec6e8fde",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671afe8abcdcba57f9fe5cd",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:24.366Z",
+            "updatedAt": "2024-06-20T07:56:24.366Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e0aae447813fec6e8fe1",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671afe8abcdcba57f9fe5d1",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:26.399Z",
+            "updatedAt": "2024-06-20T07:56:26.399Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e0ade447813fec6e8fe4",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671ad4babcdcba57f9fe5ae",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:29.061Z",
+            "updatedAt": "2024-06-20T07:56:29.061Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e0aee447813fec6e8fe7",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671ad4babcdcba57f9fe5af",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:30.721Z",
+            "updatedAt": "2024-06-20T07:56:30.721Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e0b3e447813fec6e8fea",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671acddabcdcba57f9fe592",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:35.409Z",
+            "updatedAt": "2024-06-20T07:56:35.409Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e0b4e447813fec6e8fed",
+            "userId": "666a5fb7f38117c0cddd81ad",
+            "productId": "6671acddabcdcba57f9fe58c",
+            "actionType": "add_to_cart",
+            "createdAt": "2024-06-20T07:56:36.839Z",
+            "updatedAt": "2024-06-20T07:56:36.839Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e126e447813fec6e8ff0",
+            "userId": "6673ce5a791cb1cfc767874f",
+            "productId": "6671af8dabcdcba57f9fe5c1",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:58:30.600Z",
+            "updatedAt": "2024-06-20T07:58:30.600Z",
+            "__v": 0
+        },
+        {
+            "_id": "6673e14de447813fec6e8ff3",
+            "userId": "6673ce61791cb1cfc7678753",
+            "productId": "6671af8dabcdcba57f9fe5bf",
+            "actionType": "watching",
+            "createdAt": "2024-06-20T07:59:09.690Z",
+            "updatedAt": "2024-06-20T07:59:09.690Z",
+            "__v": 0
+        }
+    ]
+}
