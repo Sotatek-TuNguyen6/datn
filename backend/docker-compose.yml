@@ -36,112 +36,112 @@ services:
       timeout: 5s
       retries: 5
 
-  # account:
-  #   build:
-  #     context: ./Account
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - ./Account:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/account
-  #     - PORT=5000
-  #     - REDIS_HOST=redis
-  #     - REDIS_PORT=6379
-  #     - RABBITMQ_URL=amqp://rabbitmq:5672
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
+  account:
+    build:
+      context: ./Account
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./Account:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/account
+      - PORT=5000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
-  # category:
-  #   build:
-  #     context: ./Category
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5002:5002"
-  #   volumes:
-  #     - ./Category:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/category
-  #     - PORT=5002
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
+  category:
+    build:
+      context: ./Category
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./Category:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/category
+      - PORT=5002
+    depends_on:
+      mongo:
+        condition: service_healthy
 
-  # chat:
-  #   build:
-  #     context: ./Chat
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5003:5003"
-  #   volumes:
-  #     - ./Chat:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/chat
-  #     - PORT=5003
-  #     - REDIS_HOST=redis
-  #     - REDIS_PORT=6379
-  #     - RABBITMQ_URL=amqp://rabbitmq:5672
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
+  chat:
+    build:
+      context: ./Chat
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./Chat:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/chat
+      - PORT=5003
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
-  # order:
-  #   build:
-  #     context: ./Order
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5004:5004"
-  #   volumes:
-  #     - ./Order:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/order
-  #     - PORT=5004
-  #     - REDIS_HOST=redis
-  #     - REDIS_PORT=6379
-  #     - RABBITMQ_URL=amqp://rabbitmq:5672
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
+  order:
+    build:
+      context: ./Order
+      dockerfile: Dockerfile
+    ports:
+      - "5004:5004"
+    volumes:
+      - ./Order:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/order
+      - PORT=5004-
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
-  # payment:
-  #   build:
-  #     context: ./Payment
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5006:5006"
-  #   volumes:
-  #     - ./Payment:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/payment
-  #     - PORT=5006
-  #     - REDIS_HOST=redis
-  #     - REDIS_PORT=6379
-  #     - VNP_TMN_CODE=BFOVPGBI
-  #     - VNP_HASH_SECRET=JPJI1NRURNH39ZRZOWQYKJ3Q7GWL5302
-  #     - VNP_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  #     - VNP_RETURN_URL=http://localhost:3006/orderSuccess
-  #     - RABBITMQ_URL=amqp://rabbitmq:5672
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
+  payment:
+    build:
+      context: ./Payment
+      dockerfile: Dockerfile
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./Payment:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/payment
+      - PORT=5006
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - VNP_TMN_CODE=BFOVPGBI
+      - VNP_HASH_SECRET=JPJI1NRURNH39ZRZOWQYKJ3Q7GWL5302
+      - VNP_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      - VNP_RETURN_URL=http://localhost:3006/orderSuccess
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   product:
     build:
@@ -163,38 +163,38 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  # review:
-  #   build:
-  #     context: ./Review
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5005:5005"
-  #   volumes:
-  #     - ./Review:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/review
-  #     - PORT=5005
-  #     - RABBITMQ_URL=amqp://rabbitmq:5672
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
+  review:
+    build:
+      context: ./Review
+      dockerfile: Dockerfile
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./Review:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/review
+      - PORT=5005
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
-  # actions:
-  #   build:
-  #     context: ./Actions
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5007:5007"
-  #   volumes:
-  #     - ./Actions:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/actions
-  #     - PORT=5007
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
+  actions:
+    build:
+      context: ./Actions
+      dockerfile: Dockerfile
+    ports:
+      - "5007:5007"
+    volumes:
+      - ./Actions:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/actions
+      - PORT=5007
+    depends_on:
+      mongo:
+        condition: service_healthy
 
   recommender:
     build:
@@ -222,14 +222,14 @@ services:
     environment:
       - NODE_ENV=production
     depends_on:
-      # - account
-      # - category
-      # - order
-      # - payment
+      - account
+      - category
+      - order
+      - payment
       - product
-      # - review
-      # - actions
-      # - chat
+      - review
+      - actions
+      - chat
       - recommender
 
 volumes:
