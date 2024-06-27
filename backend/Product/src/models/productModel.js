@@ -46,12 +46,9 @@ const productSchema = mongoose.Schema({
         min: [0, 'Stock quantity cannot be less than 0'],
     },
     categoryId: {
-        type: String,
+        type: mongoose.Schema.ObjectId,
         required: true,
-    },
-    categoryName: {
-        type: String,
-        require: true,
+        ref: 'Category'
     },
     subCategoryName:{
         type: String,

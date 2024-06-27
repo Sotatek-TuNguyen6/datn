@@ -1,5 +1,7 @@
 const amqp = require('amqplib');
 const logger = require('./logger');
+const sendEmail = require('../service/sendMail');
+const Notification = require('../models/NotificationModel');
 
 async function publishToExchange(exchangeName, routingKey, message) {
   try {
@@ -15,7 +17,7 @@ async function publishToExchange(exchangeName, routingKey, message) {
   }
 }
 
-async function consumeFromExchange(exchangeName, queueName, bindingKey, callback) {
+async function consumeFromExchange(exchangeName, queueName, bindingKey) {
   try {
     const connection = await amqp.connect(process.env.RABBITMQ_URL);
     const channel = await connection.createChannel();
@@ -23,12 +25,25 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey, callback
     await channel.assertQueue(queueName, { durable: true });
     await channel.bindQueue(queueName, exchangeName, bindingKey);
 
-    channel.consume(queueName, (msg) => {
+    channel.consume(queueName, async (msg) => {
       if (msg !== null) {
         const messageContent = JSON.parse(msg.content.toString());
         logger.info(`Message received from exchange: ${exchangeName} with routingKey: ${bindingKey}`, { messageContent });
-        callback(messageContent);
+        const dataNew = {
+          userId: messageContent.recipientEmail._id,
+          message: 'test',
+          status: 'sent',
+          sentAt: new Date()
+        }
+        const notification = new Notification(dataNew);
+        await notification.save();
         channel.ack(msg);
+        logger.info('Notification saved to DB', { notification });
+
+        // Phân loại thông điệp và thực hiện hành động tương ứng
+        if (messageContent.type === 'email') {
+          sendEmail(notification, messageContent.recipientEmail.email);
+        } 
       }
     }, { noAck: false });
 
@@ -39,40 +54,4 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey, callback
   }
 }
 
-async function publishToQueue(queueName, message) {
-  try {
-    const connection = await amqp.connect(process.env.RABBITMQ_URL);
-    const channel = await connection.createChannel();
-    await channel.assertQueue(queueName, { durable: true });
-    channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
-    logger.info(`Message sent to queue: ${queueName}`, { message });
-    await channel.close();
-    await connection.close();
-  } catch (error) {
-    logger.error(`Error publishing to queue: ${queueName}`, { error: error.message });
-  }
-}
-
-async function consumeQueue(queueName, callback) {
-  try {
-    const connection = await amqp.connect(process.env.RABBITMQ_URL);
-    const channel = await connection.createChannel();
-    await channel.assertQueue(queueName, { durable: true });
-
-    channel.consume(queueName, (msg) => {
-      if (msg !== null) {
-        const messageContent = JSON.parse(msg.content.toString());
-        logger.info(`Message received from queue: ${queueName}`, { messageContent });
-        callback(messageContent);
-        channel.ack(msg);
-      }
-    }, { noAck: false });
-
-    logger.info(`Started consuming queue: ${queueName}`);
-  } catch (error) {
-    logger.error(`Error consuming queue: ${queueName}`, { error: error.message });
-    throw error;
-  }
-}
-
-module.exports = { publishToQueue, consumeQueue };
+module.exports = { publishToExchange, consumeFromExchange };

@@ -39,3 +39,11 @@ error: Error handling product details request: publishToQueue is not defined {"s
 error: Error handling product details request: publishToQueue is not defined {"stack":"ReferenceError: publishToQueue is not defined\n    at handleProductGetAll (/app/src/service/productConsumer.js:38:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
 error: Error handling product details request: replyQueue is not defined {"stack":"ReferenceError: replyQueue is not defined\n    at handleProductGetAll (/app/src/service/productConsumer.js:38:26)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
 error: Error handling product details request: replyQueue is not defined {"stack":"ReferenceError: replyQueue is not defined\n    at handleProductGetAll (/app/src/service/productConsumer.js:38:26)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error consuming queue: productRequestQueue {"error":"connect ECONNREFUSED 172.20.0.3:5672"}
+error: Error consuming queue: productDetailsRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}
+error: Error consuming queue: productDetailsRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}
+error: Error consuming queue: productRequestQueue {"error":"connect ECONNREFUSED 172.20.0.4:5672"}
+error: Error consuming queue: productRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}
+error: Error consuming queue: productRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}
+error: Error consuming queue: productRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}
+error: Error consuming queue: productRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}

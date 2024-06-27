@@ -5,7 +5,7 @@ const Joi = require("joi");
 const redis = require('redis');
 const util = require('util');
 const redisClient = require("../utils/redisClient");
-const { publishToQueue, consumeQueue } = require("../utils/amqp");
+const { publishToQueue, consumeQueue, publishToExchange } = require("../utils/amqp");
 
 // Controller for creating a new account
 exports.createAccount = async (req, res) => {
@@ -57,6 +57,15 @@ exports.createAccount = async (req, res) => {
     const savedAccount = await newAccount.save();
     res.status(201).json(savedAccount);
     logger.info("New account created:", savedAccount);
+
+    const message = {
+      type: 'email',
+      recipientEmail: savedAccount,
+      message: `Welcome ${savedAccount.name}! Your account has been successfully created.`,
+      userToken: '' // Nếu bạn muốn gửi thông báo đẩy, bạn cần token của thiết bị người dùng.
+    };
+    await publishToExchange('notification_exchange', 'account.created', message);
+
   } catch (error) {
     res.status(500).json({ message: "Error creating account", error: error.message });
     logger.error("Error creating account:", error);

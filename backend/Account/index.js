@@ -15,6 +15,7 @@ db();
 
 var accessLogStream = fs.createWriteStream(path.join(__dirname, './logs/access.log'), { flags: 'a' });
 require('./src/service/accountService');
+require('./src/service/accountServiceV2');
 
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('combined', { stream: accessLogStream }));

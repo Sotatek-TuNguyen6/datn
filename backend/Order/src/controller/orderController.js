@@ -1,4 +1,5 @@
 const Order = require('../model/orderModel'); // Adjust the path as needed
+const { publishToExchange, consumeFromExchange } = require('../utils/amqp');
 const logger = require('../utils/logger'); // Adjust the path as needed
 const redisClient = require('../utils/redisClient');
 
@@ -8,7 +9,7 @@ exports.getAllOrders = async (req, res) => {
         const cachedOrders = await redisClient.get('orders');
         if (cachedOrders) {
             const orders = JSON.parse(cachedOrders);
-            if(orders.length > 0){
+            if (orders.length > 0) {
                 res.status(200).json(orders);
                 logger.info("Retrieved all orders from cache");
                 return;
@@ -53,6 +54,15 @@ exports.createOrder = async (req, res) => {
 
         res.status(201).json(savedOrder);
         logger.info("Created new order:", savedOrder);
+
+        await publishToExchange("user_exchange", "user.detail", { userId: req.body.userId });
+
+        let email = ""
+        // Consume message from RabbitMQ
+        consumeFromExchange("user_exchange", "user_queue", "user.detail", async (messageContent) => {
+            email = messageContent
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Error creating order", error: error.message });
         logger.error("Error creating order:", error);

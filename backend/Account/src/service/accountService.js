@@ -11,14 +11,12 @@ async function handleProductDetailsRequest({ userId }) {
             throw new Error('Account not found');
         }
 
-        await publishToQueue('user-info-response', account);
         logger.info('successfully:', account);
     } catch (error) {
         logger.error('Error handling product details request:', error);
     }
 }
 
-console.log("vao day r")
 // Ensure the consumer starts
 consumeQueue('user-info-request', handleProductDetailsRequest);
 logger.info("Consumer for productDetailsRequestQueue has started.");
