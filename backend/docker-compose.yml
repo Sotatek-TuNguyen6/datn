@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   mongo:
     image: mongo:latest
@@ -12,9 +11,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - my_network
-
   rabbitmq:
     image: rabbitmq:management
     ports:
@@ -25,9 +21,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - my_network
-
   redis:
     image: redis:latest
     ports:
@@ -39,11 +32,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - my_network
 
   account:
-    image: ntu11022002/account:latest
+    build:
+      context: ./Account
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     volumes:
@@ -55,14 +48,17 @@ services:
       - REDIS_PORT=6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
-      - mongo
-      - redis
-      - rabbitmq
-    networks:
-      - my_network
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   notification:
-    image: ntu11022002/notification:latest
+    build:
+      context: ./Notification
+      dockerfile: Dockerfile
     ports:
       - "5009:5009"
     volumes:
@@ -71,35 +67,36 @@ services:
       - MONGODB_URL=mongodb://mongo:27017/notification
       - PORT=5009
       - RABBITMQ_URL=amqp://rabbitmq:5672
-      - EMAIL_USER=nguyendinhtu11022002@gmail.com
-      - EMAIL_PASS=dipotwokkbgjlryq
     depends_on:
-      - mongo
-      - rabbitmq
-    networks:
-      - my_network
+      mongo:
+        condition: service_healthy
 
-  chat:
-    image: ntu11022002/chat:latest
-    ports:
-      - "5003:5003"
-    volumes:
-      - ./Chat:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/chat
-      - PORT=5003
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-    depends_on:
-      - mongo
-      - redis
-      - rabbitmq
-    networks:
-      - my_network
+  # chat:
+  #   build:
+  #     context: ./Chat
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5003:5003"
+  #   volumes:
+  #     - ./Chat:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/chat
+  #     - PORT=5003
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #     - RABBITMQ_URL=amqp://rabbitmq:5672
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
 
   order:
-    image: ntu11022002/order:latest
+    build:
+      context: ./Order
+      dockerfile: Dockerfile
     ports:
       - "5004:5004"
     volumes:
@@ -111,14 +108,17 @@ services:
       - REDIS_PORT=6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
-      - mongo
-      - redis
-      - rabbitmq
-    networks:
-      - my_network
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   payment:
-    image: ntu11022002/payment:latest
+    build:
+      context: ./Payment
+      dockerfile: Dockerfile
     ports:
       - "5006:5006"
     volumes:
@@ -134,75 +134,83 @@ services:
       - VNP_RETURN_URL=http://localhost:3006/orderSuccess
       - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
-      - mongo
-      - redis
-      - rabbitmq
-    networks:
-      - my_network
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
-  product:
-    image: ntu11022002/product:latest
-    ports:
-      - "5001:5001"
-    volumes:
-      - ./Product:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/product
-      - PORT=5001
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-    depends_on:
-      - mongo
-      - rabbitmq
-    networks:
-      - my_network
+  # product:
+  #   build:
+  #     context: ./Product
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5001:5001"
+  #   volumes:
+  #     - ./Product:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/product
+  #     - PORT=5001
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #     - RABBITMQ_URL=amqp://rabbitmq:5672
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
 
-  review:
-    image: ntu11022002/review:latest
-    ports:
-      - "5005:5005"
-    volumes:
-      - ./Review:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/review
-      - PORT=5005
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-    depends_on:
-      - mongo
-      - rabbitmq
-    networks:
-      - my_network
+  # review:
+  #   build:
+  #     context: ./Review
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5005:5005"
+  #   volumes:
+  #     - ./Review:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/review
+  #     - PORT=5005
+  #     - RABBITMQ_URL=amqp://rabbitmq:5672
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
 
-  actions:
-    image: ntu11022002/actions:latest
-    ports:
-      - "5007:5007"
-    volumes:
-      - ./Actions:/app
-    environment:
-      - MONGODB_URL=mongodb://mongo:27017/actions
-      - PORT=5007
-    depends_on:
-      - mongo
-    networks:
-      - my_network
+  # actions:
+  #   build:
+  #     context: ./Actions
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5007:5007"
+  #   volumes:
+  #     - ./Actions:/app
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongo:27017/actions
+  #     - PORT=5007
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
 
-  recommender:
-    image: ntu11022002/recommender:latest
-    ports:
-      - "5008:5008"
-    volumes:
-      - ./Recommend:/app
-    environment:
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-    depends_on:
-      - rabbitmq
-    networks:
-      - my_network
-
+  # recommender:
+  #   build:
+  #     context: ./Recommend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5008:5008"
+  #   volumes:
+  #     - ./Recommend:/app
+  #   environment:
+  #     - RABBITMQ_URL=amqp://rabbitmq:5672
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
   apigateway:
-    image: ntu11022002/apigateway:latest
+    build:
+      context: ./ApiGateWay
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     volumes:
@@ -211,21 +219,18 @@ services:
       - NODE_ENV=production
     depends_on:
       - account
-      - notification
+      # - category
       - order
       - payment
-      - product
-      - review
-      - actions
-      - chat
-      - recommender
-    networks:
-      - my_network
+      # - product
+      # - review
+      # - actions
+      # - chat
+      # - recommender
 
 volumes:
   mongo-data:
   redis-data:
-
 networks:
-  my_network:
-    driver: bridge
+  default:
+    name: my_network

@@ -29,5 +29,5 @@ app.use((err, req, res, next) => {
     res.status(500).json({ success: false, message: "An unexpected error occurred", error: err.message });
 });
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server payment runing on port ${port}`);
 });

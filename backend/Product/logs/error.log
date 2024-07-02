@@ -47,3 +47,5 @@ error: Error consuming queue: productRequestQueue {"error":"getaddrinfo ENOTFOUN
 error: Error consuming queue: productRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}
 error: Error consuming queue: productRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}
 error: Error consuming queue: productRequestQueue {"error":"getaddrinfo ENOTFOUND rabbitmq"}
+error: Error consuming queue: productRequestQueue {"error":"connect ECONNREFUSED 172.25.0.4:5672"}
+error: Error consuming queue: productRequestQueue {"error":"connect ECONNREFUSED 172.20.0.4:5672"}

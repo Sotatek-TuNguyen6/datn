@@ -1,6 +1,6 @@
 const amqp = require('amqplib');
 const logger = require('./logger');
-const sendEmail = require('../service/sendMail');
+const { sendEmail, sendEmailOrder } = require('../service/sendMail');
 const Notification = require('../models/NotificationModel');
 
 async function publishToExchange(exchangeName, routingKey, message) {
@@ -30,7 +30,7 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey) {
         const messageContent = JSON.parse(msg.content.toString());
         logger.info(`Message received from exchange: ${exchangeName} with routingKey: ${bindingKey}`, { messageContent });
         const dataNew = {
-          userId: messageContent.recipientEmail._id,
+          userId: messageContent?.recipientEmail?._id ? messageContent.recipientEmail._id : messageContent.userId,
           message: 'test',
           status: 'sent',
           sentAt: new Date()
@@ -40,10 +40,11 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey) {
         channel.ack(msg);
         logger.info('Notification saved to DB', { notification });
 
-        // Phân loại thông điệp và thực hiện hành động tương ứng
         if (messageContent.type === 'email') {
           sendEmail(notification, messageContent.recipientEmail.email);
-        } 
+        } else if (messageContent.type === "orderSuccess") {
+          sendEmailOrder(messageContent, messageContent.emailUser)
+        }
       }
     }, { noAck: false });
 

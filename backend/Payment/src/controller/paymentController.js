@@ -4,7 +4,7 @@ const querystring = require("qs");
 const sha256 = require("sha256");
 const qs = require('qs');
 const crypto = require('crypto');
-const { publishToQueue, consumeQueue } = require('../utils/amqp');
+const { publishToQueue, consumeQueue, publishToExchange, consumeFromExchange } = require('../utils/amqp');
 const PaymentModel = require("../model/paymentModel")
 // Create a new payment
 
@@ -60,78 +60,88 @@ function sortObject(obj) {
     return sorted;
 }
 exports.createPayment = async (req, res) => {
-    let dateFormat;
+
     try {
-        dateFormat = await import('dateformat');
-    } catch (err) {
-        return res.status(500).json({ message: 'Failed to load dateformat module' });
-    }
-    let ipAddr =
-        req.headers['x-forwarded-for'] ||
-        req.connection.remoteAddress ||
-        req.socket.remoteAddress ||
-        req.connection.socket.remoteAddress;
+       
+        let ipAddr = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
 
-    const orderDetails = req.body.orderDetails
-    var amount = req.body.amount;
-    var bankCode = "VNBANK";
-    const userId = req.body.userId
-    var currCode = 'VND';
+        const orderDetails = req.body.orderDetails;
+        var emailUser = req.body.email;
+        var amount = req.body.amount;
+        var bankCode = "VNBANK";
+        const userId = req.body.userId;
+        var currCode = 'VND';
 
-    var locale = req.body.language;
-    if (locale === null || locale === '') {
-        locale = 'vn';
-    }
-    await publishToQueue('orderCreateRequestQueue', {
-        userId: userId,
-        products: orderDetails
-    });
-
-    await consumeQueue('orderCreateResponseQueue', async (messageContent) => {
-        const { orderId } = messageContent;
-        var orderInfo = `Nap tien cho userID: ${userId}. So tien ${amount} VND`;
-        var orderType = 'thanhtoan';
-        const paymentNew = new PaymentModel({
-            amount,
-            currency: currCode,
-            paymentMethod: 'VNPAY',
-            status: 'pending',
-            orderId,
-            orderInfo
-        })
-        await paymentNew.save();
-
-        let vnpUrl = url;
-        let date = new Date();
-        let createDate = moment(date).format('YYYYMMDDHHmmss');
-        var vnp_Params = {};
-        vnp_Params['vnp_Version'] = '2.1.0';
-        vnp_Params['vnp_Command'] = 'pay';
-        vnp_Params['vnp_TmnCode'] = tmnCode;
-        vnp_Params['vnp_Locale'] = locale;
-        vnp_Params['vnp_CurrCode'] = currCode;
-        vnp_Params['vnp_TxnRef'] = orderId;
-        vnp_Params['vnp_OrderInfo'] = orderInfo;
-        vnp_Params['vnp_OrderType'] = orderType;
-        vnp_Params['vnp_Amount'] = amount * 100;
-        vnp_Params['vnp_ReturnUrl'] = returnUrl;
-        vnp_Params['vnp_IpAddr'] = ipAddr;
-        vnp_Params['vnp_CreateDate'] = createDate;
-        if (bankCode !== null && bankCode !== '') {
-            vnp_Params['vnp_BankCode'] = bankCode;
+        var locale = req.body.language;
+        if (!locale) {
+            locale = 'vn';
         }
 
-        vnp_Params = sortObject(vnp_Params);
+        await publishToExchange('orderExchange', 'order.create', {
+            userId: userId,
+            products: orderDetails,
+            amount,
+            emailUser
+        });
 
-        var signData = querystring.stringify(vnp_Params, { encode: false });
-        var hmac = crypto.createHmac("sha512", secretKey);
-        var signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
-        vnp_Params['vnp_SecureHash'] = signed;
-        vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
+        const orderCreateResponseHandler = async (messageContent) => {
+            try {
+                const { orderId } = messageContent;
+                var orderInfo = `Nap tien cho userID: ${userId}. So tien ${amount} VND`;
+                var orderType = 'thanhtoan';
 
-        res.status(200).json({ code: '00', data: vnpUrl });
-    });
+                const paymentNew = new PaymentModel({
+                    amount,
+                    currency: currCode,
+                    paymentMethod: 'VNPAY',
+                    status: 'pending',
+                    orderId,
+                    orderInfo
+                });
+
+                await paymentNew.save();
+
+                let vnpUrl = url;
+                let date = new Date();
+                let createDate = moment(date).format('YYYYMMDDHHmmss');
+                var vnp_Params = {};
+                vnp_Params['vnp_Version'] = '2.1.0';
+                vnp_Params['vnp_Command'] = 'pay';
+                vnp_Params['vnp_TmnCode'] = tmnCode;
+                vnp_Params['vnp_Locale'] = locale;
+                vnp_Params['vnp_CurrCode'] = currCode;
+                vnp_Params['vnp_TxnRef'] = orderId;
+                vnp_Params['vnp_OrderInfo'] = orderInfo;
+                vnp_Params['vnp_OrderType'] = orderType;
+                vnp_Params['vnp_Amount'] = amount * 100;
+                vnp_Params['vnp_ReturnUrl'] = returnUrl;
+                vnp_Params['vnp_IpAddr'] = ipAddr;
+                vnp_Params['vnp_CreateDate'] = createDate;
+                if (bankCode) {
+                    vnp_Params['vnp_BankCode'] = bankCode;
+                }
+
+                vnp_Params = sortObject(vnp_Params);
+
+                var signData = querystring.stringify(vnp_Params, { encode: false });
+                var hmac = crypto.createHmac("sha512", secretKey);
+                var signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
+                vnp_Params['vnp_SecureHash'] = signed;
+                vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
+
+                return res.status(200).json({ code: '00', data: vnpUrl });
+            } catch (error) {
+                return res.status(500).json({ message: 'Failed to process payment', error: error.message });
+            }
+        };
+        await consumeFromExchange('orderExchange', 'order.create.response', 'orderResponseQueue', orderCreateResponseHandler);
+        // return res.json({message: "ok"});
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
 };
+
+
 
 // Get all payments
 exports.getAllPayments = async (req, res) => {

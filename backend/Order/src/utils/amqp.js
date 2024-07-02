@@ -14,27 +14,26 @@ async function publishToExchange(exchangeName, routingKey, message) {
     logger.error(`Error publishing to exchange: ${exchangeName}`, { error: error.message });
   }
 }
-async function consumeFromExchange(exchangeName, queueName, bindingKey, callback) {
+async function consumeFromExchange(exchangeName, routingKey, queueName, messageHandler) {
   try {
     const connection = await amqp.connect(process.env.RABBITMQ_URL);
     const channel = await connection.createChannel();
     await channel.assertExchange(exchangeName, 'topic', { durable: true });
-    await channel.assertQueue(queueName, { durable: true });
-    await channel.bindQueue(queueName, exchangeName, bindingKey);
+    const q = await channel.assertQueue(queueName, { durable: true });
+    await channel.bindQueue(q.queue, exchangeName, routingKey);
 
-    channel.consume(queueName, (msg) => {
+    channel.consume(q.queue, (msg) => {
       if (msg !== null) {
         const messageContent = JSON.parse(msg.content.toString());
-        logger.info(`Message received from exchange: ${exchangeName} with routingKey: ${bindingKey}`, { messageContent });
-        callback(messageContent);
+        messageHandler(messageContent);
         channel.ack(msg);
+        logger.info(`Message received from exchange: ${exchangeName} with routingKey: ${routingKey}`, { message: messageContent });
       }
-    }, { noAck: false });
+    });
 
-    logger.info(`Started consuming from exchange: ${exchangeName} with bindingKey: ${bindingKey}`);
+    logger.info(`Waiting for messages in queue: ${queueName} with routingKey: ${routingKey}`);
   } catch (error) {
     logger.error(`Error consuming from exchange: ${exchangeName}`, { error: error.message });
-    throw error;
   }
 }
 async function publishToQueue(queueName, message) {
