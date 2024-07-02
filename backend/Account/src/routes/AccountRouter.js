@@ -10,5 +10,8 @@ router.get("/detail/:id", AccountController.getAccountById)
 router.delete("/:id", AccountController.deleteAccount)
 router.post("/:id", protect, AccountController.updateAccount)
 router.put('/wishlist/:product', protect, AccountController.updateWishlist);
+router.post("/update/password", protect, AccountController.updatePassword); 
+router.post("/forgotPassword/email", AccountController.forgotPassword)
+router.post("/reset-password/:token", AccountController.resetPassword);
 
 module.exports = router

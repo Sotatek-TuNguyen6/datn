@@ -1,6 +1,7 @@
 const amqp = require('amqplib');
 const logger = require('./logger');
-const { sendEmail, sendEmailOrder } = require('../service/sendMail');
+const { sendEmail, sendEmailOrder, sendEmailResetPass } = require('../service/sendMail');
+// const {sendEmail, sendEmailResetPass} = require('../service/sendMail');
 const Notification = require('../models/NotificationModel');
 
 async function publishToExchange(exchangeName, routingKey, message) {
@@ -34,7 +35,7 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey) {
           message: 'test',
           status: 'sent',
           sentAt: new Date()
-        }
+        };
         const notification = new Notification(dataNew);
         await notification.save();
         channel.ack(msg);
@@ -43,7 +44,9 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey) {
         if (messageContent.type === 'email') {
           sendEmail(notification, messageContent.recipientEmail.email);
         } else if (messageContent.type === "orderSuccess") {
-          sendEmailOrder(messageContent, messageContent.emailUser)
+          await sendEmailOrder(messageContent, messageContent.emailUser)
+        } else if (messageContent.type === "restPass") {
+          await sendEmailResetPass(messageContent.message, messageContent.recipientEmail.email);
         }
       }
     }, { noAck: false });
@@ -54,5 +57,4 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey) {
     throw error;
   }
 }
-
 module.exports = { publishToExchange, consumeFromExchange };

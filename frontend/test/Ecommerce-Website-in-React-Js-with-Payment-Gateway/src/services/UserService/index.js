@@ -96,3 +96,41 @@ export const updateUser = async (data, access_token) => {
         throw error;
     }
 }
+
+export const updatePassword = async (data, access_token) => {
+    try {
+        const headers = {
+            Authorization: `Bearer ${access_token}`,
+        };
+        const response = await axios.post(
+            `${API_URL}/api/v1/account/update/password`,
+            data,
+            { headers }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating User:', error);
+        throw error;
+    }
+}
+
+export const forgotPassword = async (data) => {
+    try {
+        const sendReq = await axios.post(`${API_URL}/api/v1/account/forgotPassword/email`, { email: data })
+        return sendReq.data;
+    } catch (error) {
+        console.error('Error updating User:', error);
+        throw error;
+    }
+}
+
+export const resetPassword = async (data) => {
+    try {
+        const { passwordNew, token } = data
+        const sendReq = await axios.post(`${API_URL}/api/v1/account/reset-password/${token}`, { passwordNew: passwordNew })
+        return sendReq.data;
+    } catch (error) {
+        console.error('Error updating User:', error);
+        throw error;
+    }
+}

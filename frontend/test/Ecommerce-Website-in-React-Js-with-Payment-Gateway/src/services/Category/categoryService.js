@@ -30,3 +30,12 @@ export const deleteCategory = async (id, access_token) => {
     return res.data;
 };
 
+export const getCategoryDetail = async (id) =>{
+    try {
+        const res = await axios.get(`${API_URL}/api/v1/category/${id}`);
+        return res.data;
+    } catch (error) {
+        console.log('errror: ', error);
+        throw error;
+    }
+}

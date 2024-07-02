@@ -23,13 +23,13 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(helmet());
 app.use(cors());
 
-require('./src/service/productConsumer');
+require('./src/service/productConsumer');   
 
 app.use("/api/v1/product", routerProduct);
 app.use("/api/v1/category", categoryRouter);
 
 app.use((err, req, res, next) => {
-    logger.error(err);
+    logger.error(err);  
     res.status(500).json({ success: false, message: "An unexpected error occurred", error: err.message });
 });
 app.listen(port, () => {

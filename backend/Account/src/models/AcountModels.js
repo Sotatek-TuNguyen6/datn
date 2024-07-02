@@ -4,7 +4,7 @@ const AccountSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true, 
+    trim: true,
   },
   username: {
     type: String,
@@ -15,11 +15,11 @@ const AccountSchema = mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true, 
+    unique: true,
     trim: true,
     lowercase: true,
     validate: {
-      validator: (email) => /^([^\s@]+@[^\s@]+\.[^\s@]+)$/.test(email), 
+      validator: (email) => /^([^\s@]+@[^\s@]+\.[^\s@]+)$/.test(email),
       message: "Please enter a valid email address.",
     },
   },
@@ -34,11 +34,11 @@ const AccountSchema = mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8, 
+    minlength: 8,
   },
   role: {
     type: String,
-    enum: ["customer", "admin"], 
+    enum: ["customer", "admin"],
     default: "customer",
   },
   addresses: [
@@ -56,6 +56,8 @@ const AccountSchema = mongoose.Schema({
       type: String,
     },
   ],
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 });
 // Login
 AccountSchema.methods.matchPassword = async function (enterPassword) {
@@ -65,9 +67,14 @@ AccountSchema.methods.matchPassword = async function (enterPassword) {
 // Register
 AccountSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    next();
+    return next();
   }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  const isHashed = this.password.startsWith('$2b$');
+  if (!isHashed) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+
+  next();
 });
 module.exports = mongoose.model("Account", AccountSchema);

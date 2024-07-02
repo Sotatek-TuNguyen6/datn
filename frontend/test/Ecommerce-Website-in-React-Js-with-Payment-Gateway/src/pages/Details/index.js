@@ -193,7 +193,7 @@ const DetailsPage = (props) => {
 
   return (
     <>
-      {context.windowWidth < 992 && (
+      {/* {context.windowWidth < 992 && (
         <Button
           className={`btn-g btn-lg w-100 filterBtn {isAlreadyAddedInCart===true && 'no-click'}`}
           onClick={() => handleAddToCart(detailProduct?.data)}
@@ -201,7 +201,7 @@ const DetailsPage = (props) => {
           <ShoppingCartOutlinedIcon />
           {"Add To Cart"}
         </Button>
-      )}
+      )} */}
 
       {isLoading && (
         <div className="loader">
@@ -333,13 +333,13 @@ const DetailsPage = (props) => {
                 </div>
               </div>
 
-              {/* <div>
+              <div>
                 <p
                   dangerouslySetInnerHTML={{
                     __html: detailProduct?.data?.description,
                   }}
                 ></p>
-              </div> */}
+              </div>
               {detailProduct?.data?.weight !== undefined &&
                 detailProduct?.data?.weight.length !== 0 && (
                   <div className="productSize d-flex align-items-center">
@@ -408,16 +408,14 @@ const DetailsPage = (props) => {
 
               <div className="d-flex align-items-center">
                 <div className="d-flex align-items-center">
-                  {context.windowWidth > 992 && (
-                    <Button
-                      className={`btn-g btn-lg addtocartbtn ${isAlreadyAddedInCart === true && "no-click"
-                        }`}
-                      onClick={() => handleAddToCart(detailProduct?.data)}
-                    >
-                      <ShoppingCartOutlinedIcon />
-                      {"Add To Cart"}
-                    </Button>
-                  )}
+                  <Button
+                    className={`btn-g btn-lg addtocartbtn ${isAlreadyAddedInCart === true && "no-click"
+                      }`}
+                    onClick={() => handleAddToCart(detailProduct?.data)}
+                  >
+                    <ShoppingCartOutlinedIcon />
+                    {"Add To Cart"}
+                  </Button>
                   <Button
                     className=" btn-lg addtocartbtn  ml-3  wishlist btn-border"
                     onClick={() => handleAddWishList(detailProduct?.data)}
@@ -763,8 +761,8 @@ const DetailsPage = (props) => {
             <h2 class="hd mb-0 mt-0">Related products</h2>
             <br className="res-hide" />
             {!isLoadingRecommend && <Slider {...related} className="prodSlider">
-              {detailProductRecommend.length !== 0 &&
-                detailProductRecommend.map((product, index) => {
+              {detailProductRecommend?.length !== 0 &&
+                detailProductRecommend?.map((product, index) => {
                   return (
                     <div className="item" key={index}>
                       <Product tag={product.type} item={product} />

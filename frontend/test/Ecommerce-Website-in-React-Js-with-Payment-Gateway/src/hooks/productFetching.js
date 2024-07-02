@@ -25,4 +25,15 @@ function useGetProductDetail(id) {
     return getListQuery;
 }
 
-export { useGetProduct, useGetProductDetail };
+function useGetProductByCategory(categoryId){
+    const getListQuery = useQuery({
+        queryKey: ['productByCategory', categoryId],
+        queryFn: () => ProductService.getProductByCategory(categoryId),
+        cacheTime: 5000,
+        refetchOnWindowFocus: false,
+        staleTime: 5000,
+        refetchInterval: 60000,
+    });
+    return getListQuery;
+}
+export { useGetProduct, useGetProductDetail, useGetProductByCategory };

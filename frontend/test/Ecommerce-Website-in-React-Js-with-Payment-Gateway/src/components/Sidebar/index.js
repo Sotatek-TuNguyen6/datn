@@ -22,11 +22,13 @@ function valuetext(value) {
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const Sidebar = (props) => {
+  const { handleSubCategoryClick } = props;
   const [value, setValue] = useState([100, 60000]);
   const [value2, setValue2] = useState(0);
   const [brandFilters, setBrandFilters] = React.useState([]);
   const [ratingsArr, setRatings] = React.useState([]);
   const [totalLength, setTotalLength] = useState([]);
+  const [data, setData] = useState(props.data);
 
   const context = useContext(MyContext);
 
@@ -37,74 +39,97 @@ const Sidebar = (props) => {
 
   var catLength = 0;
   var lengthArr = [];
-  useEffect(() => {
-    props.data.length !== 0 &&
-      props.data.map((item, index) => {
-        item.items.length !== 0 &&
-          item.items.map((item_) => {
-            catLength += item_.products.length;
-          });
-        lengthArr.push(catLength);
-        catLength = 0;
-      });
 
-    const list = lengthArr.filter(
-      (item, index) => lengthArr.indexOf(item) === index
-    );
-    setTotalLength(list);
-  }, []);
+  // useEffect(() => {
+  //   if (props?.data?.data && props.products && Array.isArray(props.data.data.subCategories)) {
+  //     const updatedSubCategories = props.data.data.subCategories.map(subCategory => {
+  //       const countProducts = props.products.filter(product =>
+  //         product.categoryId._id === id && product.subCategoryName === subCategory.subCategoryName
+  //       ).length;
 
-  useEffect(() => {
-    brands = [];
-    ratings = [];
-    props.currentCatData.length !== 0 &&
-      props.currentCatData.map((item) => {
-        brands.push(item.brand);
-        ratings.push(parseFloat(item.rating));
-      });
+  //       return {
+  //         ...subCategory,
+  //         countProducts
+  //       };
+  //     });
 
-    const brandList = brands.filter(
-      (item, index) => brands.indexOf(item) === index
-    );
-    setBrandFilters(brandList);
+  //     setData({
+  //       ...props.data,
+  //       data: {
+  //         ...props.data.data,
+  //         subCategories: updatedSubCategories
+  //       }
+  //     });
+  //   }
+  // }, [props, id]);
+  // useEffect(() => {
+  //   props.data.data.length !== 0 &&
+  //     props.data.data.map((item, index) => {
+  //       item.items.length !== 0 &&
+  //         item.items.map((item_) => {
+  //           catLength += item_.products.length;
+  //         });
+  //       lengthArr.push(catLength);
+  //       catLength = 0;
+  //     });
 
-    const ratings_ = ratings.filter(
-      (item, index) => ratings.indexOf(item) === index
-    );
-    setRatings(ratings_);
-  }, [id]);
+  //   const list = lengthArr.filter(
+  //     (item, index) => lengthArr.indexOf(item) === index
+  //   );
+  //   setTotalLength(list);
+  // }, []);
 
-  useEffect(() => {
-    var price = 0;
-    props.currentCatData.length !== 0 &&
-      props.currentCatData.map((item, index) => {
-        let prodPrice = parseInt(item.price.toString().replace(/,/g, ""));
-        if (prodPrice > price) {
-          price = prodPrice;
-        }
-      });
+  // useEffect(() => {
+  //   brands = [];
+  //   ratings = [];
+  //   props.currentCatData.length !== 0 &&
+  //     props.currentCatData.map((item) => {
+  //       brands.push(item.brand);
+  //       ratings.push(parseFloat(item.rating));
+  //     });
 
-    setValue2(price);
+  //   const brandList = brands.filter(
+  //     (item, index) => brands.indexOf(item) === index
+  //   );
+  //   setBrandFilters(brandList);
 
-    //setValue(price);
-    //filterByPrice(price[0], price[1]);
-  }, [props.currentCatData]);
+  //   const ratings_ = ratings.filter(
+  //     (item, index) => ratings.indexOf(item) === index
+  //   );
+  //   setRatings(ratings_);
+  // }, [id]);
 
-  const filterByBrand = (keyword) => {
-    props.filterByBrand(keyword);
-  };
+  // useEffect(() => {
+  //   var price = 0;
+  //   props.currentCatData.length !== 0 &&
+  //     props.currentCatData.map((item, index) => {
+  //       let prodPrice = parseInt(item.price.toString().replace(/,/g, ""));
+  //       if (prodPrice > price) {
+  //         price = prodPrice;
+  //       }
+  //     });
 
-  const filterByRating = (keyword) => {
-    props.filterByRating(parseFloat(keyword));
-  };
+  //   setValue2(price);
 
-  useEffect(() => {
-    filterByPrice(value[0], value[1]);
-  }, [value]);
+  //   //setValue(price);
+  //   //filterByPrice(price[0], price[1]);
+  // }, [props.currentCatData]);
 
-  const filterByPrice = (minValue, maxValue) => {
-    props.filterByPrice(minValue, maxValue);
-  };
+  // const filterByBrand = (keyword) => {
+  //   props.filterByBrand(keyword);
+  // };
+
+  // const filterByRating = (keyword) => {
+  //   props.filterByRating(parseFloat(keyword));
+  // };
+
+  // useEffect(() => {
+  //   filterByPrice(value[0], value[1]);
+  // }, [value]);
+
+  // const filterByPrice = (minValue, maxValue) => {
+  //   props.filterByPrice(minValue, maxValue);
+  // };
 
   return (
     <>
@@ -112,10 +137,10 @@ const Sidebar = (props) => {
         <div className="card border-0 shadow res-hide">
           <h3>Category</h3>
           <div className="catList">
-            {props.data.length !== 0 &&
-              props.data.map((item, index) => {
+            {props?.data?.subCategories.length !== 0 &&
+              props.data?.subCategories.map((item, index) => {
                 return (
-                  <Link to={`/cat/${item.cat_name.toLowerCase()}`}>
+                  <Link to={``} onClick={() => handleSubCategoryClick(item.subCategoryName)}>
                     <div className="catItem d-flex align-items-center">
                       <span className="img">
                         <img
@@ -124,10 +149,10 @@ const Sidebar = (props) => {
                         />
                       </span>
                       <h4 className="mb-0 ml-3 mr-3 text-capitalize">
-                        {item.cat_name}
+                        {item.subCategoryName}
                       </h4>
-                      <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
-                        {totalLength[index]}
+                       <span className="d-flex align-items-center justify-content-center rounded-circle ml-auto">
+                        {item.countProducts}
                       </span>
                     </div>
                   </Link>
@@ -136,7 +161,7 @@ const Sidebar = (props) => {
           </div>
         </div>
 
-        <div className="card border-0 shadow">
+        {/* <div className="card border-0 shadow">
           <h3>Fill by price</h3>
 
           <RangeSlider
@@ -219,7 +244,7 @@ const Sidebar = (props) => {
               <FilterAltOutlinedIcon /> Filter
             </Button>
           </div>
-        </div>
+        </div> */}
 
         <img src={bannerImg} className="w-100" />
       </div>
