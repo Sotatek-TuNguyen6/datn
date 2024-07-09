@@ -41,8 +41,34 @@ async function handleProductGetAll(msg) {
   }
 }
 
+const checkQuantityStock = async (products) => {
+  try {
+    const productIds = products.map(product => product.productId);
+    const quantities = products.map(product => product.quantity);
+
+    const productCheck = await Product.find({ _id: { $in: productIds } });
+
+    for (let i = 0; i < products.length; i++) {
+      const productId = productIds[i];
+      const quantityRequired = quantities[i];
+      const product = productCheck.find(p => p._id.toString() === productId.toString());
+
+      if (!product || product.stock < quantityRequired) {
+        return false;
+      }
+    }
+
+    return true;
+  } catch (error) {
+    logger.error('Error checking product stock: ' + error.message);
+    return false;
+  }
+};
 // Ensure the consumer starts
 
-consumeQueue('productRequestQueue', handleProductGetAll);
-consumeQueue('productDetailsRequestQueue', handleProductDetailsRequest);
+// consumeQueue('productRequestQueue', handleProductGetAll);
+// consumeQueue('productDetailsRequestQueue', handleProductDetailsRequest);
 logger.info("Consumer for productDetailsRequestQueue has started.");
+
+
+module.exports = { checkQuantityStock }

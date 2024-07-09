@@ -32,6 +32,20 @@ app.use((err, req, res, next) => {
 });
 app.listen(port, () => {
     console.log(`Server payment runing on port ${port}`);
-    consumeFromExchange("orderExchange", 'order.create', 'orderQueue', handleCreatePaymentRequest)
-    consumeFromExchange("orderExchange", 'order.update', 'orderQueueUpdate', handleUpdateStatusPayment)
+    // consumeFromExchange("orderExchange", 'order.create', 'orderQueue', handleCreatePaymentRequest)
+    // consumeFromExchange("orderExchange", 'order.update', 'orderQueueUpdate', handleUpdateStatusPayment)
+    consumeFromExchange('orderExchange', 'inventory.reserved', 'paymentQueue', async (message) => {
+        const { amount, orderId, products, userId } = message;
+        try {
+            const paymentSuccessful = await handleCreatePaymentRequest({ userId, orderId, products, amount });
+
+            if (paymentSuccessful) {
+                await publishToExchange('orderExchange', 'payment.completed', {  userId, orderId, products, amount, type: "orderSuccess"  });
+            } else {
+                await publishToExchange('orderExchange', 'payment.failed', { orderId });
+            }
+        } catch (error) {
+            logger.error(`Error processing inventory.reserved event for order ${orderId}`, { error: error.message });
+        }
+    });
 });

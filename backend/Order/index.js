@@ -7,6 +7,9 @@ const fs = require('fs');
 const helmet = require("helmet");
 const routerOrder = require("./src/routes/orderRouter");
 const db = require("./src/config/connectDb");
+const Order = require("./src/model/orderModel");
+const { consumeFromExchange } = require("./src/utils/amqp");
+const logger = require("./src/utils/logger");
 const app = express();
 
 dotenv.config();
@@ -28,6 +31,71 @@ app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ success: false, message: "An unexpected error occurred", error: err.message });
 });
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`Server running on port ${port}`);
+
+    await consumeFromExchange('orderExchange', 'orderQueue', 'inventory.reservation_failed', async (message) => {
+        const { orderId } = message;
+        console.log("Received inventory.reservation_failed message:", message);
+        try {
+          const order = await Order.findById(orderId);
+          if (order) {
+            order.status = 'inventory_reservation_failed';
+            await order.save();
+            logger.info(`Order ${orderId} status updated to inventory_reservation_failed`);
+          } else {
+            logger.error(`Order ${orderId} not found`);
+          }
+        } catch (error) {
+          logger.error(`Error processing inventory.reservation_failed for order ${orderId}`, { error: error.message });
+        }
+      });
+
+    // await consumeFromExchange('orderExchange', 'inventory.reserved', 'orderQueue', async (message) => {
+    //     const { orderId } = message;
+    //     try {
+    //         const order = await Order.findById(orderId);
+    //         if (order) {
+    //             order.status = 'inventory_reserved';
+    //             await order.save();
+    //             logger.info(`Order ${orderId} status updated to inventory_reserved`);
+    //         } else {
+    //             logger.error(`Order ${orderId} not found`);
+    //         }
+    //     } catch (error) {
+    //         logger.error(`Error processing inventory.reserved for order ${orderId}`, { error: error.message });
+    //     }
+    // });
+
+    // await consumeFromExchange('orderExchange', 'payment.completed', 'orderQueue', async (message) => {
+    //     const { orderId } = message;
+    //     try {
+    //         const order = await Order.findById(orderId);
+    //         if (order) {
+    //             order.status = 'payment_completed';
+    //             await order.save();
+    //             logger.info(`Order ${orderId} status updated to payment_completed`);
+    //         } else {
+    //             logger.error(`Order ${orderId} not found`);
+    //         }
+    //     } catch (error) {
+    //         logger.error(`Error processing payment.completed for order ${orderId}`, { error: error.message });
+    //     }
+    // });
+
+    // await consumeFromExchange('orderExchange', 'payment.failed', 'orderQueue', async (message) => {
+    //     const { orderId } = message;
+    //     try {
+    //         const order = await Order.findById(orderId);
+    //         if (order) {
+    //             order.status = 'payment_failed';
+    //             await order.save();
+    //             logger.info(`Order ${orderId} status updated to payment_failed`);
+    //         } else {
+    //             logger.error(`Order ${orderId} not found`);
+    //         }
+    //     } catch (error) {
+    //         logger.error(`Error processing payment.failed for order ${orderId}`, { error: error.message });
+    //     }
+    // });
 });

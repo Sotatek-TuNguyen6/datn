@@ -160,3 +160,23 @@ exports.getProductByCategory = async (req, res, next) => {
         next(error)
     }
 }
+
+
+exports.updateStock =  async (productId) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            productId,
+            {},
+            { new: true, runValidators: true }
+          )
+
+        if (updatedProduct) {
+            await redisClient.del('products');
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        next(error);
+    }
+};
