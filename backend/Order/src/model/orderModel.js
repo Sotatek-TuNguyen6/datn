@@ -20,6 +20,11 @@ const orderSchema = new mongoose.Schema({
             required: true,
         }
     }],
+    status: {
+        type: String,
+        enum: ['created', 'inventory_reserved', 'inventory_reservation_failed', 'payment_completed', 'payment_failed', 'cancelled'],
+        default: 'created'
+    },
     createdAt: {
         type: Date,
         default: Date.now,

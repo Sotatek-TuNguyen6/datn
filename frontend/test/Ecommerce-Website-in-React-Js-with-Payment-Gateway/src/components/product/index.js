@@ -96,10 +96,10 @@ const Product = (props) => {
 
       {productData !== undefined && (
         <>
-          <Link to={`/product/${productData._id}`}>
+          <Link to={`/product/${productData?._id}`}>
             <div className="imgWrapper">
               <div className="p-4 wrapper mb-3">
-                <img src={productData.mainImage} className="w-100" />
+                <img src={productData?.mainImage} className="w-100" />
               </div>
 
               <div className="overlay transition">
@@ -125,27 +125,27 @@ const Product = (props) => {
           </Link>
 
           <div className="info">
-            <span className="d-block catName">{productData.brand}</span>
+            <span className="d-block catName">{productData?.brand}</span>
             <h4 className="title">
-              <Link>{productData.productName.substr(0, 50) + "..."}</Link>
+              <Link>{productData?.productName?.substr(0, 50) + "..."}</Link>
             </h4>
             <Rating
               name="half-rating-read"
-              value={parseFloat(productData.ratings)}
+              value={parseFloat(productData?.ratings)}
               precision={0.5}
               readOnly
             />
             <span className="brand d-block text-g">
-              By <Link className="text-g">{productData.brand}</Link>
+              By <Link className="text-g">{productData?.brand}</Link>
             </span>
 
             <div className="d-flex align-items-center mt-3">
               <div className="d-flex align-items-center w-100">
                 <span className="price text-g font-weight-bold">
-                  {formatMoneyVND(productData.priceSale)}
+                  {formatMoneyVND(productData?.priceSale)}
                 </span>{" "}
                 <span className="oldPrice ml-auto">
-                  {formatMoneyVND(productData.price)}
+                  {formatMoneyVND(productData?.price)}
                 </span>
               </div>
             </div>

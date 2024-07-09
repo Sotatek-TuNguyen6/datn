@@ -9,6 +9,9 @@ const routerProduct = require("./src/routes/productRouter");
 const categoryRouter = require("./src/routes/categoryRouter");
 const db = require("./src/config/connectDb");
 const logger = require('./src/utils/logger'); // Ensure logger is configured
+const { consumeFromExchange } = require("./src/utils/amqp");
+const { checkQuantityStock } = require("./src/service/productConsumer");
+const Product = require("./src/models/productModel");
 
 const app = express();
 dotenv.config();
@@ -34,4 +37,19 @@ app.use((err, req, res, next) => {
 });
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
+
+    consumeFromExchange("orderExchange", 'order.create', 'orderQueue', async (message) => {
+        const { products } = message;
+
+        const stockAvailable = await checkQuantityStock(products)
+
+        if (!stockAvailable) {
+            await publishToExchange('orderExchange', 'inventory.reservation_failed', { orderId });
+        }
+        
+        else {
+            // const updateProduct = await Product
+        }
+
+    })
 });

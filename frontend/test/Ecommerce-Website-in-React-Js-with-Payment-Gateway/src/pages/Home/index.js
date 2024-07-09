@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import SliderBanner from "./slider/index";
 import CatSlider from "../../components/catSlider";
-
 import Banners from "../../components/banners";
-
 import "./style.css";
 import Product from "../../components/product";
 import Banner4 from "../../assets/images/banner4.jpg";
-
 import Slider from "react-slick";
 import TopProducts from "./TopProducts";
-import axios from "axios";
 import { MyContext } from "../../App";
 import { useGetCategoru } from "../../hooks/categoryFetching";
 
@@ -22,10 +18,16 @@ const Home = (props) => {
   const [activeTab, setactiveTab] = useState("");
   const [activeTabIndex, setactiveTabIndex] = useState(0);
   const [activeTabData, setActiveTabData] = useState([]);
-
-  const [bestSells, setBestSells] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
-
+  const [bestSells, setBestSells] = useState([]);
+  const [itemsPerPage] = useState(10);
+  const [totalPage, setTotalPage] = useState(0)
+  const [listProduct, setListProduct] = useState([])
+  const [topSelling, setTopSelling] = useState([])
+  const [Trending, setTrending] = useState([])
+  const [recently, setRecently] = useState([])
+  const [topRate, setTopRate] = useState([])
   const productRow = useRef();
   const context = useContext(MyContext);
 
@@ -39,6 +41,18 @@ const Home = (props) => {
     arrows: context.windowWidth < 992 ? false : true,
   };
 
+  const updateCurrentItems = (page) => {
+    const indexOfLastItem = page * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const items = activeTabData.slice(indexOfFirstItem, indexOfLastItem);
+    setListProduct(items);
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    updateCurrentItems(newPage)
+  };
+
   useEffect(() => {
     if (activeTab) {
       const filteredData = props.data
@@ -48,78 +62,40 @@ const Home = (props) => {
           parentCatName: item.categoryName,
           subCatName: item.categoryName,
         }));
-
+      setListProduct(filteredData.slice(0, 10))
       setActiveTabData(filteredData);
       setIsLoadingProducts(false);
+      setTotalPage(Math.ceil(filteredData?.length / itemsPerPage))
+      setCurrentPage(1)
     }
+
   }, [activeTab, props.data]);
 
   useEffect(() => {
-    setactiveTab(data?.data[0]._id);
+    if (data) {
+      setactiveTab(data?.data[0]?._id);
+    }
   }, [isLoadingCallApi]);
-  // useEffect(() => {
-
-  //     prodData.length !== 0 &&
-  //         prodData.map((item) => {
-  //             item.items.length !== 0 &&
-  //                 item.items.map((item_) => {
-  //                     catArr.push(item_.cat_name);
-  //                 })
-  //         })
-
-  //     const list2 = catArr.filter((item, index) => catArr.indexOf(item) === index);
-  //     setcatArray(list2)
-
-  //     setactiveTab(list2[0])
-
-  //     window.scrollTo(0, 0);
-
-  // }, [])
-
-  // useEffect(() => {
-  //     var arr = [];
-  //     setActiveTabData(arr);
-  //     // prodData.length !== 0 &&
-  //     //     prodData.map((item, index) => {
-  //     //         item.items.map((item_, index_) => {
-  //     //             if (item_.cat_name === activeTab) {
-  //     //                 {
-  //     //                     item_.products.length !== 0 &&
-  //     //                         item_.products.map((product) => {
-  //     //                             arr.push({ ...product, parentCatName: item.cat_name, subCatName: item_.cat_name })
-  //     //                         })
-
-  //     //                     setActiveTabData(arr)
-  //     //                     setTimeout(()=>{
-  //     //                         setIsLoadingProducts(false);
-  //     //                     },[1000]);
-  //     //                 }
-  //     //             }
-  //     //         })
-
-  //     //     })
-
-  // }, [activeTab, activeTabData])
-
-  const bestSellsArr = [];
 
   useEffect(() => {
-    // prodData.length !== 0 &&
-    //     prodData.map((item) => {
-    //         if (item.cat_name === "Electronics") {
-    //             item.items.length !== 0 &&
-    //                 item.items.map((item_) => {
-    //                     item_.products.length !== 0 &&
-    //                         item_.products.map((product, index) => {
-    //                             bestSellsArr.push(product);
-    //                         })
-    //                 })
-    //         }
+    window.scrollTo(0, 0)
+  }, [])
 
-    //     });
-
-    setBestSells(bestSellsArr);
-  }, []);
+  useEffect(() => {
+    if (props.data && props.data.length > 0) {
+      const shuffledData = [...props.data].sort(() => 0.5 - Math.random());
+      const shuffledDataSelling = [...props.data].sort(() => 0.5 - Math.random());
+      const shuffledDataTrending = [...props.data].sort(() => 0.5 - Math.random());
+      const shuffledDataRecently = [...props.data].sort(() => 0.5 - Math.random());
+      const shuffledDataRate = [...props.data].sort(() => 0.5 - Math.random());
+      const selectedBestSells = shuffledData.slice(0, 10);
+      setBestSells(selectedBestSells);
+      setTopSelling(shuffledDataSelling.slice(0, 5))
+      setTrending(shuffledDataTrending.slice(0, 5))
+      setRecently(shuffledDataRecently.slice(0, 5))
+      setTopRate(shuffledDataRate.slice(0, 5))
+    }
+  }, [props.data]);
 
   return (
     <>
@@ -143,11 +119,10 @@ const Home = (props) => {
                         <li className="list list-inline-item">
                           <a
                             className={`cursor text-capitalize 
-                                                ${
-                                                  activeTabIndex === index
-                                                    ? "act"
-                                                    : ""
-                                                }`}
+                                                ${activeTabIndex === index
+                                ? "act"
+                                : ""
+                              }`}
                             onClick={() => {
                               setactiveTab(item._id);
                               setactiveTabIndex(index);
@@ -164,22 +139,67 @@ const Home = (props) => {
               </div>
 
               <div
-                className={`productRow ${
-                  isLoadingProducts === true && "loading"
-                }`}
+                className={`productRow ${isLoadingProducts === true && "loading"
+                  }`}
                 ref={productRow}
               >
-                {activeTabData.length !== 0 &&
-                  activeTabData.map((item, index) => {
+                {listProduct.length !== 0 &&
+                  listProduct.map((item, index) => {
                     return (
                       <div className="item" key={index}>
                         <Product item={item} />
                       </div>
                     );
                   })}
+
               </div>
+              {totalPage > 0 && (
+                <nav aria-label="Page navigation example">
+                  <ul className="pagination justify-content-center mt-4">
+                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                      <a
+                        className="page-link"
+                        href="#"
+                        tabIndex="-1"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handlePageChange(currentPage - 1);
+                        }}
+                      >
+                        Previous
+                      </a>
+                    </li>
+                    {[...Array(totalPage)].map((_, i) => (
+                      <li className={`page-item ${currentPage === i + 1 ? 'active' : ''}`} key={i}>
+                        <a
+                          className="page-link"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(i + 1);
+                          }}
+                        >
+                          {i + 1} {currentPage === i + 1 && <span className="sr-only">(current)</span>}
+                        </a>
+                      </li>
+                    ))}
+                    <li className={`page-item ${currentPage === totalPage ? 'disabled' : ''}`}>
+                      <a
+                        className="page-link"
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handlePageChange(currentPage + 1);
+                        }}
+                      >
+                        Next
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              )}
             </div>
-          </section>
+          </section >
 
           <section className="homeProducts homeProductsRow2 pt-0">
             <div className="container-fluid">
@@ -214,24 +234,24 @@ const Home = (props) => {
             <div className="container-fluid">
               <div className="row">
                 <div className="col">
-                  <TopProducts title="Top Selling" />
+                  <TopProducts title="Top Selling" data={topSelling} />
                 </div>
 
                 <div className="col">
-                  <TopProducts title="Trending Products" />
+                  <TopProducts title="Trending Products" data={Trending} />
                 </div>
 
                 <div className="col">
-                  <TopProducts title="Recently added" />
+                  <TopProducts title="Recently added" data={recently} />
                 </div>
 
                 <div className="col">
-                  <TopProducts title="Top Rated" />
+                  <TopProducts title="Top Rated" data={topRate} />
                 </div>
               </div>
             </div>
           </section>
-        </div>
+        </div >
       )}
     </>
   );

@@ -1,7 +1,8 @@
 const Product = require("../models/productModel")
 const Joi = require("joi")
 const logger = require('../utils/logger');
-const redisClient = require("../utils/redisClient")
+const redisClient = require("../utils/redisClient");
+const { log } = require("winston");
 
 const productSchema = Joi.object({
     productName: Joi.string().trim().required(),
@@ -134,3 +135,47 @@ exports.importData = async (req, res, next) => {
         next(error);
     }
 }
+
+exports.getProductByCategory = async (req, res, next) => {
+    try {
+        const categoryId = req.params.id
+        // const cachedProducts = await redisClient.get('productByCategory');
+        // if (cachedProducts) {
+        //     const products = JSON.parse(cachedProducts);
+        //     const dataNew = products.filter((item) => {
+        //         return item.categoryId._id === categoryId
+        //     })
+        //     if (products.length > 0) {
+        //         res.status(200).json({ success: true, data: dataNew });
+        //         logger.info("Retrieved all accounts from cache");
+        //         return;
+        //     }
+        //     else res.status(200).json({ success: true, data: [] });
+        // }
+        const listProducts = await Product.find({ categoryId: categoryId }).populate('categoryId').exec();
+        // await redisClient.setEx('productByCategory', 5, JSON.stringify(listProducts));
+
+        return res.status(200).json({ success: true, data: listProducts })
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.updateStock =  async (productId) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            productId,
+            {},
+            { new: true, runValidators: true }
+          )
+
+        if (updatedProduct) {
+            await redisClient.del('products');
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        next(error);
+    }
+};

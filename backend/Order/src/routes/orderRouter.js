@@ -3,6 +3,10 @@ const router = express.Router();
 const orderController = require('../controller/orderController'); // Adjust the path as needed
 
 // Get all orders
+
+router.get("/vnpay_return", orderController.returnPayment)
+router.get("/vnpay_ipn", orderController.inpPayment)
+
 router.get('/', orderController.getAllOrders);
 
 // Get a single order by ID
@@ -16,5 +20,6 @@ router.put('/:id', orderController.updateOrderById);
 
 // Delete an order by ID
 router.delete('/:id', orderController.deleteOrderById);
+
 
 module.exports = router;

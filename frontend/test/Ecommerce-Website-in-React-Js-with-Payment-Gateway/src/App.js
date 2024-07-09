@@ -25,6 +25,8 @@ import AccountPage from "./pages/AccountPage/AccountPage";
 import MyOrdersPage from "./pages/OrderTracking/order";
 import PaymentSuccess from "./pages/PaymentSucces/paymentSucces";
 import ChatButton from "./components/Chatbot/ChatButton";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 const MyContext = createContext();
 
@@ -150,7 +152,7 @@ function App() {
               />
               <Route
                 exact={true}
-                path="/cat/:id"
+                path="/category/:id"
                 element={<Listing data={data.productData} single={true} />}
               />
               <Route
@@ -166,6 +168,8 @@ function App() {
               <Route exact={true} path="/cart" element={<Cart />} />
               <Route exact={true} path="/wishlist" element={<Wishlist />} />
               <Route exact={true} path="/signIn" element={<SignIn />} />
+              <Route exact={true} path="/forgot-password" element={<ForgotPassword />} />
+              <Route exact={true} path="/reset-password/:token" element={<ResetPassword />} />
               <Route exact={true} path="/signUp" element={<SignUp />} />
               <Route exact={true} path="/checkout" element={<Checkout />} />
               <Route exact={true} path="/account" element={<AccountPage />} />

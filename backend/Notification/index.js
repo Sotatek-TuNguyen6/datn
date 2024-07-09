@@ -31,6 +31,7 @@ app.use((err, req, res, next) => {
 });
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
-    consumeFromExchange('notification_exchange', 'notification_queue', 'account.created');
+    // consumeFromExchange('notification_exchange', 'notification_queue', 'account.created');
     // consumeFromExchange('orderExchange', 'orderCreateResponseQueue', 'order.create.response');
+    consumeFromExchange("orderExchange", 'notificationQueue', 'order.update');
 });

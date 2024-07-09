@@ -7,6 +7,8 @@ const fs = require('fs');
 const helmet = require("helmet");
 const routerPayment = require("./src/routes/paymentRouter");
 const db = require("./src/config/connectDb");
+const { consumeFromExchange } = require("./src/utils/amqp");
+const { handleCreatePaymentRequest, handleUpdateStatusPayment } = require("./src/services/paymentServices");
 const app = express();
 
 
@@ -30,4 +32,6 @@ app.use((err, req, res, next) => {
 });
 app.listen(port, () => {
     console.log(`Server payment runing on port ${port}`);
+    consumeFromExchange("orderExchange", 'order.create', 'orderQueue', handleCreatePaymentRequest)
+    consumeFromExchange("orderExchange", 'order.update', 'orderQueueUpdate', handleUpdateStatusPayment)
 });

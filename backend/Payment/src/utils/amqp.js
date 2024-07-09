@@ -60,9 +60,9 @@ async function publishToExchange(exchangeName, routingKey, message) {
 //     await channel.bindQueue(queueName, exchangeName, bindingKey);
 //     let index = 0;
 //     channel.consume(queueName, async (msg) => {
-      // console.log("🚀 ~ channel.consume ~ msg:", msg)
-      // index++;
-      // console.log("🚀 ~ channel.consume ~ index:", index)
+// console.log("🚀 ~ channel.consume ~ msg:", msg)
+// index++;
+// console.log("🚀 ~ channel.consume ~ index:", index)
 
 //       if (msg !== null) {
 //         const messageContent = JSON.parse(msg.content.toString());
@@ -91,19 +91,15 @@ async function consumeFromExchange(exchangeName, routingKey, queueName, messageH
     await channel.assertExchange(exchangeName, 'topic', { durable: true });
     const q = await channel.assertQueue(queueName, { durable: true });
     await channel.bindQueue(q.queue, exchangeName, routingKey);
-    let index = 0;
-    channel.consume(q.queue, async (msg) => {
-      // console.log("🚀 ~ channel.consume ~ msg:", msg)
-      index++;
-      console.log("🚀 ~ channel.consume ~ index:", index)
+
+    channel.consume(q.queue, (msg) => {
       if (msg !== null) {
         const messageContent = JSON.parse(msg.content.toString());
-        await messageHandler(messageContent);
+        messageHandler(messageContent);
         channel.ack(msg);
-        channel.nack(msg);
         logger.info(`Message received from exchange: ${exchangeName} with routingKey: ${routingKey}`, { message: messageContent });
       }
-    }, { noAck: false });
+    });
 
     logger.info(`Waiting for messages in queue: ${queueName} with routingKey: ${routingKey}`);
   } catch (error) {

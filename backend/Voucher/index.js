@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
 const helmet = require("helmet");
-const routerOrder = require("./src/routes/orderRouter");
+const routerVoucher = require("./src/routes/voucherRouter");
 const db = require("./src/config/connectDb");
 const app = express();
 
@@ -21,7 +21,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(helmet());
 app.use(cors());
 
-app.use("/api/v1/order", routerOrder);
+app.use("/api/v1/voucher", routerVoucher);
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ success: false, message: "An unexpected error occurred", error: err.message });

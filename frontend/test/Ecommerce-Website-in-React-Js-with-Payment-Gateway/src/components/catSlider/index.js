@@ -50,8 +50,8 @@ const CatSlider = (props) => {
   var catLength = 0;
   var lengthArr = [];
   useEffect(() => {
-    if (allData.length !== 0 && product.length !== 0) {
-      const counts = allData.reduce((acc, category) => {
+    if (allData?.length !== 0 && product?.length !== 0) {
+      const counts = allData?.reduce((acc, category) => {
         const productCount = product.filter(
           (p) => p.categoryId === category._id
         ).length;
@@ -76,7 +76,7 @@ const CatSlider = (props) => {
               allData?.map((item, index) => {
                 return (
                   <div className="item" key={index}>
-                    <Link to={`/cat/${item._id}`}>
+                    <Link to={`/category/${item._id}`}>
                       <div
                         className="info"
                         style={{ background: itemBg[index] }}
@@ -91,135 +91,6 @@ const CatSlider = (props) => {
                   </div>
                 );
               })}
-
-            {
-              //    itemBg.length!==0 && itemBg.map((item,index)=>{
-              //     return(
-              //         <div className='item'>
-              //         <div className='info'  style={{background:item}}>
-              //             <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-13.png'/>
-              //             <h5>Cake & Milk</h5>
-              //             <p>26 items</p>
-              //         </div>
-              //     </div>
-              //     )
-              //    })
-            }
-
-            {/* <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-12.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-11.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-9.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-3.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-1.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-2.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-4.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-13.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-5.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-                        
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-2.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-4.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-13.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div>
-
-
-                        <div className='item'>
-                            <div className='info'>
-                                <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/cat-5.png'/>
-                                <h5>Cake & Milk</h5>
-                                <p>26 items</p>
-                            </div>
-                        </div> */}
           </Slider>
         </div>
       </div>

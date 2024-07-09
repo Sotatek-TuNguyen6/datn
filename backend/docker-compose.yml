@@ -115,6 +115,27 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  voucher:
+    build:
+      context: ./Voucher
+      dockerfile: Dockerfile
+    ports:
+      - "5010:5010"
+    volumes:
+      - ./Order:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/order
+      - PORT=5010
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
   payment:
     build:
       context: ./Payment
@@ -141,25 +162,25 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  # product:
-  #   build:
-  #     context: ./Product
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5001:5001"
-  #   volumes:
-  #     - ./Product:/app
-  #   environment:
-  #     - MONGODB_URL=mongodb://mongo:27017/product
-  #     - PORT=5001
-  #     - REDIS_HOST=redis
-  #     - REDIS_PORT=6379
-  #     - RABBITMQ_URL=amqp://rabbitmq:5672
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
+  product:
+    build:
+      context: ./Product
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./Product:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/product
+      - PORT=5001
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   # review:
   #   build:
@@ -222,7 +243,7 @@ services:
       # - category
       - order
       - payment
-      # - product
+      - product
       # - review
       # - actions
       # - chat

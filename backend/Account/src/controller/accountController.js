@@ -6,6 +6,8 @@ const redis = require('redis');
 const util = require('util');
 const redisClient = require("../utils/redisClient");
 const { publishToQueue, consumeQueue, publishToExchange } = require("../utils/amqp");
+const bcrypt = require("bcrypt")
+const crypto = require('crypto');
 
 // Controller for creating a new account
 exports.createAccount = async (req, res) => {
@@ -154,7 +156,7 @@ exports.updateAccount = async (req, res) => {
   const accountId = req.params.id;
   try {
     const allowedUpdates = ['name', 'email', 'phone', 'addresses', 'orders', 'wishlist', 'role'];
-    
+
     const updates = Object.keys(req.body);
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
@@ -234,3 +236,109 @@ exports.updateWishlist = async (req, res) => {
     res.status(500).json({ message: "Error updating wishlist", error: error.message });
   }
 }
+
+exports.updatePassword = async (req, res) => {
+  try {
+    const { passwordOld, passwordNew } = req.body;
+    const accountId = req.user._id;
+    const account = await Account.findOne(accountId);
+
+    if (!account) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    logger.info(`Hashed password in database: ${account.password}`);
+
+    if (!(await account.matchPassword(passwordOld))) {
+      return res.status(400).json({ message: "Old password is incorrect" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(passwordNew, salt);
+
+    account.password = hashedPassword;
+    await account.save();
+
+    const updatedAccount = await Account.findById(accountId);
+    console.log("Updated Account Password:", updatedAccount.password);
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating password", error: error.message });
+    logger.error("Error updating password:", error);
+  }
+};
+
+exports.restPassword = async (req, res) => {
+  try {
+
+  } catch (error) {
+
+  }
+}
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const account = await Account.findOne({ email });
+
+    if (!account) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+    account.resetPasswordToken = resetToken;
+    account.resetPasswordExpire = resetPasswordExpire;
+
+    await account.save();
+
+    const resetUrl = `http://localhost:3006/reset-password/${resetToken}`;
+
+    const message = {
+      type: 'restPass',
+      recipientEmail: account,
+      message: resetUrl,
+    };
+
+    await publishToExchange('notification_resetPassword', 'account.restPassword', message);
+    res.status(200).json({ message: "Password reset link sent to your email" });
+  } catch (error) {
+    res.status(500).json({ message: "Error sending password reset link", error: error.message });
+    logger.error("Error sending password reset link:", error);
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { passwordNew } = req.body;
+
+    const account = await Account.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpire: { $gt: Date.now() } // Ensure the token has not expired
+    });
+
+    if (!account) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(passwordNew, salt);
+    console.log("🚀 ~ exports.resetPassword= ~ hashedPassword:", hashedPassword)
+
+    account.password = hashedPassword;
+    account.resetPasswordToken = undefined;
+    account.resetPasswordExpire = undefined;
+
+    await account.save();
+    const updatedAccount = await Account.findById(account._id);
+    console.log("Updated Account Password:", updatedAccount.password);
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error resetting password", error: error.message });
+    logger.error("Error resetting password:", error);
+  }
+};

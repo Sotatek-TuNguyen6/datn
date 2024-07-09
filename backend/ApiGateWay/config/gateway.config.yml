@@ -19,10 +19,10 @@ apiEndpoints:
     paths: 
         - "/api/v1/product*"
         - "/api/v1/category*"
-  # category:
-  #   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-  #   host: "*"
-  #   paths: "/api/v1/category*"
+  voucher:
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    host: "*"
+    paths: "/api/v1/voucher*"
   order:
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     host: "*"
@@ -55,8 +55,8 @@ serviceEndpoints:
     url: "http://account:5000"
   productService:
     url: "http://product:5001"
-  # categoryService:
-  #   url: "http://category:5002"
+  voucherService:
+    url: "http://category:5002"
   # chatService:
   #   url: "http://chat:5003"
   orderService:
@@ -127,27 +127,27 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: productService
-  # category:
-  #   apiEndpoints:
-  #     - category
-  #   policies:
-  #     - cors:
-  #         - action:
-  #             origin: "*"
-  #             methods: "*"
-  #             preflightContinue: false
-  #             optionsSuccessStatus: 204
-  #     - log:
-  #         - action:
-  #             message: "${req.method} ${req.originalUrl}"
-  #     - request-transformer:
-  #         - action:
-  #             headers:
-  #               add:
-  #                 requestID: "requestID"
-  #     - proxy:
-  #         - action:
-  #             serviceEndpoint: categoryService
+  voucher:
+    apiEndpoints:
+      - voucher
+    policies:
+      - cors:
+          - action:
+              origin: "*"
+              methods: "*"
+              preflightContinue: false
+              optionsSuccessStatus: 204
+      - log:
+          - action:
+              message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: voucherService
   order:
     apiEndpoints:
       - order

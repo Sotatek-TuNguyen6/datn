@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 
 var accessLogStream = fs.createWriteStream(path.join(__dirname, './logs/access.log'), { flags: 'a' });
 
-require('./src/service/orderService');
+// require('./src/service/orderService');
 
 app.use(express.json());
 app.use(morgan('combined', { stream: accessLogStream }));

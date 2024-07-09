@@ -16,7 +16,7 @@ const PaymentSuccess = () => {
     const getResultVNPay = async () => {
       const query = location.search;
       const { data } = await axios.get(
-        `http://localhost:8080/api/v1/payment/vnpay_return${query}`
+        `http://localhost:8000/api/v1/order/vnpay_return${query}`
       );
     };
 

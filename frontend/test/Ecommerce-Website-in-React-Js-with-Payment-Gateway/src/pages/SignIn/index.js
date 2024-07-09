@@ -132,9 +132,9 @@ const SignIn = () => {
       <ToastContainer />
 
       <section className="signIn mb-5">
-        <div class="breadcrumbWrapper">
-          <div class="container-fluid">
-            <ul class="breadcrumb breadcrumb2 mb-0">
+        <div className="breadcrumbWrapper">
+          <div className="container-fluid">
+            <ul className="breadcrumb breadcrumb2 mb-0">
               <li>
                 <Link to="/">Home</Link>{" "}
               </li>
@@ -163,7 +163,7 @@ const SignIn = () => {
                   label="User Name"
                   className="w-100"
                   onChange={onChangeField}
-                  value={formFields.email}
+                  value={formFields.username}
                 />
               </div>
               <div className="form-group mb-4 w-100">
@@ -189,6 +189,11 @@ const SignIn = () => {
                   </Button>
                 </div>
               </div>
+              <div className="form-group mb-4 w-100">
+                <p className="text-end">
+                  <Link to="/forgot-password">Forgot Password?</Link>
+                </p>
+              </div>
 
               <div className="form-group mt-5 mb-4 w-100">
                 <Button
@@ -199,14 +204,8 @@ const SignIn = () => {
                 </Button>
               </div>
 
-              <div className="form-group mt-5 mb-4 w-100 signInOr">
-                <p className="text-center">OR</p>
-                {/* <Button className='w-100' variant="outlined" onClick={signInWithGoogle}><img src={GoogleImg} />
-                                    Sign In with Google</Button> */}
-              </div>
-
               <p className="text-center">
-                Not have an account
+                Not have an account?
                 <b>
                   {" "}
                   <Link to="/signup">Sign Up</Link>
