@@ -41,7 +41,7 @@ async function handleProductGetAll(msg) {
   }
 }
 
-const checkQuantityStock = async ({ products }) => {
+const checkQuantityStock = async (products) => {
   try {
     const productIds = products.map(product => product.productId);
     const quantities = products.map(product => product.quantity);
@@ -60,13 +60,14 @@ const checkQuantityStock = async ({ products }) => {
 
     return true;
   } catch (error) {
-    throw new Error('Error checking product stock: ' + error.message);
+    logger.error('Error checking product stock: ' + error.message);
+    return false;
   }
 };
 // Ensure the consumer starts
 
-consumeQueue('productRequestQueue', handleProductGetAll);
-consumeQueue('productDetailsRequestQueue', handleProductDetailsRequest);
+// consumeQueue('productRequestQueue', handleProductGetAll);
+// consumeQueue('productDetailsRequestQueue', handleProductDetailsRequest);
 logger.info("Consumer for productDetailsRequestQueue has started.");
 
 

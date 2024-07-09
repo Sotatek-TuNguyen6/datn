@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controller/orderController'); // Adjust the path as needed
+const { protect } = require('../middleware/AuthMiddleware');
 
 // Get all orders
 
-router.get("/vnpay_return", orderController.returnPayment)
+router.get("/vnpay_return", protect, orderController.returnPayment)
 router.get("/vnpay_ipn", orderController.inpPayment)
 
 router.get('/', orderController.getAllOrders);

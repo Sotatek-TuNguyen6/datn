@@ -20,10 +20,13 @@ async function handleCreatePaymentRequest({ userId, orderId, products, amount, e
             const savedOrder = await newPayment.save();
 
             logger.info('Payment created successfully:', savedOrder);
+            return true;
         }
         logger.info('Start!!', {});
+        return false
     } catch (error) {
         logger.error('Error handling create order request:', error);
+        return false
     }
 }
 

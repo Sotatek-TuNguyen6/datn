@@ -34,4 +34,5 @@ app.listen(port, () => {
     // consumeFromExchange('notification_exchange', 'notification_queue', 'account.created');
     // consumeFromExchange('orderExchange', 'orderCreateResponseQueue', 'order.create.response');
     consumeFromExchange("orderExchange", 'notificationQueue', 'order.update');
+    consumeFromExchange("orderExchange", 'notificationQueue', 'payment.completed');
 });

@@ -47,6 +47,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - JWT_SECRET=9aFb3cH1iLp2sO8qR
     depends_on:
       mongo:
         condition: service_healthy
@@ -107,6 +108,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - JWT_SECRET=9aFb3cH1iLp2sO8qR
     depends_on:
       mongo:
         condition: service_healthy
@@ -129,6 +131,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - JWT_SECRET=9aFb3cH1iLp2sO8qR
     depends_on:
       mongo:
         condition: service_healthy
@@ -154,6 +157,7 @@ services:
       - VNP_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
       - VNP_RETURN_URL=http://localhost:3006/orderSuccess
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - JWT_SECRET=9aFb3cH1iLp2sO8qR
     depends_on:
       mongo:
         condition: service_healthy

@@ -161,6 +161,7 @@ exports.getProductByCategory = async (req, res, next) => {
     }
 }
 
+
 exports.updateStock =  async (productId) => {
     try {
         const updatedProduct = await Product.findByIdAndUpdate(

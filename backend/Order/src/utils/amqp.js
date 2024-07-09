@@ -8,7 +8,7 @@ async function connectRabbitMQ() {
   if (!connection || connection.connection.stream.destroyed) {
     connection = await amqp.connect(process.env.RABBITMQ_URL);
   }
-  if (!channel || channel.connection.connection.stream.destroyed) {
+  if (!channel || channel.connection.stream.destroyed) {
     channel = await connection.createChannel();
   }
 }
@@ -24,25 +24,26 @@ async function publishToExchange(exchangeName, routingKey, message) {
   }
 }
 
-async function consumeFromExchange(exchangeName, routingKey, queueName, messageHandler) {
+async function consumeFromExchange(exchangeName, queueName, bindingKey, callback) {
   try {
     await connectRabbitMQ();
     await channel.assertExchange(exchangeName, 'topic', { durable: true });
-    const q = await channel.assertQueue(queueName, { durable: true });
-    await channel.bindQueue(q.queue, exchangeName, routingKey);
+    await channel.assertQueue(queueName, { durable: true });
+    await channel.bindQueue(queueName, exchangeName, bindingKey);
 
-    channel.consume(q.queue, (msg) => {
+    channel.consume(queueName, (msg) => {
       if (msg !== null) {
         const messageContent = JSON.parse(msg.content.toString());
-        messageHandler(messageContent);
+        logger.info(`Message received from exchange: ${exchangeName} with routingKey: ${bindingKey}`, { messageContent });
+        callback(messageContent);
         channel.ack(msg);
-        logger.info(`Message received from exchange: ${exchangeName} with routingKey: ${routingKey}`, { message: messageContent });
       }
-    });
+    }, { noAck: false });
 
-    logger.info(`Waiting for messages in queue: ${queueName} with routingKey: ${routingKey}`);
+    logger.info(`Started consuming from exchange: ${exchangeName} with bindingKey: ${bindingKey}`);
   } catch (error) {
     logger.error(`Error consuming from exchange: ${exchangeName}`, { error: error.message });
+    throw error;
   }
 }
 

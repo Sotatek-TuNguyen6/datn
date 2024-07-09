@@ -85,6 +85,7 @@ exports.login = async (req, res) => {
       const access_token = await generateToken({
         id: userCheck._id,
         role: userCheck.role,
+        email: userCheck.email
       });
 
       return res.json({
