@@ -7,14 +7,14 @@ import { useSelector } from 'react-redux';
 import { useRef } from 'react';
 import axios from "axios";
 
-const socket = io('http://localhost:8080');
+const socket = io('http://localhost:8000');
 
 const ChatScreen = () => {
     const user = useSelector((state) => state.user);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-    const userId = '667069eebe996098397b8fc5'; // Đặt ID của người dùng tại đây
-    const adminId = user.id; // Đặt ID của admin tại đây
+    const userId = '65ccd9f7617ebb3814b8d4fa';
+    const adminId = user.id;
     const [users, setUsers] = useState();
     const [click, setClick] = useState(false);
     const messagesEndRef = useRef(null);

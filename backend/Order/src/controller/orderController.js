@@ -85,6 +85,7 @@ exports.createOrder = async (req, res) => {
         const {id, email} = req.user
         const { products, userId } = req.body
         const newOrder = new Order({ products, userId });
+        
         const savedOrder = await newOrder.save();
         logger.info("Created new order:", savedOrder);
 

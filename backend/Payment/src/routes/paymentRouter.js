@@ -12,14 +12,14 @@ const config = {
     vnp_ReturnUrl: 'http://localhost:3006/',
 };
 
-router.post("/", createPayment);
-router.post("/create", createPaymentV2);
-router.get("/vnpay_return", returnPayment)
-router.get("/vnpay_ipn", inpPayment)
-// router.get("/", getAllPayments)
-// router.get("/:id", getPayment);
-// router.delete("/:id", deletePayment);
-// router.put("/:id", updatePayment);
+// router.post("/", createPayment);
+// router.post("/create", createPaymentV2);
+// router.get("/vnpay_return", returnPayment)
+// router.get("/vnpay_ipn", inpPayment)
+router.get("/", getAllPayments)
+router.get("/:id", getPayment);
+router.delete("/:id", deletePayment);
+router.put("/:id", updatePayment);
 
 
 module.exports = router;

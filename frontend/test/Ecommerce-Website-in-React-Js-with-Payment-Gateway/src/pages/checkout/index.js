@@ -80,19 +80,28 @@ const Checkout = () => {
 
   const createPaymentUrl = async (orderDetails) => {
     if (formFields.paymentMethod == "credit_card") {
-      const { data } = await axios.post("http://localhost:8000/api/v1/payment", {
+
+      const headers = {
+        Authorization: `Bearer ${user.access_token}`,
+      };
+      const { data } = await axios.post("http://localhost:8000/api/v1/order", {
         userId: user.id,
         amount: totalAmount,
         bankCode: "NCB",
         language: "vn",
         orderDetails: orderDetails
+      }, {
+        headers
       });
+
       if (data.code === "00") {
         window.location.href = data.data;
       }
+
     }
+
     else {
-      await axios.post("http://localhost:8000/api/v1/payment/create", {
+      await axios.post("http://localhost:8000/api/v1/order", {
         userId: user.id,
         amount: totalAmount,
         bankCode: "NCB",
@@ -206,7 +215,7 @@ const Checkout = () => {
                   </div>
                 </div>
               </div>
-  
+
               <div className="col-md-4 cartRightBox pt-4">
                 <div className="card p-4">
                   <div className="d-flex align-items-center mb-4">
@@ -215,26 +224,26 @@ const Checkout = () => {
                       <span className="text-g">{formatMoneyVND(totalAmount)}</span>
                     </h3>
                   </div>
-  
+
                   <div className="d-flex align-items-center mb-4">
                     <h5 className="mb-0 text-light">Shipping</h5>
                     <h3 className="ml-auto mb-0 font-weight-bold">
                       <span>Free</span>
                     </h3>
                   </div>
-  
+
                   <div className="d-flex align-items-center mb-4">
                     <h5 className="mb-0 text-light">Total</h5>
                     <h3 className="ml-auto mb-0 font-weight-bold">
                       <span className="text-g">{formatMoneyVND(totalAmount)}</span>
                     </h3>
                   </div>
-  
+
                   <Button className="btn-g btn-lg" onClick={placeOrder}>
                     Place Order
                   </Button>
                 </div>
-  
+
                 {/* Add Voucher Code Input Below Order Summary */}
                 <div className="card p-4 mt-4">
                   <div className="form-group mt-3">
@@ -263,7 +272,7 @@ const Checkout = () => {
       </div>
     </section>
   );
-  
+
 };
 
 export default Checkout;

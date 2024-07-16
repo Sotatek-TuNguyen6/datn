@@ -5,11 +5,11 @@ import Voucher from "./Voucher";
 import { useSelector } from "react-redux";
 import * as VoucherService from "../../Services/VoucherService";
 import { error } from "jquery";
-import { useGetListReview } from "../../hooks/callApiCache";
+import { useGetListVoucher } from "../../hooks/callApiCache";
 const VoucherMain = () => {
     const [search, SetSearch] = useState("");
 
-    const getListQuery = useGetListReview();
+    const getListQuery = useGetListVoucher();
 
     const { data, isLoading, isError } = getListQuery
 

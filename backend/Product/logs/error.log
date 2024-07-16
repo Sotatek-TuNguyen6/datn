@@ -793,3 +793,4 @@ error: Error checking product stock: Cast to ObjectId failed for value "1" (type
 error: Error checking product stock: Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Product"
 error: Error checking product stock: Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Product"
 error: Error checking product stock: Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Product"
+error: Error consuming from exchange: orderExchange {"error":"connect ECONNREFUSED 172.20.0.4:5672"}
