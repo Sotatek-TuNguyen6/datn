@@ -7,3 +7,4 @@ Flask
 pika
 python-dotenv
 requests
+matplotlib

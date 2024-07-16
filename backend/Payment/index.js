@@ -7,8 +7,9 @@ const fs = require('fs');
 const helmet = require("helmet");
 const routerPayment = require("./src/routes/paymentRouter");
 const db = require("./src/config/connectDb");
-const { consumeFromExchange } = require("./src/utils/amqp");
+const { consumeFromExchange, publishToExchange } = require("./src/utils/amqp");
 const { handleCreatePaymentRequest, handleUpdateStatusPayment } = require("./src/services/paymentServices");
+const logger = require("./src/utils/logger");
 const app = express();
 
 
@@ -34,13 +35,13 @@ app.listen(port, () => {
     console.log(`Server payment runing on port ${port}`);
     // consumeFromExchange("orderExchange", 'order.create', 'orderQueue', handleCreatePaymentRequest)
     // consumeFromExchange("orderExchange", 'order.update', 'orderQueueUpdate', handleUpdateStatusPayment)
-    consumeFromExchange('orderExchange', 'inventory.reserved', 'paymentQueue', async (message) => {
-        const { amount, orderId, products, userId } = message;
+    consumeFromExchange('orderExchange', 'paymentQueue', 'inventory.reserved', async (message) => {
+        const { amount, orderId, products, userId, emailUser, type } = message;
         try {
             const paymentSuccessful = await handleCreatePaymentRequest({ userId, orderId, products, amount });
 
             if (paymentSuccessful) {
-                await publishToExchange('orderExchange', 'payment.completed', {  userId, orderId, products, amount, type: "orderSuccess"  });
+                await publishToExchange('orderExchange', 'payment.completed', { userId, orderId, products, amount, emailUser, type});
             } else {
                 await publishToExchange('orderExchange', 'payment.failed', { orderId });
             }

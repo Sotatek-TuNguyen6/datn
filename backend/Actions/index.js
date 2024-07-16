@@ -23,6 +23,7 @@ app.use(cors());
 require('./src/service/serviceActions');
 
 app.use("/api/v1/actions", routeAction);
+
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ success: false, message: "An unexpected error occurred", error: err.message });

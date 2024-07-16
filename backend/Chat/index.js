@@ -107,37 +107,86 @@ app.post('/messages', async (req, res) => {
     }
 });
 
+// io.on('connection', (socket) => {
+//     console.log('a user connected');
+
+//     socket.on('chat message', async (msg) => {
+//         try {
+//             console.log(msg);
+
+//             const newMessage = new Message({
+//                 sender: msg.sender,
+//                 receiver: msg.receiver,
+//                 message: msg.message,
+//                 timestamp: new Date()
+//             });
+//             await newMessage.save();
+
+//             io.to(msg.receiver).emit('chat message', newMessage);
+//         } catch (err) {
+//             console.error(err);
+//         }
+//     });
+
+//     socket.on('join', ({ userId }) => {
+//         socket.join(userId);
+//         console.log(`${userId} joined the chat`);
+//     });
+
+//     socket.on('disconnect', () => {
+//         console.log('user disconnected');
+//     });
+// });
+
+// Mock chat list data
+const chatList = [
+    { chatId: '1', participantIds: ['user1', 'user2'], creatorId: 'user1' },
+    { chatId: '2', participantIds: ['user3', 'user4'], creatorId: 'user3' },
+];
+
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('New client connected');
 
-    socket.on('chat message', async (msg) => {
-        try {
-            console.log(msg);
-
-            const newMessage = new Message({
-                sender: msg.sender,
-                receiver: msg.receiver,
-                message: msg.message,
-                timestamp: new Date()
-            });
-            await newMessage.save();
-
-            io.to(msg.receiver).emit('chat message', newMessage);
-        } catch (err) {
-            console.error(err);
-        }
+    socket.on('message:send', (message) => {
+        console.log('Received message:', message);
+        io.emit('message', message); // Broadcast the message to all connected clients
     });
 
-    socket.on('join', ({ userId }) => {
-        socket.join(userId);
-        console.log(`${userId} joined the chat`);
+    socket.on('reaction', (reaction) => {
+        console.log('Received reaction:', reaction);
+        io.emit('reaction', reaction); // Broadcast the reaction to all connected clients
+    });
+
+    socket.on('chat:create', (data) => {
+        console.log('Received chat:create event:', data);
+
+        // Simulate chat creation and emit a success event
+        const chatCreatedEvent = {
+            chatId: Date.now().toString(), // Simulate a unique chat ID
+            participantIds: data.participantIds,
+            creatorId: data.creatorId,
+        };
+
+        chatList.push(chatCreatedEvent); // Add the new chat to the chat list
+
+        io.emit('chat:created-success', chatCreatedEvent); // Emit the chat created success event
+    });
+
+    socket.on('chat:list', () => {
+        console.log('Received chat:list event');
+        socket.emit('chat:list', chatList); // Send the chat list to the requesting client
     });
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        console.log('Client disconnected');
     });
 });
 
-server.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
+
+// server.listen(port, () => {
+//     console.log(`Server running at http://localhost:${port}/`);
+// });

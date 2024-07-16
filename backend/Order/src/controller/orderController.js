@@ -73,7 +73,7 @@ exports.createOrder = async (req, res) => {
         let ipAddr = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
         var orderType = 'thanhtoan';
 
-        var emailUser = req.body.email;
+        // var emailUser = req.body.email;
         var amount = req.body.amount;
         var bankCode = "VNBANK";
         var currCode = 'VND';
@@ -82,7 +82,7 @@ exports.createOrder = async (req, res) => {
             locale = 'vn';
         }
 
-        // const userId = req.user._id
+        const {id, email} = req.user
         const { products, userId } = req.body
         const newOrder = new Order({ products, userId });
         const savedOrder = await newOrder.save();
@@ -92,7 +92,7 @@ exports.createOrder = async (req, res) => {
             userId: userId,
             products,
             amount,
-            emailUser,
+            emailUser: email,
             orderId: savedOrder._id,
         });
 
@@ -180,6 +180,7 @@ exports.deleteOrderById = async (req, res) => {
 
 
 exports.returnPayment = async (req, res) => {
+    const {email} = req.user
     try {
         var vnp_Params = req.query;
 
@@ -201,7 +202,7 @@ exports.returnPayment = async (req, res) => {
                 orderId,
                 type: 'orderSuccess',
                 products: getOrder.products,
-                emailUser: "tu.nguyen6@sotatek.com",
+                emailUser: email,
                 amount,
                 userId: getOrder.userId
             });

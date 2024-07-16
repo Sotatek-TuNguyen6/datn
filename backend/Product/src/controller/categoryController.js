@@ -1,5 +1,5 @@
 const Category = require("../models/categoryModel.js");
-
+const data = require("../../category.json")
 // Tạo danh mục mới
 exports.createCategory = async (req, res, next) => {
     try {
@@ -77,9 +77,10 @@ exports.deleteCategory = async (req, res, next) => {
 
 exports.importData = async (req, res, next) => {
     try {
-        const { data } = req.body;
+        // const { data } = req.body;
 
-        const importedProducts = await Category.insertMany(data);
+        console.log("🚀 ~ exports.importData= ~ data:", data)
+        const importedProducts = await Category.insertMany(data.data);
 
         res.status(200).json({
             success: true,

@@ -1,0 +1,176 @@
+{
+    "success": true,
+    "data": [
+        {
+            "_id": "666d58705b228a0132c45468",
+            "categoryName": "Category test",
+            "subCategories": [
+                {
+                    "subCategoryName": "Category test 1",
+                    "_id": "666d58705b228a0132c45469",
+                    "createdDate": "2024-06-15T09:01:36.066Z",
+                    "updatedDate": "2024-06-15T09:01:36.066Z"
+                },
+                {
+                    "subCategoryName": "Category test 2",
+                    "_id": "666d58705b228a0132c4546a",
+                    "createdDate": "2024-06-15T09:01:36.066Z",
+                    "updatedDate": "2024-06-15T09:01:36.067Z"
+                },
+                {
+                    "subCategoryName": "Category test 3",
+                    "_id": "666d58705b228a0132c4546b",
+                    "createdDate": "2024-06-15T09:01:36.067Z",
+                    "updatedDate": "2024-06-15T09:01:36.067Z"
+                }
+            ],
+            "createdDate": "2024-06-15T09:01:36.067Z",
+            "updatedDate": "2024-06-15T09:01:36.086Z",
+            "__v": 0
+        },
+        {
+            "_id": "66719582f289714f42f64f06",
+            "categoryName": "Mobiles & Tablets",
+            "subCategories": [
+                {
+                    "subCategoryName": "Mobile Phones",
+                    "_id": "66719582f289714f42f64f07",
+                    "createdDate": "2024-06-18T14:11:14.563Z",
+                    "updatedDate": "2024-06-18T14:11:14.563Z"
+                }
+            ],
+            "createdDate": "2024-06-18T14:11:14.563Z",
+            "updatedDate": "2024-06-18T14:11:14.582Z",
+            "__v": 0
+        },
+        {
+            "_id": "6671a92cf289714f42f64f63",
+            "categoryName": "Food",
+            "subCategories": [
+                {
+                    "subCategoryName": "Dals & Pulses",
+                    "_id": "6671a92cf289714f42f64f64",
+                    "createdDate": "2024-06-18T15:35:08.850Z",
+                    "updatedDate": "2024-06-18T15:35:08.850Z"
+                }
+            ],
+            "createdDate": "2024-06-18T15:35:08.850Z",
+            "updatedDate": "2024-06-18T15:35:08.853Z",
+            "__v": 0
+        },
+        {
+            "_id": "6671abd6f289714f42f64f8a",
+            "categoryName": "Beverages",
+            "subCategories": [
+                {
+                    "subCategoryName": "Coffee",
+                    "_id": "6671abd6f289714f42f64f8b",
+                    "createdDate": "2024-06-18T15:46:30.179Z",
+                    "updatedDate": "2024-06-18T15:46:30.179Z"
+                },
+                {
+                    "subCategoryName": "Tea",
+                    "_id": "6671abd6f289714f42f64f8c",
+                    "createdDate": "2024-06-18T15:46:30.179Z",
+                    "updatedDate": "2024-06-18T15:46:30.179Z"
+                },
+                {
+                    "subCategoryName": "Syrups & Concentrates",
+                    "_id": "6671abd6f289714f42f64f8d",
+                    "createdDate": "2024-06-18T15:46:30.179Z",
+                    "updatedDate": "2024-06-18T15:46:30.179Z"
+                },
+                {
+                    "subCategoryName": "Drink Mixes",
+                    "_id": "6671abd6f289714f42f64f8e",
+                    "createdDate": "2024-06-18T15:46:30.179Z",
+                    "updatedDate": "2024-06-18T15:46:30.179Z"
+                },
+                {
+                    "subCategoryName": "Dairy drinks",
+                    "_id": "6671abd6f289714f42f64f8f",
+                    "createdDate": "2024-06-18T15:46:30.179Z",
+                    "updatedDate": "2024-06-18T15:46:30.179Z"
+                },
+                {
+                    "subCategoryName": "Juices",
+                    "_id": "6671abd6f289714f42f64f90",
+                    "createdDate": "2024-06-18T15:46:30.179Z",
+                    "updatedDate": "2024-06-18T15:46:30.179Z"
+                }
+            ],
+            "createdDate": "2024-06-18T15:46:30.179Z",
+            "updatedDate": "2024-06-18T15:46:30.181Z",
+            "__v": 0
+        },
+        {
+            "_id": "6671b07ef289714f42f65016",
+            "categoryName": "Prayer Essentials",
+            "subCategories": [
+                {
+                    "subCategoryName": "Incense & Dhoop sticks",
+                    "_id": "6671b07ef289714f42f65017",
+                    "createdDate": "2024-06-18T16:06:22.357Z",
+                    "updatedDate": "2024-06-18T16:06:22.357Z"
+                },
+                {
+                    "subCategoryName": "Other Essentials",
+                    "_id": "6671b07ef289714f42f65018",
+                    "createdDate": "2024-06-18T16:06:22.357Z",
+                    "updatedDate": "2024-06-18T16:06:22.357Z"
+                }
+            ],
+            "createdDate": "2024-06-18T16:06:22.357Z",
+            "updatedDate": "2024-06-18T16:06:22.358Z",
+            "__v": 0
+        },
+        {
+            "_id": "6671b20bf289714f42f65036",
+            "categoryName": "Personal Care",
+            "subCategories": [
+                {
+                    "subCategoryName": "Oral care",
+                    "_id": "6671b20bf289714f42f65037",
+                    "createdDate": "2024-06-18T16:12:59.257Z",
+                    "updatedDate": "2024-06-18T16:12:59.257Z"
+                },
+                {
+                    "subCategoryName": "Hair Care",
+                    "_id": "6671b20bf289714f42f65038",
+                    "createdDate": "2024-06-18T16:12:59.257Z",
+                    "updatedDate": "2024-06-18T16:12:59.257Z"
+                },
+                {
+                    "subCategoryName": "Skin Care",
+                    "_id": "6671b20bf289714f42f65039",
+                    "createdDate": "2024-06-18T16:12:59.258Z",
+                    "updatedDate": "2024-06-18T16:12:59.258Z"
+                },
+                {
+                    "subCategoryName": "Health",
+                    "_id": "6671b20bf289714f42f6503a",
+                    "createdDate": "2024-06-18T16:12:59.258Z",
+                    "updatedDate": "2024-06-18T16:12:59.258Z"
+                }
+            ],
+            "createdDate": "2024-06-18T16:12:59.258Z",
+            "updatedDate": "2024-06-18T16:12:59.259Z",
+            "__v": 0
+        },
+        {
+            "_id": "6671b445f289714f42f65072",
+            "categoryName": "Kitchenware",
+            "subCategories": [
+                {
+                    "subCategoryName": "Kitchenware",
+                    "_id": "6671b445f289714f42f65073",
+                    "createdDate": "2024-06-18T16:22:29.152Z",
+                    "updatedDate": "2024-06-18T16:22:29.152Z"
+                }
+            ],
+            "createdDate": "2024-06-18T16:22:29.153Z",
+            "updatedDate": "2024-06-18T16:22:29.162Z",
+            "__v": 0
+        }
+    ]
+}

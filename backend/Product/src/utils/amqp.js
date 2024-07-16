@@ -18,6 +18,7 @@ async function publishToExchange(exchangeName, routingKey, message) {
     await channel.assertExchange(exchangeName, 'topic', { durable: true });
     channel.publish(exchangeName, routingKey, Buffer.from(JSON.stringify(message)));
     logger.info(`Message sent to exchange: ${exchangeName} with routingKey: ${routingKey}`, { message });
+  
   } catch (error) {
     logger.error(`Error publishing to exchange: ${exchangeName}`, { error: error.message });
   }

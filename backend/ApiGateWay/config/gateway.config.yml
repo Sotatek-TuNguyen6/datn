@@ -42,7 +42,9 @@ apiEndpoints:
   recommender:
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     host: "*"
-    paths: "/api/v1/recommend*"
+    paths: 
+        - "/api/v1/recommend*"
+        - "/api/v1/metrics*"
   chat:
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     host: "*"
@@ -57,8 +59,8 @@ serviceEndpoints:
     url: "http://product:5001"
   voucherService:
     url: "http://category:5002"
-  # chatService:
-  #   url: "http://chat:5003"
+  chatService:
+    url: "http://chat:5003"
   orderService:
     url: "http://order:5004"
   reviewService:
@@ -253,48 +255,48 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: actionsService
-  # chat:
-  #   apiEndpoints:
-  #     - chat
-  #   policies:
-  #     - cors:
-  #         - action:
-  #             origin: "*"
-  #             credentials: true
-  #             methods: GET,POST,PUT,DELETE,OPTIONS
-  #             allowedHeaders:
-  #               [
-  #                 "Content-type",
-  #                 "Authorization",
-  #                 "Origin",
-  #                 "Access-Control-Allow-Origin",
-  #                 "Accept",
-  #                 "Options",
-  #               ]
-  #             exposedHeaders:
-  #               [
-  #                 "Content-type",
-  #                 "Authorization",
-  #                 "Origin",
-  #                 "Access-Control-Allow-Origin",
-  #                 "Accept",
-  #                 "Options",
-  #               ]
-  #             #exposedHeaders : ['Content-type','Authorization','Origin','Access-Control-Allow-Origin','Origin', 'Accept', 'X-Requested-With', 'Content-Type', 'Access-Control-Request-Method', 'Access-Control-Request-Headers','Authorization', 'Access-Control-Allow-Origin','X-TEST']
-  #             preflightContinue: false
-  #             optionsSuccessStatus: 204
-  #             #maxAge: 600
-  #     - log:
-  #         - action:
-  #             message: "${req.method} ${req.originalUrl}"
-  #     - request-transformer:
-  #         - action:
-  #             headers:
-  #               add:
-  #                 requestID: "requestID"
-  #     - proxy:
-  #         - action:
-  #             serviceEndpoint: chatService
+  chat:
+    apiEndpoints:
+      - chat
+    policies:
+      - cors:
+          - action:
+              origin: "*"
+              credentials: true
+              methods: GET,POST,PUT,DELETE,OPTIONS
+              allowedHeaders:
+                [
+                  "Content-type",
+                  "Authorization",
+                  "Origin",
+                  "Access-Control-Allow-Origin",
+                  "Accept",
+                  "Options",
+                ]
+              exposedHeaders:
+                [
+                  "Content-type",
+                  "Authorization",
+                  "Origin",
+                  "Access-Control-Allow-Origin",
+                  "Accept",
+                  "Options",
+                ]
+              #exposedHeaders : ['Content-type','Authorization','Origin','Access-Control-Allow-Origin','Origin', 'Accept', 'X-Requested-With', 'Content-Type', 'Access-Control-Request-Method', 'Access-Control-Request-Headers','Authorization', 'Access-Control-Allow-Origin','X-TEST']
+              preflightContinue: false
+              optionsSuccessStatus: 204
+              #maxAge: 600
+      - log:
+          - action:
+              message: "${req.method} ${req.originalUrl}"
+      - request-transformer:
+          - action:
+              headers:
+                add:
+                  requestID: "requestID"
+      - proxy:
+          - action:
+              serviceEndpoint: chatService
   recommender:
     apiEndpoints:
       - recommender
