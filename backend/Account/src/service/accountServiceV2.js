@@ -2,6 +2,7 @@ const { consumeQueue, publishToQueue, consumeFromExchange, publishToExchange } =
 const Account = require('../models/AcountModels');
 const logger = require('../utils/logger');
 const amqp = require('amqplib');
+const User = require('../models/AcountModels');
 
 async function handleUserDetailRequest(messageContent) {
     try {

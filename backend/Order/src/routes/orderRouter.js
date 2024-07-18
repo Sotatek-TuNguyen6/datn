@@ -14,7 +14,7 @@ router.get('/', orderController.getAllOrders);
 router.get('/:id', orderController.getOrderById);
 
 // Create a new order
-router.post('/', orderController.createOrder);
+router.post('/', protect, orderController.createOrder);
 
 // Update an existing order by ID
 router.put('/:id', orderController.updateOrderById);

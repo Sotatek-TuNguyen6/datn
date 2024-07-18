@@ -135,7 +135,7 @@ const MainProducts = () => {
               <Loading />
             ) : (
               <div className="row">
-                <Table data={data.data} columns={columns} sub={true} />
+                <Table data={data?.data} columns={columns} sub={true} />
 
               </div>
             )}

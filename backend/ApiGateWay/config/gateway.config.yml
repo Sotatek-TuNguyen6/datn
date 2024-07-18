@@ -58,7 +58,7 @@ serviceEndpoints:
   productService:
     url: "http://product:5001"
   voucherService:
-    url: "http://category:5002"
+    url: "http://voucher:5010"
   chatService:
     url: "http://chat:5003"
   orderService:

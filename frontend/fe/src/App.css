@@ -357,5 +357,7 @@ ul.breadcrumb li a:hover {
 .checkoutPage .form{zoom: 135%; background: #f1f1f1; padding: 40px;}
 .checkoutPage .form button{zoom: 80%;}
 .checkoutPage .card{background: #f1f1f1 !important;}
-
+.checkoutPage .card-noStick {
+  position: revert !important;
+}
 

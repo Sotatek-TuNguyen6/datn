@@ -40,30 +40,21 @@ app.get('/chat-users', async (req, res) => {
     try {
         const messages = await Message.find({ $or: [{ sender: adminId }, { receiver: adminId }] });
         const userIds = [...new Set(messages.map(msg => msg.sender === adminId ? msg.receiver : msg.sender))];
-        const userInfoPromises = userIds.map(async (userId) => {
-            const message = {
-                userId: userId,
-            };
+        const message = {
+            userIds: userIds,
+        };
 
-            console.log("--- start send")
-            await publishToQueue('user-info-request', message);
-
-            console.log("---- end send")
-            try {
-                console.log('await....')
-                const userInfo = await consumeQueue('user-info-response');
-                console.log('ok....')
-
-                return userInfo;
-            } catch (error) {
-                console.error(`Error consuming user info for userId ${userId}:`, error);
-                throw error;
-            }
-        });
+        await publishToQueue('user-info-request', message);
 
         // Wait for all userInfoPromises to resolve
-        const userInfos = await Promise.all(userInfoPromises);
-        res.json({ userInfos });
+        try {
+            const userInfos = await consumeQueue('user-info-response');
+
+            res.json(userInfos.accounts);
+        } catch (error) {
+            console.error(`Error consuming user info response:`, error);
+            throw error;
+        }
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -80,7 +71,6 @@ app.get('/messages', async (req, res) => {
                 { sender: adminId, receiver: userId }
             ]
         }).sort({ timestamp: 1 });
-        console.log('vao day r');
         res.json(messages);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -107,80 +97,80 @@ app.post('/messages', async (req, res) => {
     }
 });
 
-// io.on('connection', (socket) => {
-//     console.log('a user connected');
-
-//     socket.on('chat message', async (msg) => {
-//         try {
-//             console.log(msg);
-
-//             const newMessage = new Message({
-//                 sender: msg.sender,
-//                 receiver: msg.receiver,
-//                 message: msg.message,
-//                 timestamp: new Date()
-//             });
-//             await newMessage.save();
-
-//             io.to(msg.receiver).emit('chat message', newMessage);
-//         } catch (err) {
-//             console.error(err);
-//         }
-//     });
-
-//     socket.on('join', ({ userId }) => {
-//         socket.join(userId);
-//         console.log(`${userId} joined the chat`);
-//     });
-
-//     socket.on('disconnect', () => {
-//         console.log('user disconnected');
-//     });
-// });
-
-// Mock chat list data
-const chatList = [
-    { chatId: '1', participantIds: ['user1', 'user2'], creatorId: 'user1' },
-    { chatId: '2', participantIds: ['user3', 'user4'], creatorId: 'user3' },
-];
-
 io.on('connection', (socket) => {
-    console.log('New client connected');
+    console.log('a user connected');
 
-    socket.on('message:send', (message) => {
-        console.log('Received message:', message);
-        io.emit('message', message); // Broadcast the message to all connected clients
+    socket.on('chat message', async (msg) => {
+        try {
+            console.log(msg);
+
+            const newMessage = new Message({
+                sender: msg.sender,
+                receiver: msg.receiver,
+                message: msg.message,
+                timestamp: new Date()
+            });
+            await newMessage.save();
+
+            io.to(msg.receiver).emit('chat message', newMessage);
+        } catch (err) {
+            console.error(err);
+        }
     });
 
-    socket.on('reaction', (reaction) => {
-        console.log('Received reaction:', reaction);
-        io.emit('reaction', reaction); // Broadcast the reaction to all connected clients
-    });
-
-    socket.on('chat:create', (data) => {
-        console.log('Received chat:create event:', data);
-
-        // Simulate chat creation and emit a success event
-        const chatCreatedEvent = {
-            chatId: Date.now().toString(), // Simulate a unique chat ID
-            participantIds: data.participantIds,
-            creatorId: data.creatorId,
-        };
-
-        chatList.push(chatCreatedEvent); // Add the new chat to the chat list
-
-        io.emit('chat:created-success', chatCreatedEvent); // Emit the chat created success event
-    });
-
-    socket.on('chat:list', () => {
-        console.log('Received chat:list event');
-        socket.emit('chat:list', chatList); // Send the chat list to the requesting client
+    socket.on('join', ({ userId }) => {
+        socket.join(userId);
+        console.log(`${userId} joined the chat`);
     });
 
     socket.on('disconnect', () => {
-        console.log('Client disconnected');
+        console.log('user disconnected');
     });
 });
+
+// Mock chat list data
+// const chatList = [
+//     { chatId: '1', participantIds: ['user1', 'user2'], creatorId: 'user1' },
+//     { chatId: '2', participantIds: ['user3', 'user4'], creatorId: 'user3' },
+// ];
+
+// io.on('connection', (socket) => {
+//     console.log('New client connected');
+
+//     socket.on('message:send', (message) => {
+//         console.log('Received message:', message);
+//         io.emit('message', message); // Broadcast the message to all connected clients
+//     });
+
+//     socket.on('reaction', (reaction) => {
+//         console.log('Received reaction:', reaction);
+//         io.emit('reaction', reaction); // Broadcast the reaction to all connected clients
+//     });
+
+//     socket.on('chat:create', (data) => {
+//         console.log('Received chat:create event:', data);
+
+//         // Simulate chat creation and emit a success event
+//         const chatCreatedEvent = {
+//             chatId: Date.now().toString(), // Simulate a unique chat ID
+//             participantIds: data.participantIds,
+//             creatorId: data.creatorId,
+//         };
+
+//         chatList.push(chatCreatedEvent); // Add the new chat to the chat list
+
+//         io.emit('chat:created-success', chatCreatedEvent); // Emit the chat created success event
+//     });
+
+//     socket.on('chat:list', () => {
+//         console.log('Received chat:list event');
+//         socket.emit('chat:list', chatList); // Send the chat list to the requesting client
+//     });
+
+//     socket.on('disconnect', () => {
+//         console.log('Client disconnected');
+//     });
+// });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

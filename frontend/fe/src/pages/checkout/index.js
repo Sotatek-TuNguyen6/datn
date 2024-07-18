@@ -80,7 +80,7 @@ const Checkout = () => {
 
   const createPaymentUrl = async (orderDetails) => {
     if (formFields.paymentMethod == "credit_card") {
-      const { data } = await axios.post("http://localhost:8000/api/v1/payment", {
+      const { data } = await axios.post("http://localhost:8000/api/v1/order", {
         userId: user.id,
         amount: totalAmount,
         bankCode: "NCB",
@@ -92,7 +92,7 @@ const Checkout = () => {
       }
     }
     else {
-      await axios.post("http://localhost:8000/api/v1/payment/create", {
+      await axios.post("http://localhost:8000/api/v1/order/create", {
         userId: user.id,
         amount: totalAmount,
         bankCode: "NCB",
@@ -208,7 +208,7 @@ const Checkout = () => {
               </div>
   
               <div className="col-md-4 cartRightBox pt-4">
-                <div className="card p-4">
+                <div className="card p-4 card-noStick">
                   <div className="d-flex align-items-center mb-4">
                     <h5 className="mb-0 text-light">Subtotal</h5>
                     <h3 className="ml-auto mb-0 font-weight-bold">
@@ -236,7 +236,7 @@ const Checkout = () => {
                 </div>
   
                 {/* Add Voucher Code Input Below Order Summary */}
-                <div className="card p-4 mt-4">
+                <div className="card p-4 mt-4 card-noStick">
                   <div className="form-group mt-3">
                     <TextField
                       label="Enter Voucher Code"

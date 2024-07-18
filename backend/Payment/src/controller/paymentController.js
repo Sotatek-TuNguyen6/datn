@@ -141,8 +141,6 @@ exports.createPayment = async (req, res) => {
     }
 };
 
-
-
 // Get all payments
 exports.getAllPayments = async (req, res) => {
     try {

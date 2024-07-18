@@ -16,8 +16,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
-import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-
+import { ClickAwayListener } from '@mui/base'
 import Nav from "./nav/nav";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
@@ -25,7 +24,6 @@ import { useContext } from "react";
 import { MyContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";

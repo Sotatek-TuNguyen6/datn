@@ -12,11 +12,11 @@ export const createVoucher = async (data, access_token) => {
     return res.data;
 };
 
-export const getPay = async (access_token) => {
+export const getVoucher = async (access_token) => {
     const headers = {
         Authorization: `Bearer ${access_token}`,
     };
-    const res = await axiosJWT.get(`${API}/api/v1/review`, {
+    const res = await axiosJWT.get(`${API}/api/v1/voucher`, {
         headers,
     });
     return res.data;

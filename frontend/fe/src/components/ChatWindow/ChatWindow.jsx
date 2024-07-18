@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
@@ -7,20 +7,21 @@ import "./ChatWindow.css";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-const socket = io("http://localhost:8080"); // Thay đổi URL phù hợp với cấu hình của bạn
+const socket = io("http://localhost:8000");
 
 const ChatWindow = ({ onClose }) => {
   const user = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const chatBodyRef = useRef(null);
 
   useEffect(() => {
     const fetchChatHistory = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/messages", {
+        const response = await axios.get("http://localhost:8000/messages", {
           params: {
             userId: user.id,
-            adminId: "666331cfd4db5a08e6948e6d", // ID của admin
+            adminId: "66946520e4f20286b4c09dec",
           },
         });
         setMessages(response.data);
@@ -43,11 +44,18 @@ const ChatWindow = ({ onClose }) => {
     };
   }, [user]);
 
+  useEffect(() => {
+    // Scroll to the bottom when messages change
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
       const message = {
         sender: user.id,
-        receiver: "666331cfd4db5a08e6948e6d", // ID của admin
+        receiver: "66946520e4f20286b4c09dec", // ID của admin
         message: newMessage,
       };
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -64,7 +72,7 @@ const ChatWindow = ({ onClose }) => {
           <CloseIcon />
         </IconButton>
       </div>
-      <div className="chat-body">
+      <div className="chat-body" ref={chatBodyRef}>
         {messages.map((message, index) => (
           <div
             key={index}

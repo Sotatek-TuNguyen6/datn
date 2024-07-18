@@ -124,9 +124,9 @@ services:
     ports:
       - "5010:5010"
     volumes:
-      - ./Order:/app
+      - ./Voucher:/app
     environment:
-      - MONGODB_URL=mongodb://mongo:27017/order
+      - MONGODB_URL=mongodb://mongo:27017/voucher
       - PORT=5010
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -139,6 +139,28 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+  shipping:
+    build:
+      context: ./Shipping
+      dockerfile: Dockerfile
+    ports:
+      - "5011:5011"
+    volumes:
+      - ./Shipping:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/shipping
+      - PORT=5010
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - JWT_SECRET=9aFb3cH1iLp2sO8qR
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy      
   payment:
     build:
       context: ./Payment
@@ -157,7 +179,7 @@ services:
       - VNP_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
       - VNP_RETURN_URL=http://localhost:3006/orderSuccess
       - RABBITMQ_URL=amqp://rabbitmq:5672
-      - JWT_SECRET=9aFb3cH1iLp2sO8qR
+      - JWT_SECRET=9aFb3cH1iLp2sO8qRi
     depends_on:
       mongo:
         condition: service_healthy
@@ -245,7 +267,6 @@ services:
       - NODE_ENV=production
     depends_on:
       - account
-      # - category
       - order
       - payment
       - product
@@ -253,6 +274,8 @@ services:
       - actions
       - chat
       - recommender
+      - voucher
+      - shipping
 
 volumes:
   mongo-data:
