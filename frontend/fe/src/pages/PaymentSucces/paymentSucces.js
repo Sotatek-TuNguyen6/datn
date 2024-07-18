@@ -2,21 +2,26 @@ import React, { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const PaymentSuccess = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  
+  const user = useSelector((state) => state.user);
+
   const transactionId = queryParams.get("vnp_TxnRef");
-  const amount = queryParams.get("vnp_Amount") / 100; 
+  const amount = queryParams.get("vnp_Amount") / 100;
   const responseCode = queryParams.get("vnp_ResponseCode");
   const message = responseCode === "00" ? "Transaction Successful" : "Transaction Failed";
 
   useEffect(() => {
+    const headers = {
+      Authorization: `Bearer ${user.access_token}`,
+    };
     const getResultVNPay = async () => {
       const query = location.search;
       const { data } = await axios.get(
-        `http://localhost:8000/api/v1/order/vnpay_return${query}`
+        `http://localhost:8000/api/v1/order/vnpay_return${query}`, { headers }
       );
     };
 

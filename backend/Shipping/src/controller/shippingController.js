@@ -1,5 +1,5 @@
 // controllers/shippingController.js
-const Shipping = require('../models/Shipping');
+const Shipping = require('../models/shippingModel');
 
 // Create a new shipping record
 exports.createShipping = async (req, res) => {

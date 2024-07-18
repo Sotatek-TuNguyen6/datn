@@ -66,9 +66,9 @@ const checkQuantityStock = async (products) => {
 };
 // Ensure the consumer starts
 
-consumeQueue('productRequestQueue', handleProductGetAll);
+// consumeQueue('productRequestQueue', handleProductGetAll);
 // consumeQueue('productDetailsRequestQueue', handleProductDetailsRequest);
-logger.info("Consumer for productDetailsRequestQueue has started.");
+// logger.info("Consumer for productDetailsRequestQueue has started.");
 
 
 module.exports = { checkQuantityStock }

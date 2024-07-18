@@ -148,8 +148,7 @@ const Header = (props) => {
                       <li className="list-inline-item">
                         <span>
                           <Link to={"/cart"}>
-                            {" "}
-                            <img src={IconCart} />
+                                      <img src={IconCart} />
                             <span className="badge bg-success rounded-circle">
                               {listCart.length}
                             </span>
@@ -321,7 +320,6 @@ const Header = (props) => {
             <li>
               <Button className="align-items-center">
                 <Link to="">
-                  {" "}
                   <img src={IconCompare} />
                   Compare
                 </Link>
@@ -330,7 +328,6 @@ const Header = (props) => {
             <li>
               <Button className="align-items-center">
                 <Link to="">
-                  {" "}
                   <img src={IconCart} />
                   Cart
                 </Link>
