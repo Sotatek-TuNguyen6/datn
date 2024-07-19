@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../features/userSlice/userSlice";
 
 const SignIn = () => {
+  window.scrollTo(0, 0)
   const [showPassword, setShowPassword] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [formFields, setFormFields] = useState({
@@ -90,7 +91,7 @@ const SignIn = () => {
         password: formFields.password,
       });
     } else {
-      alert("Please fill all the details");
+      console.log("Please fill all the details");
     }
   };
 

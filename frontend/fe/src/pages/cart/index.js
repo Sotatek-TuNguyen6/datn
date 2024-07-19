@@ -9,7 +9,7 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { MyContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {  removeFromCart, updateCart } from "../../features/cart/cartSlice";
+import { removeFromCart, updateCart } from "../../features/cart/cartSlice";
 import { formatMoneyVND } from "../../functions/formatVND";
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -17,6 +17,8 @@ const Cart = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.user);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   const { listCart } = useSelector((state) => state.cart);
   const { access_token } = userLogin;
   useEffect(() => {
@@ -40,7 +42,7 @@ const Cart = () => {
     .reduce((total, value) => total + value, 0);
   return (
     <>
-      {context.windowWidth > 992 && (
+      {windowWidth > 992 && (
         <div className="breadcrumbWrapper mb-4">
           <div className="container-fluid">
             <ul className="breadcrumb breadcrumb2 mb-0">
@@ -121,7 +123,6 @@ const Cart = () => {
                             <td>
                               <QuantityBox
                                 item={item}
-
                               />
                             </td>
                             <td>

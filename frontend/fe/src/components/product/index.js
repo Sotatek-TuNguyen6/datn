@@ -2,15 +2,14 @@ import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import Rating from "@mui/material/Rating";
 import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import * as ActionsService from "../../services/Actions/actionService";
 import * as UserService from "../../services/UserService/index";
-
-import { MyContext } from "../../App";
+import { Bounce, toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { formatMoneyVND } from "../../functions/formatVND";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice";
@@ -21,8 +20,9 @@ const Product = (props) => {
   const [productData, setProductData] = useState();
   const [isAdded, setIsadded] = useState(false);
   const dispatch = useDispatch()
-  const context = useContext(MyContext);
   const { id: idUser, name, access_token } = useSelector((state) => state.user);
+
+  const history = useNavigate()
   useEffect(() => {
     setProductData(props.item);
   }, [props.item]);
@@ -53,7 +53,8 @@ const Product = (props) => {
   const mutationAddActions = useMutation({
     mutationFn: (data) => ActionsService.createAction(data),
     onSuccess: () => {
-      alert("Action created successfully");
+
+      console.log("Action created successfully");
     },
     onError: (error) => {
       console.error("Error submitting action:", error);
@@ -83,84 +84,102 @@ const Product = (props) => {
       productId: _id,
       actionType: "add_to_cart",
     });
+
+    history("/cart")
+    // alert("ok")
+    // toast.success('Add to cart success!', {
+    //   position: "bottom-center",
+    //   autoClose: 5000,
+    //   hideProgressBar: false,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   draggable: true,
+    //   progress: undefined,
+    //   theme: "dark",
+    //   className: "custom-toast",
+    //   transition: Bounce,
+    // });
   };
   const handleIconClick = (event) => {
     event.stopPropagation();
   };
 
   return (
-    <div className="productThumb" onClick={setProductCat}>
-      {props.tag !== null && props.tag !== undefined && (
-        <span className={`badge ${props.tag}`}>{props.tag}</span>
-      )}
+    <>
+      <ToastContainer />
+      <div className="productThumb" onClick={setProductCat}>
+        {props.tag !== null && props.tag !== undefined && (
+          <span className={`badge ${props.tag}`}>{props.tag}</span>
+        )}
 
-      {productData !== undefined && (
-        <>
-          <Link to={`/product/${productData?._id}`}>
-            <div className="imgWrapper">
-              <div className="p-4 wrapper mb-3">
-                <img src={productData?.mainImage} className="w-100" />
-              </div>
+        {productData !== undefined && (
+          <>
+            <Link to={`/product/${productData?._id}`}>
+              <div className="imgWrapper">
+                <div className="p-4 wrapper mb-3">
+                  <img src={productData?.mainImage} className="w-100" />
+                </div>
 
-              <div className="overlay transition">
-                <ul className="list list-inline mb-0">
-                  <li className="list-inline-item">
-                    <a className="cursor" tooltip="Add to Wishlist" onClick={() => {handleAddWishList(productData)}}>
-                    <FavoriteBorderOutlinedIcon onClick={handleAddWishList} />
-                    </a>
-                  </li>
-                  {/* <li className="list-inline-item">
+                <div className="overlay transition">
+                  <ul className="list list-inline mb-0">
+                    <li className="list-inline-item">
+                      <a className="cursor" tooltip="Add to Wishlist" onClick={() => { handleAddWishList(productData) }}>
+                        <FavoriteBorderOutlinedIcon onClick={handleAddWishList} />
+                      </a>
+                    </li>
+                    {/* <li className="list-inline-item">
                     <a className="cursor" tooltip="Compare">
                       <CompareArrowsOutlinedIcon />
                     </a>
                   </li> */}
-                  <li className="list-inline-item">
-                    <a className="cursor" tooltip="Quick View">
-                      <RemoveRedEyeOutlinedIcon />
-                    </a>
-                  </li>
-                </ul>
+                    <li className="list-inline-item">
+                      <a className="cursor" tooltip="Quick View">
+                        <RemoveRedEyeOutlinedIcon />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
 
-          <div className="info">
-            <span className="d-block catName">{productData?.brand}</span>
-            <h4 className="title">
-              <Link>{productData?.productName?.substr(0, 50) + "..."}</Link>
-            </h4>
-            <Rating
-              name="half-rating-read"
-              value={parseFloat(productData?.ratings)}
-              precision={0.5}
-              readOnly
-            />
-            <span className="brand d-block text-g">
-              By <Link className="text-g">{productData?.brand}</Link>
-            </span>
+            <div className="info">
+              <span className="d-block catName">{productData?.brand}</span>
+              <h4 className="title">
+                <Link>{productData?.productName?.substr(0, 50) + "..."}</Link>
+              </h4>
+              <Rating
+                name="half-rating-read"
+                value={parseFloat(productData?.ratings)}
+                precision={0.5}
+                readOnly
+              />
+              <span className="brand d-block text-g">
+                By <Link className="text-g">{productData?.brand}</Link>
+              </span>
 
-            <div className="d-flex align-items-center mt-3">
-              <div className="d-flex align-items-center w-100">
-                <span className="price text-g font-weight-bold">
-                  {formatMoneyVND(productData?.priceSale)}
-                </span>{" "}
-                <span className="oldPrice ml-auto">
-                  {formatMoneyVND(productData?.price)}
-                </span>
+              <div className="d-flex align-items-center mt-3">
+                <div className="d-flex align-items-center w-100">
+                  <span className="price text-g font-weight-bold">
+                    {formatMoneyVND(productData?.priceSale)}
+                  </span>{" "}
+                  <span className="oldPrice ml-auto">
+                    {formatMoneyVND(productData?.price)}
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <Button
-              className="w-100 transition mt-3"
-              onClick={() => handleAddToCart(productData)}
-            >
-              <ShoppingCartOutlinedIcon />
-              {isAdded === true ? "Added" : "Add"}
-            </Button>
-          </div>
-        </>
-      )}
-    </div>
+              <Button
+                className="w-100 transition mt-3"
+                onClick={() => handleAddToCart(productData)}
+              >
+                <ShoppingCartOutlinedIcon />
+                {isAdded === true ? "Added" : "Add"}
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

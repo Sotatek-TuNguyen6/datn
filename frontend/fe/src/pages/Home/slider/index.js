@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Slider from "react-slick";
 import "./index.css";
 import Slide1 from "../../../assets/images/slider-1.png";
@@ -8,6 +8,7 @@ import { MyContext } from "../../../App";
 
 const HomeSlider = () => {
   const context = useContext(MyContext);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   var settings = {
     dots: true,
@@ -16,7 +17,7 @@ const HomeSlider = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
-    arrows: context.windowWidth > 992 ? true : false,
+    arrows: true,
     autoplay: true,
   };
 
@@ -48,7 +49,7 @@ const HomeSlider = () => {
           </div>
         </Slider>
 
-        {context.windowWidth > 992 && <Newsletter />}
+        {windowWidth> 992 && <Newsletter />}
       </div>
     </section>
   );

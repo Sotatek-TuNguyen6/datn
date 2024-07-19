@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { updateCart } from '../../features/cart/cartSlice';
+import { updateCartV2 } from '../../features/cart/cartSlice';
+import './QuantityBox.css';
 
 const QuantityBox = (props) => {
   const [inputValue, setInputValue] = useState(props.item.quantity);
@@ -30,7 +31,7 @@ const QuantityBox = (props) => {
         : cartItem;
     });
 
-    dispatch(updateCart(updatedCart[0]));
+    dispatch(updateCartV2(updatedCart));
   };
 
   return (
@@ -41,12 +42,14 @@ const QuantityBox = (props) => {
           value={inputValue}
           readOnly
         />
-        <span className="arrow plus" onClick={plus}>
-          <KeyboardArrowUpIcon />
-        </span>
-        <span className="arrow minus" onClick={minus}>
-          <KeyboardArrowDownIcon />
-        </span>
+        <div className="arrows">
+          <span className="arrow plus" onClick={plus}>
+            <KeyboardArrowUpIcon />
+          </span>
+          <span className="arrow minus" onClick={minus}>
+            <KeyboardArrowDownIcon />
+          </span>
+        </div>
       </div>
     </div>
   );

@@ -12,11 +12,10 @@ const socket = io("http://localhost:8000");
 
 const ChatWindow = ({ onClose }) => {
   const user = useSelector((state) => state.user);
-  console.log("🚀 ~ ChatWindow ~ user:", user)
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const chatBodyRef = useRef(null);
-
+  const history = useNavigate()
   useEffect(() => {
     const fetchChatHistory = async () => {
       try {
@@ -65,7 +64,7 @@ const ChatWindow = ({ onClose }) => {
   };
 
   const handleLoginRedirect = () => {
-    history("/login");
+    history("/signIn");
   };
   
   if (!user || !user.access_token) {

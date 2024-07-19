@@ -30,7 +30,6 @@ export const userSlide = createSlice({
         access_token,
         wishlist
       } = action.payload;
-      console.log("🚀 ~ action.payload:", action.payload)
       state.username = username;
       state.name = name;
       state.phone = phone;

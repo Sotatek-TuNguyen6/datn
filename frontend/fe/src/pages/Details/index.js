@@ -24,12 +24,14 @@ import { updateUser } from "../../features/userSlice/userSlice";
 import { addToCart } from "../../features/cart/cartSlice";
 import { formatMoneyVND } from "../../functions/formatVND";
 import { useGetRecommend } from "../../hooks/recommendFetching";
-
+import { Bounce, toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const DetailsPage = (props) => {
   const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
   const [smlImageSize, setSmlImageSize] = useState([150, 150]);
   const [activeSize, setActiveSize] = useState(0);
   const [activeTabs, setActiveTabs] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [currentProduct, setCurrentProduct] = useState({});
   const context = useContext(MyContext);
   const [prodCat, setProdCat] = useState({
@@ -65,7 +67,7 @@ const DetailsPage = (props) => {
   const mutationAddActions = useMutation({
     mutationFn: (data) => ActionsService.createAction(data),
     onSuccess: () => {
-      alert("Action created successfully");
+      console.log("Action created successfully");
     },
     onError: (error) => {
       console.error("Error submitting action:", error);
@@ -106,7 +108,7 @@ const DetailsPage = (props) => {
     slidesToShow: 5,
     slidesToScroll: 1,
     fade: false,
-    arrows: context.windowWidth > 992 ? true : false,
+    arrows: true,
   };
 
   var related = {
@@ -116,7 +118,7 @@ const DetailsPage = (props) => {
     slidesToShow: 4,
     slidesToScroll: 1,
     fade: false,
-    arrows: context.windowWidth > 992 ? true : false,
+    arrows: true,
   };
 
   const goto = (index) => {
@@ -189,6 +191,18 @@ const DetailsPage = (props) => {
       productId: id,
       actionType: "add_to_cart",
     });
+    toast.success('Add to cart success!', {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      className: "custom-toast",
+      transition: Bounce,
+    });
   };
 
   return (
@@ -202,14 +216,14 @@ const DetailsPage = (props) => {
           {"Add To Cart"}
         </Button>
       )} */}
-
+      <ToastContainer />
       {isLoading && (
         <div className="loader">
           <img src={Loader} />
         </div>
       )}
       <section className="detailsPage mb-5">
-        {context.windowWidth > 992 && (
+        {windowWidth > 992 && (
           <div className="breadcrumbWrapper mb-4">
             <div className="container-fluid">
               <ul className="breadcrumb breadcrumb2 mb-0">

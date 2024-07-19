@@ -1,0 +1,38 @@
+.counterSec {
+    display: flex;
+    align-items: center;
+  }
+  
+  input[type="number"] {
+    width: 50px;
+    text-align: center;
+    font-size: 18px;
+    margin-right: 10px; /* Thêm khoảng cách giữa input và nút */
+  }
+  
+  .arrows {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px; /* Thêm khoảng cách giữa các nút */
+    background-color: #f0f0f0;
+    border-radius: 5px;
+  }
+  
+  .arrow.plus {
+    margin-bottom: 10px; /* Tăng khoảng cách giữa nút cộng và trừ */
+  }
+  
+  .arrow:hover {
+    background-color: #d0d0d0;
+  }
+  

@@ -30,6 +30,7 @@ import ResetPassword from "./pages/ResetPassword/ResetPassword";
 const MyContext = createContext();
 
 function App() {
+
   const getListQuery = useGetProduct();
 
   const {
@@ -38,7 +39,9 @@ function App() {
     isError,
   } = getListQuery;
 
-
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <>
       {isLoadingCallApi === true ? (
@@ -48,46 +51,46 @@ function App() {
       ) : (
         <BrowserRouter>
           {/* <MyContext.Provider value={value}> */}
-            <Header data={data.productData} />
-            <Routes>
-              <Route
-                exact={true}
-                path="/"
-                element={<Home data={dataProduct?.data ?? []} />}
-              />
-              <Route
-                exact={true}
-                path="/category/:id"
-                element={<Listing data={data.productData} single={true} />}
-              />
-              <Route
-                exact={true}
-                path="/cat/:id/:id"
-                element={<Listing data={data.productData} single={false} />}
-              />
-              <Route
-                exact={true}
-                path="/product/:id"
-                element={<DetailsPage />}
-              />
-              <Route exact={true} path="/cart" element={<Cart />} />
-              <Route exact={true} path="/wishlist" element={<Wishlist />} />
-              <Route exact={true} path="/signIn" element={<SignIn />} />
-              <Route exact={true} path="/forgot-password" element={<ForgotPassword />} />
-              <Route exact={true} path="/reset-password/:token" element={<ResetPassword />} />
-              <Route exact={true} path="/signUp" element={<SignUp />} />
-              <Route exact={true} path="/checkout" element={<Checkout />} />
-              <Route exact={true} path="/account" element={<AccountPage />} />
-              <Route exact={true} path="/orderSuccess" element={<PaymentSuccess />} />
-              <Route
-                exact={true}
-                path="/order-tracking"
-                element={<MyOrdersPage />}
-              />
-              <Route exact={true} path="*" element={<NotFound />} />
-            </Routes>
-            <Footer />
-            <ChatButton/>
+          <Header data={data.productData} />
+          <Routes>
+            <Route
+              exact={true}
+              path="/"
+              element={<Home data={dataProduct?.data ?? []} />}
+            />
+            <Route
+              exact={true}
+              path="/category/:id"
+              element={<Listing data={data.productData} single={true} />}
+            />
+            <Route
+              exact={true}
+              path="/cat/:id/:id"
+              element={<Listing data={data.productData} single={false} />}
+            />
+            <Route
+              exact={true}
+              path="/product/:id"
+              element={<DetailsPage />}
+            />
+            <Route exact={true} path="/cart" element={<Cart />} />
+            <Route exact={true} path="/wishlist" element={<Wishlist />} />
+            <Route exact={true} path="/signIn" element={<SignIn />} />
+            <Route exact={true} path="/forgot-password" element={<ForgotPassword />} />
+            <Route exact={true} path="/reset-password/:token" element={<ResetPassword />} />
+            <Route exact={true} path="/signUp" element={<SignUp />} />
+            <Route exact={true} path="/checkout" element={<Checkout />} />
+            <Route exact={true} path="/account" element={<AccountPage />} />
+            <Route exact={true} path="/orderSuccess" element={<PaymentSuccess />} />
+            <Route
+              exact={true}
+              path="/order-tracking"
+              element={<MyOrdersPage />}
+            />
+            <Route exact={true} path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+          <ChatButton />
           {/* </MyContext.Provider> */}
         </BrowserRouter>
       )}

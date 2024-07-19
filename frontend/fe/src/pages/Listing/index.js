@@ -56,16 +56,12 @@ const Listing = (props) => {
   useEffect(() => {
     if (dataProduct && dataProduct.data && dataCategoryDetail) {
       const filterProduct = dataProduct.data.filter((product) => product.subCategoryName === dataCategoryDetail.data.subCategories[0].subCategoryName)
-      console.log("🚀 ~ useEffect ~ filterProduct:", filterProduct)
-      console.log("🚀 ~ useEffect ~ titleFilter:", titleFilter)
       setDataBefore(filterProduct)
       switch (titleFilter) {
         case "Price: Low to High":
-          console.log("vao day r", filterProduct.slice(0, itemsPerPage).sort((a, b) => a.priceSale - b.priceSale))
           setListProduct(filterProduct.slice(0, itemsPerPage).sort((a, b) => a.priceSale - b.priceSale));
           break;
         case "Price: High to Low":
-          // Sắp xếp giá từ cao xuống thấp
           // listProduct.sort((a, b) => b.price - a.price);
           setListProduct(filterProduct.slice(0, itemsPerPage).sort((a, b) => b.priceSale - a.priceSale));
 
