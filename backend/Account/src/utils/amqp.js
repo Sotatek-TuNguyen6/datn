@@ -39,12 +39,13 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey, callback
   }
 }
 async function publishToQueue(queueName, message) {
+  console.log("🚀 ~ publishToQueue ~ message:", JSON.stringify(message))
   try {
     const connection = await amqp.connect(process.env.RABBITMQ_URL);
     const channel = await connection.createChannel();
     await channel.assertQueue(queueName, { durable: true });
     channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
-    logger.info(`Message sent to queue: ${queueName}`, { message });
+    logger.info(`Message sent to queue: ${queueName}`, message);
     await channel.close();
     await connection.close();
   } catch (error) {

@@ -3,15 +3,14 @@ from surprise import Dataset, Reader, SVD
 from surprise.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics import mean_squared_error, precision_score, recall_score, f1_score
 import json
-from rabbitmq_product_client import send_and_receive_all_products
+from flask import Flask, jsonify, request
+
 class RecommenderSystem:
     def __init__(self):
         self.interaction_weights = {'watching': 1, 'add_to_cart': 3, 'purchase': 5}
         
-        # send_and_receive_all_products('productRequestQueue', 'productResponseQueue', 'response')
-        send_and_receive_all_products('actionsRequestQueue', 'actionsResponseQueue', 'actions.json')
-
         # Load items data from JSON file
         with open('response.json', 'r') as file:
             product_data = json.load(file)
@@ -45,6 +44,26 @@ class RecommenderSystem:
         
         # Calculate cosine similarity between all product descriptions
         self.cosine_sim = cosine_similarity(self.tfidf_matrix, self.tfidf_matrix)
+        
+        # Calculate MSE for collaborative filtering
+        predictions = self.algo.test(self.testset)
+        self.mse = mean_squared_error([pred.r_ui for pred in predictions], [pred.est for pred in predictions])
+        
+        # Calculate Precision, Recall, F1-score
+        self.precision, self.recall, self.f1 = self.calculate_precision_recall_f1(predictions)
+
+    def calculate_precision_recall_f1(self, predictions):
+        y_true = [pred.r_ui for pred in predictions]
+        y_pred = [pred.est for pred in predictions]
+        
+        y_pred_binary = [1 if rating >= 3 else 0 for rating in y_pred]
+        y_true_binary = [1 if rating >= 3 else 0 for rating in y_true]
+        
+        precision = precision_score(y_true_binary, y_pred_binary, zero_division=0)
+        recall = recall_score(y_true_binary, y_pred_binary, zero_division=0)
+        f1 = f1_score(y_true_binary, y_pred_binary, zero_division=0)
+        
+        return precision, recall, f1
 
     def get_content_based_recommendations(self, user_id):
         user_interactions = self.df_interactions[self.df_interactions['userId'] == user_id]
@@ -100,4 +119,3 @@ class RecommenderSystem:
             results.append(product_info)
         
         return results
-

@@ -23,6 +23,7 @@ async function consumeQueue(queueName, timeout = 10000) {
 
     return new Promise((resolve, reject) => {
       channel.consume(queueName, (msg) => {
+        console.log("🚀 ~ channel.consume ~ msg:", JSON.parse(msg.content))
         if (msg !== null) {
           const messageContent = JSON.parse(msg.content.toString());
           logger.info(`Message received from queue: ${queueName}`, { messageContent });

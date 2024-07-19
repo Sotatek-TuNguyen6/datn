@@ -83,7 +83,7 @@ exports.createOrder = async (req, res) => {
         }
 
         const {id, email} = req.user
-        const { products, userId } = req.body
+        const { products, userId, addresses } = req.body
         const newOrder = new Order({ products, userId });
         
         const savedOrder = await newOrder.save();
@@ -95,6 +95,7 @@ exports.createOrder = async (req, res) => {
             amount,
             emailUser: email,
             orderId: savedOrder._id,
+            addresses
         });
 
         var orderInfo = `Nap tien cho userID: ${userId}. So tien ${amount} VND`;

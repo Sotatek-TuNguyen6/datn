@@ -97,4 +97,8 @@ app.listen(port, async () => {
       logger.error(`Error processing payment.failed for order ${orderId}`, { error: error.message });
     }
   });
+
+  await consumeFromExchange('productResponse', 'test', 'product_respone', async (message) => {
+    console.log(message)
+  });
 });

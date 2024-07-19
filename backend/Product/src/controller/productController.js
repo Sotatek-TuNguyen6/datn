@@ -3,7 +3,8 @@ const Joi = require("joi")
 const logger = require('../utils/logger');
 const redisClient = require("../utils/redisClient");
 const { log } = require("winston");
-
+const fs = require('fs');
+const data = require("../../data.json")
 const productSchema = Joi.object({
     productName: Joi.string().trim().required(),
     price: Joi.number().required(),
@@ -120,9 +121,31 @@ exports.updateProduct = async (req, res, next) => {
 
 exports.importData = async (req, res, next) => {
     try {
-        const { data } = req.body;
+        // fs.readFile(data, 'utf8', async (err, data) => {
+        //     if (err) {
+        //         return next(err);
+        //     }
 
-        const importedProducts = await Product.insertMany(data);
+        //     try {
+        //         const products = JSON.parse(data.data);
+
+        //         const importedProducts = await Product.insertMany(products);
+
+        //         logger.info(`${importedProducts.length} products imported successfully`);
+
+        //         res.status(200).json({
+        //             success: true,
+        //             message: `${importedProducts.length} products imported successfully`,
+        //             data: importedProducts
+        //         });
+        //     } catch (error) {
+        //         next(error);
+        //     }
+        // });
+        const products = data.data; // Assuming data is already parsed JSON object
+
+        // Import the products into the database
+        const importedProducts = await Product.insertMany(products);
 
         logger.info(`${importedProducts.length} products imported successfully`);
 
@@ -134,7 +157,7 @@ exports.importData = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 exports.getProductByCategory = async (req, res, next) => {
     try {
@@ -162,13 +185,13 @@ exports.getProductByCategory = async (req, res, next) => {
 }
 
 
-exports.updateStock =  async (productId) => {
+exports.updateStock = async (productId) => {
     try {
         const updatedProduct = await Product.findByIdAndUpdate(
             productId,
             {},
             { new: true, runValidators: true }
-          )
+        )
 
         if (updatedProduct) {
             await redisClient.del('products');
