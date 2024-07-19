@@ -59,7 +59,7 @@ const Checkout = () => {
       formFields.pincode === "" ||
       formFields.phoneNumber === ""
     ) {
-      alert("All fields are required");
+      console.log("All fields are required");
       return false;
     }
     const orderDetails = listCart.map((item) => ({

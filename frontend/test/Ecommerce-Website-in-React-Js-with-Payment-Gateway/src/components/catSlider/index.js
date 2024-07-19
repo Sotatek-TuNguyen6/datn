@@ -42,9 +42,9 @@ const CatSlider = (props) => {
     slidesToShow: 10,
     slidesToScroll: 1,
     fade: false,
-    arrows: context.windowWidth > 992 ? true : false,
-    autoplay: context.windowWidth > 992 ? 2000 : false,
-    centerMode: context.windowWidth > 992 ? true : false,
+    arrows:true,
+    autoplay: true,
+    centerMode: true,
   };
 
   var catLength = 0;

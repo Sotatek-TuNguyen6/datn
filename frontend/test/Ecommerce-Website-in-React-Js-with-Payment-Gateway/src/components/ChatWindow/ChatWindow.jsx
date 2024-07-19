@@ -6,13 +6,15 @@ import { io } from "socket.io-client";
 import "./ChatWindow.css";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const socket = io("http://localhost:8080"); // Thay đổi URL phù hợp với cấu hình của bạn
-
 const ChatWindow = ({ onClose }) => {
   const user = useSelector((state) => state.user);
+  console.log("🚀 ~ ChatWindow ~ user:", user)
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const history = useNavigate();
 
   useEffect(() => {
     const fetchChatHistory = async () => {
@@ -20,7 +22,7 @@ const ChatWindow = ({ onClose }) => {
         const response = await axios.get("http://localhost:8080/messages", {
           params: {
             userId: user.id,
-            adminId: "666331cfd4db5a08e6948e6d", // ID của admin
+            adminId: "666331cfd4db5a08e6948e6d",
           },
         });
         setMessages(response.data);
@@ -30,10 +32,8 @@ const ChatWindow = ({ onClose }) => {
     };
 
     fetchChatHistory();
-    // Join the chat room for the user
     socket.emit("join", { userId: user.id });
 
-    // Lắng nghe sự kiện 'chat message' từ server
     socket.on("chat message", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
@@ -56,10 +56,40 @@ const ChatWindow = ({ onClose }) => {
     }
   };
 
+  const handleLoginRedirect = () => {
+    history("/login");
+  };
+  
+  if (!user || !user.access_token) {
+    return (
+      <div className="chat-window">
+        <div className="chat-header">
+          <span>Chat with Admin</span>
+          <IconButton size="small" onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        </div>
+        <div className="chat-body">
+          <div className="no-user-message">
+            You need to log in to chat with Admin.
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleLoginRedirect}
+            >
+              Go to Login
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  
   return (
     <div className="chat-window">
       <div className="chat-header">
-        <span>Chat với Admin</span>
+        <span>Chat with Admin</span>
         <IconButton size="small" onClick={onClose}>
           <CloseIcon />
         </IconButton>
@@ -91,7 +121,7 @@ const ChatWindow = ({ onClose }) => {
       <div className="chat-footer">
         <input
           type="text"
-          placeholder="Nhập câu hỏi..."
+          placeholder="Enter question..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => {
@@ -106,7 +136,7 @@ const ChatWindow = ({ onClose }) => {
           endIcon={<SendIcon />}
           onClick={handleSendMessage}
         >
-          Gửi
+          Send
         </Button>
       </div>
     </div>

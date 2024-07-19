@@ -794,3 +794,4 @@ error: Error checking product stock: Cast to ObjectId failed for value "1" (type
 error: Error checking product stock: Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Product"
 error: Error checking product stock: Cast to ObjectId failed for value "1" (type string) at path "_id" for model "Product"
 error: Error consuming from exchange: orderExchange {"error":"connect ECONNREFUSED 172.20.0.4:5672"}
+error: Category validation failed: categoryName: Path `categoryName` is required. {"_message":"Category validation failed","errors":{"categoryName":{"kind":"required","message":"Path `categoryName` is required.","name":"ValidatorError","path":"categoryName","properties":{"message":"Path `categoryName` is required.","path":"categoryName","type":"required"}}}}

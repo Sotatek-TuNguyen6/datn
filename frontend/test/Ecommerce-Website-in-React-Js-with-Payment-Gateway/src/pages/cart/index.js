@@ -19,6 +19,8 @@ const Cart = () => {
   const userLogin = useSelector((state) => state.user);
   const { listCart } = useSelector((state) => state.cart);
   const { access_token } = userLogin;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   useEffect(() => {
     if (!access_token) {
       history("/signIn");
@@ -40,7 +42,7 @@ const Cart = () => {
     .reduce((total, value) => total + value, 0);
   return (
     <>
-      {context.windowWidth > 992 && (
+      {windowWidth > 992 && (
         <div className="breadcrumbWrapper mb-4">
           <div className="container-fluid">
             <ul className="breadcrumb breadcrumb2 mb-0">

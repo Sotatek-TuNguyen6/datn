@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./style.css";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -19,6 +19,7 @@ const Wishlist = () => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.user);
   const { id, access_token, wishlist } = userLogin;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     if (!access_token) {
@@ -61,7 +62,7 @@ const Wishlist = () => {
 
   return (
     <>
-      {context.windowWidth > 992 && (
+      {windowWidth > 992 && (
         <div className="breadcrumbWrapper mb-4">
           <div className="container-fluid">
             <ul className="breadcrumb breadcrumb2 mb-0">

@@ -53,7 +53,7 @@ const Product = (props) => {
   const mutationAddActions = useMutation({
     mutationFn: (data) => ActionsService.createAction(data),
     onSuccess: () => {
-      alert("Action created successfully");
+      console.log("Action created successfully");
     },
     onError: (error) => {
       console.error("Error submitting action:", error);

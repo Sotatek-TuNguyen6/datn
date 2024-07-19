@@ -36,6 +36,8 @@ const DetailsPage = (props) => {
     parentCat: sessionStorage.getItem("parentCat"),
     subCatName: sessionStorage.getItem("subCatName"),
   });
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [rating, setRating] = useState(0.0);
   const [isAlreadyAddedInCart, setisAlreadyAddedInCart] = useState(false);
@@ -65,7 +67,7 @@ const DetailsPage = (props) => {
   const mutationAddActions = useMutation({
     mutationFn: (data) => ActionsService.createAction(data),
     onSuccess: () => {
-      alert("Action created successfully");
+      console.log("Action created successfully");
     },
     onError: (error) => {
       console.error("Error submitting action:", error);
@@ -106,7 +108,7 @@ const DetailsPage = (props) => {
     slidesToShow: 5,
     slidesToScroll: 1,
     fade: false,
-    arrows: context.windowWidth > 992 ? true : false,
+    arrows: true,
   };
 
   var related = {
@@ -116,7 +118,7 @@ const DetailsPage = (props) => {
     slidesToShow: 4,
     slidesToScroll: 1,
     fade: false,
-    arrows: context.windowWidth > 992 ? true : false,
+    arrows: true,
   };
 
   const goto = (index) => {
@@ -209,7 +211,7 @@ const DetailsPage = (props) => {
         </div>
       )}
       <section className="detailsPage mb-5">
-        {context.windowWidth > 992 && (
+        {windowWidth > 992 && (
           <div className="breadcrumbWrapper mb-4">
             <div className="container-fluid">
               <ul className="breadcrumb breadcrumb2 mb-0">

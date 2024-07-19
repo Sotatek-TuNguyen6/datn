@@ -90,7 +90,7 @@ const SignIn = () => {
         password: formFields.password,
       });
     } else {
-      alert("Please fill all the details");
+      console.log("Please fill all the details");
     }
   };
 
