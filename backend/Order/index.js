@@ -8,8 +8,9 @@ const helmet = require("helmet");
 const routerOrder = require("./src/routes/orderRouter");
 const db = require("./src/config/connectDb");
 const Order = require("./src/model/orderModel");
-const { consumeFromExchange } = require("./src/utils/amqp");
+const { consumeFromExchange, consumeQueue } = require("./src/utils/amqp");
 const logger = require("./src/utils/logger");
+const { getAllOrder } = require("./src/service/orderService");
 const app = express();
 
 dotenv.config();
@@ -101,4 +102,6 @@ app.listen(port, async () => {
   await consumeFromExchange('productResponse', 'test', 'product_respone', async (message) => {
     console.log(message)
   });
+
+  await consumeQueue('order_info', getAllOrder)
 });

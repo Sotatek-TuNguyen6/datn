@@ -196,11 +196,11 @@ const Cart = () => {
                   <Link to={"/checkout"}>
                     <Button
                       className="btn-g btn-lg"
-                      onClick={() => {
-                        context.setCartTotalAmount(
-                          tottalAmount
-                        );
-                      }}
+                      // onClick={() => {
+                      //   context.setCartTotalAmount(
+                      //     tottalAmount
+                      //   );
+                      // }}
                     >
                       Proceed To CheckOut
                     </Button>

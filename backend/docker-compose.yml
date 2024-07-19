@@ -149,7 +149,7 @@ services:
       - ./Shipping:/app
     environment:
       - MONGODB_URL=mongodb://mongo:27017/shipping
-      - PORT=5010
+      - PORT=5011
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - RABBITMQ_URL=amqp://rabbitmq:5672

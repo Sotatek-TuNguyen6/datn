@@ -61,7 +61,7 @@ async function handleCreateOrderRequest({ userId, products, amount, emailUser })
       };
       await publishToExchange('orderExchange', 'order.create.response', responseMessage);
 
-    //   logger.info('Order created successfully:', newOrder);
+      //   logger.info('Order created successfully:', newOrder);
     }
     logger.info('Start!!', {});
   } catch (error) {
@@ -69,9 +69,19 @@ async function handleCreateOrderRequest({ userId, products, amount, emailUser })
   }
 }
 
+async function getAllOrder(shippings) {
+  try {
+    console.log("🚀 ~ getAllOrder ~ shippings:", shippings)
+
+  } catch (error) {
+    console.log(error);
+  }
+
+}
 
 consumeFromExchange('orderExchange', 'order.create', 'orderQueue', handleCreateOrderRequest);
 
-
-
 logger.info("Consumers for orderCreateRequestQueue and orderCreateResponseQueue have started.");
+
+
+module.exports = { getAllOrder }

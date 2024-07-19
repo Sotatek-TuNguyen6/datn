@@ -1,5 +1,6 @@
 // controllers/shippingController.js
 const Shipping = require('../models/shippingModel');
+const { publishToQueue, consumeQueue } = require('../utils/amqp');
 
 // Create a new shipping record
 exports.createShipping = async (req, res) => {
@@ -16,7 +17,19 @@ exports.createShipping = async (req, res) => {
 exports.getAllShippings = async (req, res) => {
     try {
         const shippings = await Shipping.find();
-        res.send(shippings);
+
+        await publishToQueue("order_info", shippings);
+
+        // try {
+        //     // const orderInfo = await consumeQueue('order_response');
+
+        //     res.json("ok");
+        // } catch (error) {
+        //     console.error(`Error consuming user info response:`, error);
+        //     throw error;
+        // }
+
+        res.json("ok");
     } catch (error) {
         res.status(500).send(error);
     }

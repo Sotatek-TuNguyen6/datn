@@ -102,7 +102,7 @@ const Checkout = () => {
         bankCode: "NCB",
         language: "vn",
         orderDetails: orderDetails,
-        addresses: selectedAddresses
+        addresses: addresses[selectedAddresses]
       }, {
         headers
       });
