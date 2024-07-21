@@ -20,29 +20,34 @@ import * as ReviewService from "../../services/Review/reviewService";
 import * as ActionsService from "../../services/Actions/actionService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as UserService from "../../services/UserService/index";
-import { updateUser } from "../../features/userSlice/userSlice";
+import { resetUser, updateUser } from "../../features/userSlice/userSlice";
 import { addToCart } from "../../features/cart/cartSlice";
 import { formatMoneyVND } from "../../functions/formatVND";
 import { useGetRecommend } from "../../hooks/recommendFetching";
-import { Bounce, toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import Toast from "../../components/Toast/Toast";
 const DetailsPage = (props) => {
-  const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
-  const [smlImageSize, setSmlImageSize] = useState([150, 150]);
+  const toastId = React.useRef(null);
+  const Toastobjects = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  };
   const [activeSize, setActiveSize] = useState(0);
   const [activeTabs, setActiveTabs] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [currentProduct, setCurrentProduct] = useState({});
-  const context = useContext(MyContext);
-  // const [prodCat, setProdCat] = useState({
-  //   parentCat: sessionStorage.getItem("parentCat"),
-  //   subCatName: sessionStorage.getItem("subCatName"),
-  // });
-  const [relatedProducts, setRelatedProducts] = useState([]);
   const [rating, setRating] = useState(0.0);
   const [isAlreadyAddedInCart, setisAlreadyAddedInCart] = useState(false);
   const [body, setBody] = useState("");
   const dispatch = useDispatch();
+  const history = useNavigate();
+
   const { id: idUser, name, access_token } = useSelector((state) => state.user);
 
   const zoomSliderBig = useRef();
@@ -57,11 +62,9 @@ const DetailsPage = (props) => {
   const { data: detailProductRecommend, isLoading: isLoadingRecommend } = getListProductRecommend;
 
   const { data: detailProduct, isLoading, error } = getListQuery;
-  console.log("🚀 ~ DetailsPage ~ detailProduct:", detailProduct)
   const {
     data: dataReview,
     isLoading: isLoadingReview,
-    error: errorReview,
   } = getListReview;
 
   const navigate = useNavigate();
@@ -135,9 +138,14 @@ const DetailsPage = (props) => {
     mutationFn: ({ data, token }) => ReviewService.createReview(data, token),
     onSuccess: () => {
       queryClient.invalidateQueries(["review", id]);
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.success("Add Review Succes!", Toastobjects);
+      }
     },
     onError: (error) => {
-      console.error("Error submitting review:", error);
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Add Review Error!", Toastobjects);
+      }
     },
   });
 
@@ -157,18 +165,28 @@ const DetailsPage = (props) => {
   };
 
   const mutationAddWishlist = useMutation({
-    mutationFn: ({ wishlist }) =>
-      UserService.addWishlist(wishlist, access_token),
+    mutationFn: ({ productId }) =>
+      UserService.addWishlist(productId, access_token),
     onSuccess: () => {
       handleGetDetailsUser(idUser, access_token);
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.success("Add product to wishlist succes!", Toastobjects);
+      }
     },
     onError: (error) => {
-      console.error("Error submitting review:", error);
+      if (error.response.status == 401) {
+        dispatch(resetUser());
+        localStorage.removeItem("access_token");
+        history("/signIn");
+      }
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Add product to wishlist error!", Toastobjects);
+      }
     },
   });
 
   const handleAddWishList = (item) => {
-    mutationAddWishlist.mutate({ wishlist: item._id });
+    mutationAddWishlist.mutate({ productId: item._id });
   };
   const submitReview = async (e) => {
     e.preventDefault();
@@ -181,6 +199,8 @@ const DetailsPage = (props) => {
       rating,
     };
     mutationAddReview.mutate({ data: bodyReq, token: access_token });
+    setBody('')
+    setRating(0)
   };
 
   var reviews_Arr2 = [];
@@ -192,32 +212,14 @@ const DetailsPage = (props) => {
       productId: id,
       actionType: "add_to_cart",
     });
-    toast.success('Add to cart success!', {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      className: "custom-toast",
-      transition: Bounce,
-    });
+    if (!toast.isActive(toastId.current)) {
+      toastId.current = toast.success("Add to cart success!", Toastobjects);
+    }
   };
 
   return (
     <>
-      {/* {context.windowWidth < 992 && (
-        <Button
-          className={`btn-g btn-lg w-100 filterBtn {isAlreadyAddedInCart===true && 'no-click'}`}
-          onClick={() => handleAddToCart(detailProduct?.data)}
-        >
-          <ShoppingCartOutlinedIcon />
-          {"Add To Cart"}
-        </Button>
-      )} */}
-      <ToastContainer />
+      <Toast />
       {isLoading && (
         <div className="loader">
           <img src={Loader} />
@@ -233,20 +235,11 @@ const DetailsPage = (props) => {
                 </li>
                 <li>
                   <Link
-                    // to={`/cat/${detailProduct?.categoryName
-                    //   .split(" ")
-                    //   .join("-")
-                    //   .toLowerCase()}`}
-                    // onClick={() =>
-                    //   sessionStorage.setItem(
-                    //     "cat",
-                    //     detailProduct?.categoryName.split(" ").join("-").toLowerCase()
-                    //   )
-                    // }
+                    to={`/category/${detailProduct?.data.categoryId?._id}`}
                     className="text-capitalize"
                   >
-                    {detailProduct?.data.categoryName}
-                  </Link>{" "}
+                    {detailProduct?.data.categoryId?.categoryName}
+                  </Link>
                 </li>
 
                 <li>

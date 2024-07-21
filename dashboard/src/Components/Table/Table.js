@@ -6,7 +6,7 @@ import CustomSelect from "./Select";
 import { useLocation } from "react-router-dom";
 
 function Table(props) {
-  const { data, columns, sub } = props;
+  const { data, columns, sub, ExpandedComponent } = props;
   const [search, setSearch] = useState("");
   const [datas, setTempData] = useState(data);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -64,6 +64,7 @@ function Table(props) {
               progressComponent={<div>Loading...</div>}
               selectableRows
               selectableRowsHighlight
+              expandableRowsComponent={ExpandedComponent}
             />
           </div>
         )

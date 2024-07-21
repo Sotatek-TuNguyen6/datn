@@ -59,26 +59,22 @@ const Listing = (props) => {
       setDataBefore(filterProduct)
       switch (titleFilter) {
         case "Price: Low to High":
+          console.log(filterProduct.slice(0, itemsPerPage).sort((a, b) => a.priceSale - b.priceSale))
           setListProduct(filterProduct.slice(0, itemsPerPage).sort((a, b) => a.priceSale - b.priceSale));
           break;
         case "Price: High to Low":
-          // listProduct.sort((a, b) => b.price - a.price);
           setListProduct(filterProduct.slice(0, itemsPerPage).sort((a, b) => b.priceSale - a.priceSale));
 
           break;
         case "Release Date":
-          // Sắp xếp theo ngày phát hành
           setListProduct(filterProduct.slice(0, itemsPerPage).sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate)));
           break;
         case "Avg. Rating":
-          // Sắp xếp theo đánh giá trung bình
-          // listProduct.sort((a, b) => b.avgRating - a.avgRating)
           setListProduct(filterProduct.slice(0, itemsPerPage).sort((a, b) => a.ratings - b.ratings));
 
           break;
         default:
           break;
-        // setListProduct(filterProduct.slice(0, itemsPerPage).sort((a, b) => a.priceSale - b.priceSale))
 
       }
       setTotalPage(Math.ceil(filterProduct.length / itemsPerPage))
@@ -116,7 +112,7 @@ const Listing = (props) => {
       setLoading(false)
     }
   }, [dataCategoryDetail, dataProduct]);
-  
+
   const scrollToProductRow = () => {
     if (productRowRef.current) {
       productRowRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -127,53 +123,6 @@ const Listing = (props) => {
 
     window.scrollTo(0, 0)
   }, [])
-  // useEffect(() => {
-  //  dataProduct.length !== 0 &&
-  //    dataProduct.map((item, index) => {
-  //       //page == single cat
-  //       if (props.single === true) {
-  //         if (item.cat_name.toLowerCase() == id.toLowerCase()) {
-  //           item.items.length !== 0 &&
-  //             item.items.map((item_) => {
-  //               item_.products.map((item__, index__) => {
-  //                 itemsData.push({
-  //                   ...item__,
-  //                   parentCatName: item.cat_name,
-  //                   subCatName: item_.cat_name,
-  //                 });
-  //               });
-  //             });
-  //         }
-  //       }
-  //       //page == double cat
-  //       else {
-  //         item.items.length !== 0 &&
-  //           item.items.map((item_, index_) => {
-  //             // console.log(item_.cat_name.replace(/[^A-Za-z]/g,"-").toLowerCase())
-  //             if (
-  //               item_.cat_name.split(" ").join("-").toLowerCase() ==
-  //               id.split(" ").join("-").toLowerCase()
-  //             ) {
-  //               item_.products.map((item__, index__) => {
-  //                 itemsData.push({
-  //                   ...item__,
-  //                   parentCatName: item.cat_name,
-  //                   subCatName: item_.cat_name,
-  //                 });
-  //               });
-  //             }
-  //           });
-  //       }
-  //     });
-
-  //   const list2 = itemsData.filter(
-  //     (item, index) => itemsData.indexOf(item) === index
-  //   );
-
-  //   setData(list2);
-
-  //   window.scrollTo(0, 0);
-  // }, [id]);
 
   const filterByBrand = (keyword) => {
     props.data.length !== 0 &&
@@ -347,6 +296,9 @@ const Listing = (props) => {
     setSubCategoryName(name);
   };
 
+  useEffect(()=>{
+
+  },[listProduct])
   return (
     <>
       {
@@ -357,7 +309,7 @@ const Listing = (props) => {
                 <h1 className="text-capitalize"> {dataProduct?.data[0]?.categoryId?.categoryName}</h1>
                 <ul className="list list-inline mb-0">
                   <li className="list-inline-item">
-                    <Link to={""}>Home </Link>
+                    <Link to={"/"}>Home </Link>
                   </li>
                   <li className="list-inline-item">
                     <Link

@@ -52,7 +52,6 @@ const Checkout = () => {
     ?.map((item) => parseInt(item.priceSale) * item.quantity)
     .reduce((total, value) => total + value, 0);
 
-  console.log("🚀 ~ Checkout ~ listCart:", listCart)
   const placeOrder = () => {
 
     if (
@@ -73,7 +72,6 @@ const Checkout = () => {
         transition: Bounce,
         className: "custom-toast",
       });
-      // console.log("All fields are required");
       return false;
     }
     const orderDetails = listCart.map((item) => ({

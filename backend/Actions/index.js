@@ -20,7 +20,7 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(helmet());
 app.use(cors());
-require('./src/service/serviceActions');
+// require('./src/service/serviceActions');
 
 app.use("/api/v1/actions", routeAction);
 

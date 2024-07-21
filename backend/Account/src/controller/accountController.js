@@ -5,7 +5,7 @@ const Joi = require("joi");
 const redis = require('redis');
 const util = require('util');
 const redisClient = require("../utils/redisClient");
-const { publishToQueue, consumeQueue, publishToExchange } = require("../utils/amqp");
+const { publishToQueue, consumeQueue, publishToExchange, publishToQueueV2 } = require("../utils/amqp");
 const bcrypt = require("bcrypt")
 const crypto = require('crypto');
 
@@ -106,20 +106,20 @@ exports.login = async (req, res) => {
 exports.getAllAccounts = async (req, res) => {
   try {
 
-    const cachedAccounts = await redisClient.get('accounts');
+    // const cachedAccounts = await redisClient.get('accounts').select("-password");
 
-    if (cachedAccounts) {
-      const accounts = JSON.parse(cachedAccounts);
-      if (accounts.length > 0) {
-        res.status(200).json(accounts);
-        logger.info("Retrieved all accounts from cache");
-        return;
-      }
-    }
+    // if (cachedAccounts) {
+    //   const accounts = JSON.parse(cachedAccounts);
+    //   if (accounts.length > 0) {
+    //     res.status(200).json(accounts);
+    //     logger.info("Retrieved all accounts from cache");
+    //     return;
+    //   }
+    // }
 
     const accounts = await Account.find();
 
-    await redisClient.setEx('accounts', 5, JSON.stringify(accounts));
+    // await redisClient.setEx('accounts', 5, JSON.stringify(accounts));
 
     res.status(200).json(accounts);
     logger.info("Retrieved all accounts from database:", accounts);
@@ -132,22 +132,18 @@ exports.getAllAccounts = async (req, res) => {
 exports.getAccountById = async (req, res) => {
   const accountId = req.params.id;
   try {
-    const account = await Account.findById(accountId);
+    const account = await Account.findById(accountId).select('-password');;
     if (!account) {
       return res.status(404).json({ message: "Account not found" });
     }
 
-    const productDetailsPromises = account.wishlist.map(async (productId) => {
-      await publishToQueue('productDetailsRequestQueue', { productId });
-      return await consumeQueue('productDetailsResponseQueue');
+    const productIds = account.wishlist.map(item => item);
+    const detailedWishlist = await publishToQueueV2('productDetailsRequestQueue', { productIds }, async (item) => {
+      const accountWithDetailedWishlist = { ...account.toObject(), wishlist: item };
+      res.status(200).json(accountWithDetailedWishlist);
     });
 
-    const detailedWishlist = await Promise.all(productDetailsPromises);
-
-    const accountWithDetailedWishlist = { ...account.toObject(), wishlist: detailedWishlist };
-
-    res.status(200).json(accountWithDetailedWishlist);
-    logger.info("Retrieved account by ID with detailed wishlist:", accountWithDetailedWishlist);
+    logger.info("Retrieved account by ID with detailed wishlist:");
   } catch (error) {
     res.status(500).json({ message: "Error retrieving account", error: error.message });
     logger.error("Error retrieving account by ID:", error);
@@ -156,8 +152,7 @@ exports.getAccountById = async (req, res) => {
 exports.updateAccount = async (req, res) => {
   const { id, role } = req.user
   const accountId = req.params.id;
-  console.log("---------id ", id);
-  console.log("---------accountId ", accountId == id);
+
   try {
     if (role != "admin" && accountId !== id) {
       return res.status(404).json({ message: "Helo Hacker!" })
@@ -195,7 +190,7 @@ exports.updateAccount = async (req, res) => {
 
     const updatedAccount = await account.save();
 
-    res.status(200).json({status:true, message: "OK"});
+    res.status(200).json({ status: true, message: "OK" });
     logger.info("Updated account:", updatedAccount);
   } catch (error) {
     res.status(500).json({ message: "Error updating account", error: error.message });

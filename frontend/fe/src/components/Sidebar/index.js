@@ -30,110 +30,13 @@ const Sidebar = (props) => {
   const [totalLength, setTotalLength] = useState([]);
   const [data, setData] = useState(props.data);
 
-  const context = useContext(MyContext);
-
   let { id } = useParams();
 
-  var brands = [];
-  var ratings = [];
 
-  var catLength = 0;
-  var lengthArr = [];
-
-  // useEffect(() => {
-  //   if (props?.data?.data && props.products && Array.isArray(props.data.data.subCategories)) {
-  //     const updatedSubCategories = props.data.data.subCategories.map(subCategory => {
-  //       const countProducts = props.products.filter(product =>
-  //         product.categoryId._id === id && product.subCategoryName === subCategory.subCategoryName
-  //       ).length;
-
-  //       return {
-  //         ...subCategory,
-  //         countProducts
-  //       };
-  //     });
-
-  //     setData({
-  //       ...props.data,
-  //       data: {
-  //         ...props.data.data,
-  //         subCategories: updatedSubCategories
-  //       }
-  //     });
-  //   }
-  // }, [props, id]);
-  // useEffect(() => {
-  //   props.data.data.length !== 0 &&
-  //     props.data.data.map((item, index) => {
-  //       item.items.length !== 0 &&
-  //         item.items.map((item_) => {
-  //           catLength += item_.products.length;
-  //         });
-  //       lengthArr.push(catLength);
-  //       catLength = 0;
-  //     });
-
-  //   const list = lengthArr.filter(
-  //     (item, index) => lengthArr.indexOf(item) === index
-  //   );
-  //   setTotalLength(list);
-  // }, []);
-
-  // useEffect(() => {
-  //   brands = [];
-  //   ratings = [];
-  //   props.currentCatData.length !== 0 &&
-  //     props.currentCatData.map((item) => {
-  //       brands.push(item.brand);
-  //       ratings.push(parseFloat(item.rating));
-  //     });
-
-  //   const brandList = brands.filter(
-  //     (item, index) => brands.indexOf(item) === index
-  //   );
-  //   setBrandFilters(brandList);
-
-  //   const ratings_ = ratings.filter(
-  //     (item, index) => ratings.indexOf(item) === index
-  //   );
-  //   setRatings(ratings_);
-  // }, [id]);
-
-  // useEffect(() => {
-  //   var price = 0;
-  //   props.currentCatData.length !== 0 &&
-  //     props.currentCatData.map((item, index) => {
-  //       let prodPrice = parseInt(item.price.toString().replace(/,/g, ""));
-  //       if (prodPrice > price) {
-  //         price = prodPrice;
-  //       }
-  //     });
-
-  //   setValue2(price);
-
-  //   //setValue(price);
-  //   //filterByPrice(price[0], price[1]);
-  // }, [props.currentCatData]);
-
-  // const filterByBrand = (keyword) => {
-  //   props.filterByBrand(keyword);
-  // };
-
-  // const filterByRating = (keyword) => {
-  //   props.filterByRating(parseFloat(keyword));
-  // };
-
-  // useEffect(() => {
-  //   filterByPrice(value[0], value[1]);
-  // }, [value]);
-
-  // const filterByPrice = (minValue, maxValue) => {
-  //   props.filterByPrice(minValue, maxValue);
-  // };
 
   return (
     <>
-      <div className={`sidebar ${context.isOpenFilters === true && "open"}`}>
+      <div className={`sidebar open`}>
         <div className="card border-0 shadow res-hide">
           <h3>Category</h3>
           <div className="catList">

@@ -61,16 +61,14 @@ export const updateWishlist = async (idProduct, access_token) => {
     }
 }
 
-export const addWishlist = async (data, access_token) => {
+export const addWishlist = async (productId, access_token) => {
     try {
         const headers = {
             Authorization: `Bearer ${access_token}`,
         };
-        const response = await axios.post(
-            `${API_URL}/api/v1/account`,
-            {
-                wishlist: data
-            },
+        const response = await axios.put(
+            `${API_URL}/api/v1/account/wishlist/${productId}`,
+            {},
             { headers }
         );
         return response.data;

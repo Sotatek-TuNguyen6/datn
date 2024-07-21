@@ -82,11 +82,10 @@ exports.createOrder = async (req, res) => {
             locale = 'vn';
         }
 
-        const {id, email} = req.user
+        const { id, email } = req.user
         const { products, userId, addresses } = req.body
-        console.log("🚀 ~ exports.createOrder= ~ products:", products)
         const newOrder = new Order({ products, userId });
-        
+
         const savedOrder = await newOrder.save();
         logger.info("Created new order:", savedOrder);
 
@@ -183,7 +182,7 @@ exports.deleteOrderById = async (req, res) => {
 
 
 exports.returnPayment = async (req, res) => {
-    const {email} = req.user
+    const { email } = req.user
     try {
         var vnp_Params = req.query;
 
@@ -218,6 +217,14 @@ exports.returnPayment = async (req, res) => {
             // }
             res.status(200).json({ code: vnp_Params.vnp_ResponseCode });
         } else {
+            await publishToExchange('orderExchange', 'order.delete', {
+                orderId,
+                type: 'orderFail',
+                products: getOrder.products,
+                emailUser: email,
+                amount,
+                userId: getOrder.userId
+            });
             res.status(200).json({ code: vnp_Params.vnp_ResponseCode });
         }
     } catch (error) {

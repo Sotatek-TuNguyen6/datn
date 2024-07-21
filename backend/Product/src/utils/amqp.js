@@ -53,7 +53,7 @@ async function publishToQueue(queueName, message) {
     const channel = await connection.createChannel();
     await channel.assertQueue(queueName, { durable: true });
     channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
-    logger.info(`Message sent to queue: ${queueName}`, { message });
+    logger.info(`Message sent to queue: ${queueName}`);
     await channel.close();
     await connection.close();
   } catch (error) {
@@ -83,4 +83,29 @@ async function consumeQueue(queueName, callback) {
   }
 }
 
-module.exports = { publishToQueue, consumeQueue, consumeFromExchange, publishToExchange };
+async function consumeQueueV2(queueName, callback) {
+  try {
+    const connection = await amqp.connect(process.env.RABBITMQ_URL);
+    const channel = await connection.createChannel();
+    await channel.assertQueue(queueName, { durable: true });
+
+    channel.consume(queueName, async (msg) => {
+      if (msg !== null) {
+        const messageContent = JSON.parse(msg.content.toString());
+        logger.info(`Message received from queue: ${queueName}`, { messageContent });
+        const response = await callback(messageContent);
+        channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(response)), {
+          correlationId: msg.properties.correlationId
+        });
+        channel.ack(msg);
+      }
+    }, { noAck: false });
+
+    logger.info(`Started consuming queue: ${queueName}`);
+  } catch (error) {
+    logger.error(`Error consuming queue: ${queueName}`, { error: error.message });
+    throw error;
+  }
+}
+
+module.exports = { publishToQueue, consumeQueue, consumeFromExchange, publishToExchange, consumeQueueV2 };

@@ -38,7 +38,7 @@ app.use((err, req, res, next) => {
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
 
-  await consumeFromExchange("orderExchange", 'shippingQueue', 'order.update', async (message) => {
+  await consumeFromExchange("orderExchange", 'shippingQueue', 'order.created', async (message) => {
     const { addresses, orderId, amount, userId, emailUser, type } = message;
 
     try {
@@ -50,6 +50,51 @@ app.listen(port, async () => {
       });
       await shipping.save();
       logger.info("Success create Shipping!")
+
+    } catch (error) {
+      logger.error(`Error processing order.create event for order ${orderId}`, { error: error.message });
+    }
+  });
+
+  await consumeFromExchange("orderExchange", 'shippingRevertQueue', 'order.update', async (message) => {
+    const { orderId } = message;
+
+    try {
+      const revert = await Shipping.findOneAndUpdate(
+        { orderId },
+        {
+          $set: {
+            status: "pending"
+          }
+        },
+        { new: true } 
+      );
+      if (revert) {
+        logger.info(`Shipping entry with orderId ${orderId} deleted successfully.`);
+      } else {
+        logger.warn(`No shipping entry found for orderId ${orderId}.`);
+      }
+
+      logger.info("Successfully processed order.create event!");
+
+    } catch (error) {
+      logger.error(`Error processing order.create event for order ${orderId}`, { error: error.message });
+    }
+  });
+
+  await consumeFromExchange("orderExchange", 'shippingRevertQueue', 'order.delete', async (message) => {
+    const { orderId } = message;
+
+    try {
+      const revert = await Shipping.findOneAndDelete({ orderId })
+
+      if (revert) {
+        logger.info(`Shipping entry with orderId ${orderId} deleted successfully.`);
+      } else {
+        logger.warn(`No shipping entry found for orderId ${orderId}.`);
+      }
+
+      logger.info("Successfully processed order.create event!");
 
     } catch (error) {
       logger.error(`Error processing order.create event for order ${orderId}`, { error: error.message });

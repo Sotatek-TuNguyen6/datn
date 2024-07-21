@@ -75,13 +75,10 @@ const Header = (props) => {
     try {
       await axios.get(url).then((res) => {
         if (res !== null) {
-          //console.log(res.data.data);
           res.data.data.map((item, index) => {
             countryList.push(item.country);
-            //console.log(item.country)
           });
 
-          //console.log(res.data.data[0].country)
         }
       });
     } catch (error) {
@@ -89,16 +86,6 @@ const Header = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //     window.addEventListener("scroll", () => {
-  //         let position = window.pageYOffset;
-  //         if (position > 100) {
-  //             headerRef.current.classList.add('fixed');
-  //         } else {
-  //             headerRef.current.classList.remove('fixed');
-  //         }
-  //     })
-  // }, [])
 
   const signOut = () => {
     dispatch(resetUser());

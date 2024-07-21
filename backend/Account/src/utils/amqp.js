@@ -75,4 +75,39 @@ async function consumeQueue(queueName, callback) {
   }
 }
 
-module.exports = { publishToQueue, consumeQueue, publishToExchange, consumeFromExchange };
+async function publishToQueueV2(queueName, message, callback) {
+  try {
+      const connection = await amqp.connect(process.env.RABBITMQ_URL);
+      const channel = await connection.createChannel();
+      const { queue } = await channel.assertQueue('', { exclusive: true });
+
+      const correlationId = generateUuid();
+
+      channel.consume(queue, (msg) => {
+          if (msg.properties.correlationId === correlationId) {
+              const messageContent = JSON.parse(msg.content.toString());
+              logger.info(`Message received from temporary queue: ${queue}`, { messageContent });
+              callback(messageContent);
+              channel.ack(msg);
+              setTimeout(() => {
+                  channel.close();
+                  connection.close();
+              }, 500);
+          }
+      }, { noAck: false });
+
+      await channel.assertQueue(queueName, { durable: true });
+      channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)), {
+          correlationId,
+          replyTo: queue
+      });
+      logger.info(`Message sent to queue: ${queueName}`, { message });
+
+  } catch (error) {
+      logger.error(`Error publishing to queue: ${queueName}`, { error: error.message });
+  }
+}
+function generateUuid() {
+  return Math.random().toString() + Math.random().toString() + Math.random().toString();
+}
+module.exports = { publishToQueue, consumeQueue, publishToQueueV2, publishToExchange, consumeFromExchange };

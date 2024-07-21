@@ -14,12 +14,12 @@ class RecommenderSystem:
         # Load items data from JSON file
         with open('response.json', 'r') as file:
             product_data = json.load(file)
-        df_items_data = product_data['products']
+        df_items_data = pd.DataFrame(product_data)
         
         # Load interactions data from JSON file
         with open('actions.json', 'r') as file:
             action_data = json.load(file)
-        df_interactions_data = action_data['actions']
+        df_interactions_data = pd.DataFrame(action_data)
 
         # Create DataFrames
         self.df_items = pd.DataFrame(df_items_data)

@@ -1,24 +1,40 @@
-const { consumeQueue, publishToQueue } = require('../utils/amqp');
+const { consumeQueue, publishToQueue, consumeQueueV2 } = require('../utils/amqp');
 const Product = require('../models/productModel');
 const logger = require('../utils/logger');
 const amqp = require('amqplib');
+const { default: mongoose } = require('mongoose');
 
-async function handleProductDetailsRequest({ productId }) {
+async function handleProductDetailsRequest({ productIds }) {
   try {
-    logger.info("Handling product details request for productId:", productId);
-    const product = await Product.findById(productId).lean();
-    if (!product) {
-      throw new Error('Product not found');
+    if (!productIds || productIds.length === 0) {
+      logger.warn("No productIds provided");
+      return [];
     }
 
-    const connection = await amqp.connect(process.env.RABBITMQ_URL);
-    const channel = await connection.createChannel();
-    await channel.assertQueue('productDetailsResponseQueue', { durable: true });
-    channel.sendToQueue('productDetailsResponseQueue', Buffer.from(JSON.stringify(product)));
-    await channel.close();
-    await connection.close();
+    // Filter out any invalid product IDs
+    const validProductIds = productIds.filter(productId => productId && mongoose.Types.ObjectId.isValid(productId));
+
+    if (validProductIds.length === 0) {
+      logger.warn("No valid productIds provided");
+      return [];
+    }
+
+    logger.info("Handling product details request for valid productIds:", validProductIds);
+    
+    // Fetch products from the database
+    const products = await Product.find({ _id: { $in: validProductIds } })
+      .select("-description")
+      .lean();
+
+    if (!products || products.length === 0) {
+      logger.warn("No products found for the provided productIds");
+      return [];
+    }
+
+    return products;
   } catch (error) {
-    logger.error('Error handling product details request:', error);
+    logger.error('Error handling product details request:', { message: error.message, stack: error.stack });
+    throw error; // Re-throw the error to be handled by the calling function
   }
 }
 async function handleProductGetAll(msg) {
@@ -67,7 +83,7 @@ const checkQuantityStock = async (products) => {
 // Ensure the consumer starts
 
 consumeQueue('productRequestQueue', handleProductGetAll);
-// consumeQueue('productDetailsRequestQueue', handleProductDetailsRequest);
+consumeQueueV2('productDetailsRequestQueue', handleProductDetailsRequest);
 logger.info("Consumer for productDetailsRequestQueue has started.");
 
 

@@ -4,7 +4,7 @@ const ShippingSchema = new mongoose.Schema({
     origin: { type: String, default: "Đản Mỗ Uy Nỗ Đông Anh Hà Nội" },
     destination: { type: String, required: true },
     cost: { type: Number, required: true },
-    status: { type: String, enum: ['pending', 'shipped', 'delivered', 'canceled'], default: 'pending' },
+    status: { type: String, enum: ['temporary', 'pending', 'shipped', 'delivered', 'canceled'], default: 'temporary' },
     orderId: { type: String },
     userId: { type: String }
 }, {

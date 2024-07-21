@@ -91,9 +91,9 @@ async function getAllOrder(shippings) {
 }
 
 
-consumeFromExchange('orderExchange', 'order.create', 'orderQueue', handleCreateOrderRequest);
+// consumeFromExchange('orderExchange', 'order.create', 'orderQueue', handleCreateOrderRequest);
 
-logger.info("Consumers for orderCreateRequestQueue and orderCreateResponseQueue have started.");
+// logger.info("Consumers for orderCreateRequestQueue and orderCreateResponseQueue have started.");
 
 
 module.exports = { getAllOrder }

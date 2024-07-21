@@ -4,7 +4,8 @@ const logger = require('../utils/logger');
 const redisClient = require("../utils/redisClient");
 const { log } = require("winston");
 const fs = require('fs');
-const data = require("../../data.json")
+const data = require("../../data.json");
+const { publishToQueue } = require("../utils/amqp");
 const productSchema = Joi.object({
     productName: Joi.string().trim().required(),
     price: Joi.number().required(),
@@ -37,6 +38,10 @@ exports.createProduct = async (req, res, next) => {
         await product.save();
         logger.info("New product created:", product);
         await redisClient.del('products');
+
+        const allProducts = await Product.find();
+
+        await publishToQueue('recommend_queue_products', allProducts);
 
         res.status(201).json({ success: true, message: "Product created successfully", data: product });
 
@@ -91,6 +96,9 @@ exports.deleteProduct = async (req, res, next) => {
 
         if (deletedProduct) {
             await redisClient.del('products');
+            const allProducts = await Product.find();
+
+            await publishToQueue('recommend_queue_products', allProducts);
             res.status(200).json({ success: true, message: "Product deleted successfully", data: deletedProduct });
         } else {
             res.status(404).json({ success: false, message: "Product not found" });
@@ -113,6 +121,9 @@ exports.updateProduct = async (req, res, next) => {
 
         if (updatedProduct) {
             await redisClient.del('products');
+            const allProducts = await Product.find();
+
+            await publishToQueue('recommend_queue_products', allProducts);
             res.status(200).json({ success: true, message: "Product updated successfully", data: updatedProduct });
         } else {
             res.status(404).json({ success: false, message: "Product not found" });

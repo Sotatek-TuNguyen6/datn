@@ -47,4 +47,22 @@ async function handleUpdateStatusPayment({ orderId }) {
         logger.error('Error handling create order request:', error);
     }
 }
-module.exports = { handleCreatePaymentRequest, handleUpdateStatusPayment }
+
+async function handleUpdateStatusRefundPayment({ orderId }) {
+    try {
+        const updatedPayment = await Payment.findOneAndUpdate(
+            { orderId },
+            { status: "refund" },
+            { new: true }
+        );
+
+        if (updatedPayment) {
+            logger.info('Payment updated successfully:', updatedPayment);
+        } else {
+            logger.warn('No payment found with the given orderId:', orderId);
+        }
+    } catch (error) {
+        logger.error('Error handling create order request:', error);
+    }
+}
+module.exports = { handleCreatePaymentRequest, handleUpdateStatusPayment, handleUpdateStatusRefundPayment }

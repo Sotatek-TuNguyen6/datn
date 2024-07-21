@@ -1,4 +1,5 @@
 const Action = require("../model/actionModel")
+const { publishToQueue } = require('../utils/amqp');
 
 exports.createAction = async (req, res) => {
     const { userId, productId, actionType, rating } = req.body;
@@ -10,6 +11,11 @@ exports.createAction = async (req, res) => {
         }
 
         const newAction = await Action.create({ userId, productId, actionType, rating });
+
+        const allActions = await Action.find();
+
+        await publishToQueue('recommend_queue_actions', allActions);
+
         res.status(201).json(newAction);
     } catch (error) {
         res.status(400).json({ error: error.message });

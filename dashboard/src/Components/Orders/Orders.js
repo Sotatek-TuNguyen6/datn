@@ -7,120 +7,116 @@ import Table from "../Table/Table";
 import * as OrderService from "../../Services/OrderSevice";
 import { toast } from "react-toastify";
 import Toast from "../LoadingError/Toast";
+import { Tooltip } from "react-tooltip";
 
 const Orders = (props) => {
   const { data } = props;
-  const [loading, setLoading] = useState("");
-  const [tempData, setTempData] = useState([]);
-
-  const [error, setError] = useState("");
-  const toastId = React.useRef(null);
-  const Toastobjects = {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  };
-  const options = {
-    maximumFractionDigits: 0,
-  };
-  const formattedAmount = (amount, options) => {
-    return amount.toLocaleString(undefined, options);
-  };
-  const hangldeGetAll = async () => {
-    setLoading(true);
-    await OrderService.getAll()
-      .then((res) => {
-        setLoading(false);
-        setTempData(res);
-      })
-      .catch((error) => {
-        setError(error);
-      });
-  };
-  const handleDelete = async (id) => {
-    if (id) {
-      await OrderService.deletePay(id)
-        .then((res) => {
-          if (!toast.isActive(toastId.current)) {
-            toastId.current = toast.success("Thành công!", Toastobjects);
-          }
-          hangldeGetAll();
-          window.location.reload();
-        })
-        .catch((error) => {
-          if (!toast.isActive(toastId.current)) {
-            toastId.current = toast.error(error, Toastobjects);
-          }
-        });
-    }
-  };
   const columns = [
     {
       name: "Khách hàng",
-      selector: (row) => row.customer,
+      selector: (row) => row.userName,
 
-    },
-    {
-      name:"Sản phẩm",
-      selector: (row) => row.products.name,
     },
     {
       name: "Tổng giá trị đơn hàng",
       selector: (row) => row.totalPrice,
-      
+
     },
     {
       name: "Số lượng",
-      selector: (row) => row.quantity,
+      selector: (row) => row.totalQuantity,
     },
     {
       name: "Trạng thái",
       selector: (row) => row.status,
     },
     {
-      name: "Số điện thoại người mua",
-      selector: (row) => (row.phoneCustomer),
+      name: "Shipping ID",
+      selector: (row) => (
+        <div>
+          <div>
+            <Link to="/shipping">{row.shippingId}</Link>
+          </div>
+          <Tooltip id={`tooltip-${row.shippingId}`} />
+
+        </div>
+      ),
     },
     {
-      name: "Địa chỉ người mua",
-      selector: (row) => (row.addressCus),
+      name: "Số điện thoại người mua",
+      selector: (row) => (row.phoneCustomer),
     },
     {
       name: "Thời gian mua",
       selector: (row) => (row.createdAt),
     },
 
-    // {
-    //   name: "Hành động",
-    //   selector: (row) => (
-    //     <div className="d-flex" style={{ width: "450px" }}>
-    //       <Link
-    //         to={`/orders/${row.order._id}/edit`}
-    //         style={{ marginRight: "5px" }}
-    //         // className="btn btn-sm btn-outline-success p-2 pb-3 col-md-6"
-    //       >
-    //         <button className="btn btn-primary">Sửa</button>
-    //       </Link>
-    //       <button
-    //         type="button"
-    //         onClick={() => handleDelete(row.order._id)}
-    //         className="btn btn-danger"
-
-    //       >
-    //         Xóa
-    //       </button>
-    //     </div>
-    //   ),
-    // },
+    {
+      name: "Hành động",
+      selector: (row) => (
+        <div className="d-flex" style={{ width: "450px" }}>
+          <Link
+            style={{ marginRight: "5px" }}
+          >
+            <button className="btn btn-primary">Sửa</button>
+          </Link>
+          <button
+            type="button"
+            className="btn btn-danger"
+          >
+            Xóa
+          </button>
+        </div>
+      ),
+    },
   ];
+
+  const ExpandedComponent = ({ data }) => (
+    <div style={{ padding: '10px 20px' }}>
+      <p><strong>Products:</strong></p>
+      <ul style={{ margin: 0, paddingLeft: '20px' }}>
+        {data.products.map(product => (
+          <li key={product._id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            <img 
+              src={product.mainImage} 
+              alt={product.productName} 
+              style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '10px' }} 
+            />
+            <div>
+              <div><strong>{product.productName}</strong></div>
+              <div>Quantity: {product.quantity}</div>
+              <div>Price: {product.price}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
   return (
     <>
       <Toast />
-      <Table data={data} columns={columns} sub={true} />
+      <DataTable
+        columns={columns}
+        data={data}
+        expandableRows
+        expandableRowsComponent={ExpandedComponent}
+        subHeader
+        pagination
+        fixedHeader
+        fixedHeaderScrollHeight="450px"
+        progressComponent={<div>Loading...</div>}
+
+        // subHeaderComponent={
+        //   <div>
+        //     <input
+        //       type="text"
+        //       placeholder="Search..."
+        //       // Implement search functionality here if needed
+        //     />
+        //   </div>
+        // }
+      />
+      {/* <Table data={data} columns={columns} sub={true} ExpandedComponent={ExpandedComponent}/> */}
     </>
   );
 };
