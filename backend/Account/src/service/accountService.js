@@ -8,7 +8,6 @@ async function handleAccountRequest({ userIds }) {
         logger.info(`Handling account details request for userIds: ${userIds.join(', ')}`);
 
         const accounts = await Account.find({ _id: { $in: userIds } }).select('id name').lean();
-        console.log("🚀 ~ handleAccountRequest ~ accounts:", accounts)
         
         if (!accounts || accounts.length === 0) {
             throw new Error('No accounts found for the provided userIds');

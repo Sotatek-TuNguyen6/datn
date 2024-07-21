@@ -5,6 +5,7 @@ import * as ReviewService from "../Services/ReviewService";
 import * as UserService from "../Services/UserService";
 import * as PaymentService from "../Services/PaymentService";
 import * as VoucherService from "../Services/VoucherService";
+import * as ShippingService from "../Services/ShippingService";
 
 function useGetListCategory() {
     const getListQuery = useQuery('category', CategoryService.getCategory, {
@@ -99,7 +100,19 @@ function useGetListVoucher(access_token) {
     });
     return getListQuery;
 }
+
+//Shipping
+function useGetListShipping(access_token) {
+    const getListQuery = useQuery('shipping', () => ShippingService.getAll(access_token), {
+        cacheTime: 5000,
+        refetchOnWindowFocus: false,
+        staleTime: 5000,
+        refetchInterval: 60000,
+    });
+    return getListQuery;
+}
 export {
     useGetListCategory, useGetListProduct, useGetDetailProduct, useGetListReview, useGetListUser,
-    useGetDetailReview, useGetDetailUser, useGetListPayment, useGetListVoucher
+    useGetDetailReview, useGetDetailUser, useGetListPayment, useGetListVoucher,
+    useGetListShipping
 };

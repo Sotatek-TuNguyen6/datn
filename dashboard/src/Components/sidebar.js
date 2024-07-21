@@ -95,6 +95,16 @@ const Sidebar = () => {
               </NavLink>
             </li>
 
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/shipping"
+              >
+                <i className="icon fas fa-shipping-fast"></i>
+                <span className="text">Shipping</span>
+              </NavLink>
+            </li>
 
             <li className="menu-item">
               <NavLink

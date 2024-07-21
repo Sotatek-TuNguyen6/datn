@@ -23,6 +23,7 @@ import EditUserScreen from "./Screen/User/UserEditScreen";
 import AddUserScreen from "./Screen/User/UserAddScreen";
 import AddVoucherScreen from "./Screen/Voucher/AddVoucherScreen";
 import ChatScreen from "./Screen/Chat/chatScreen";
+import ShippingScreen from "./Screen/Shipping/ShippingSreen";
 
 function App() {
     const userLogin = useSelector((state) => state.user);
@@ -109,6 +110,8 @@ function App() {
                         <Route path="/review/create" element={<AddReviewScreen />} />
                         <Route path="/review/:id/edit" element={<EditReviewScreen />} />
                         <Route path="/chat" element={<ChatScreen />} />
+
+                        <Route path="/shipping" element={<ShippingScreen />} />
 
                         {/* <Route path="/message/create" element={<AddVoucherScreen />} /> */}
 

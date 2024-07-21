@@ -72,10 +72,10 @@ const Home = (props) => {
   }, [activeTab, props.data]);
 
   useEffect(() => {
-    if (data) {
+    if (data && data?.data?.length > 0) {
       setactiveTab(data?.data[0]?._id);
     }
-  }, [isLoadingCallApi]);
+  }, [isLoadingCallApi, data]);
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -114,7 +114,7 @@ const Home = (props) => {
                 <h2 className="hd mb-0 mt-0 res-full">Popular Products</h2>
                 <ul className="list list-inline ml-auto filterTab mb-0 res-full">
                   {data?.data?.length !== 0 &&
-                    data?.data.map((item, index) => {
+                    data?.data?.map((item, index) => {
                       return (
                         <li className="list list-inline-item">
                           <a

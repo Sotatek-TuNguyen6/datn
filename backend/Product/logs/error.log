@@ -809,3 +809,35 @@ error: Cast to ObjectId failed for value "kitchenware" (type string) at path "ca
 error: Cast to ObjectId failed for value "kitchenware" (type string) at path "_id" for model "Category" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"kitchenware\"","value":"kitchenware","valueType":"string"}
 error: Cast to ObjectId failed for value "kitchenware" (type string) at path "categoryId" for model "Product" {"kind":"ObjectId","path":"categoryId","reason":{},"stringValue":"\"kitchenware\"","value":"kitchenware","valueType":"string"}
 error: Cast to ObjectId failed for value "kitchenware" (type string) at path "_id" for model "Category" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"kitchenware\"","value":"kitchenware","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Product" {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"undefined\"","value":"undefined","valueType":"string"}
+error: Cannot populate path `category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}
+error: Cannot populate path `Category` because it is not in your schema. Set the `strictPopulate` option to false to override. {"path":"Category"}

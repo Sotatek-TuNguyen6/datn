@@ -84,6 +84,7 @@ exports.createOrder = async (req, res) => {
 
         const {id, email} = req.user
         const { products, userId, addresses } = req.body
+        console.log("🚀 ~ exports.createOrder= ~ products:", products)
         const newOrder = new Order({ products, userId });
         
         const savedOrder = await newOrder.save();
