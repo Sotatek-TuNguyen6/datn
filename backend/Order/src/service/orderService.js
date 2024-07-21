@@ -1,6 +1,7 @@
 const amqp = require('amqplib');
 const Order = require("../model/orderModel");
 const logger = require('../utils/logger');
+const { publishToQueue } = require('../utils/amqp');
 
 async function publishToExchange(exchangeName, routingKey, message) {
   try {
@@ -71,13 +72,24 @@ async function handleCreateOrderRequest({ userId, products, amount, emailUser })
 
 async function getAllOrder(shippings) {
   try {
-    console.log("🚀 ~ getAllOrder ~ shippings:", shippings)
+    const orders = await Promise.all(shippings.map(async (shipping) => {
+      const order = await Order.findById(shipping.orderId)
+      return {
+        ...shipping,
+        orderDetails: order
+      };
+    }));
+    console.log("🚀 ~ orders ~ order:", orders)
+    // await publishToQueue('order-response', orders);
+    return orders;
 
+    // await publishToExchange("orderResponse", 'order_response', orders)
   } catch (error) {
     console.log(error);
   }
 
 }
+
 
 consumeFromExchange('orderExchange', 'order.create', 'orderQueue', handleCreateOrderRequest);
 

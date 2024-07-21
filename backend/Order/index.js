@@ -8,7 +8,7 @@ const helmet = require("helmet");
 const routerOrder = require("./src/routes/orderRouter");
 const db = require("./src/config/connectDb");
 const Order = require("./src/model/orderModel");
-const { consumeFromExchange, consumeQueue } = require("./src/utils/amqp");
+const { consumeFromExchange, consumeQueue, consumeQueueV2, publishToExchange } = require("./src/utils/amqp");
 const logger = require("./src/utils/logger");
 const { getAllOrder } = require("./src/service/orderService");
 const app = express();
@@ -103,5 +103,23 @@ app.listen(port, async () => {
     console.log(message)
   });
 
-  await consumeQueue('order_info', getAllOrder)
+  await consumeFromExchange('deleteShipping', 'deleteShippingQueue', 'delete_shipping', async (message) => {
+    const { orderId } = message
+    try {
+      const order = await Order.findById(orderId);
+      if (order) {
+        order.status = 'cancelled';
+        await order.save();
+        await publishToExchange("orderUpdate", "order_update", { orderId })
+        logger.info(`Order ${orderId} status updated to payment_failed`);
+      } else {
+        logger.error(`Order ${orderId} not found`);
+      }
+    } catch (error) {
+      logger.error(`Error processing payment.failed for order ${orderId}`, { error: error.message });
+    }
+  })
+
+  await consumeQueueV2('order-request', getAllOrder);
+
 });

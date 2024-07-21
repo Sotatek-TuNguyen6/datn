@@ -36,4 +36,5 @@ function useGetProductByCategory(categoryId){
     });
     return getListQuery;
 }
+
 export { useGetProduct, useGetProductDetail, useGetProductByCategory };

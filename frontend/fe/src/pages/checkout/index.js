@@ -52,6 +52,7 @@ const Checkout = () => {
     ?.map((item) => parseInt(item.priceSale) * item.quantity)
     .reduce((total, value) => total + value, 0);
 
+  console.log("🚀 ~ Checkout ~ listCart:", listCart)
   const placeOrder = () => {
 
     if (
@@ -78,6 +79,9 @@ const Checkout = () => {
     const orderDetails = listCart.map((item) => ({
       productId: item._id,
       quantity: item.quantity,
+      price: item.price,
+      productName: item.productName,
+      mainImage: item.mainImage
     }));
 
     createPaymentUrl(orderDetails);
@@ -101,7 +105,7 @@ const Checkout = () => {
         amount: totalAmount,
         bankCode: "NCB",
         language: "vn",
-        orderDetails: orderDetails,
+        products: orderDetails,
         addresses: addresses[selectedAddresses]
       }, {
         headers
@@ -116,15 +120,15 @@ const Checkout = () => {
         amount: totalAmount,
         bankCode: "NCB",
         language: "vn",
-        orderDetails: orderDetails,
+        products: orderDetails,
         addresses
       }, {
         headers
       });
     }
 
-    //clear cart ...
-    dispatch(resetCart())
+    // //clear cart ...
+    // dispatch(resetCart())
   };
 
   return (

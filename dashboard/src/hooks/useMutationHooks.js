@@ -1,8 +1,10 @@
 import { useMutation } from "react-query"
 
-export const useMutationHooks = (fnCallback)=>{
+export const useMutationHooks = (fnCallback, options = {}) => {
     const mutation = useMutation({
-        mutationFn: fnCallback
-    })
-    return mutation
-}
+        mutationFn: fnCallback,
+        ...options,
+    });
+
+    return mutation;
+};

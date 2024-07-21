@@ -328,7 +328,6 @@ exports.resetPassword = async (req, res) => {
     // Hash new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(passwordNew, salt);
-    console.log("🚀 ~ exports.resetPassword= ~ hashedPassword:", hashedPassword)
 
     account.password = hashedPassword;
     account.resetPasswordToken = undefined;

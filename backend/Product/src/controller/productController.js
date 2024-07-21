@@ -69,7 +69,10 @@ exports.getAllProduct = async (req, res, next) => {
 exports.getDetailProduct = async (req, res, next) => {
     try {
         const idParams = req.params.id;
-        const findProduct = await Product.findById(idParams);
+        // if (!idParams) {
+        //     return res.status(404).json({ success: false, message: "Product not found" })
+        // }
+        const findProduct = await Product.findById(idParams).populate("categoryId");
 
         if (findProduct) {
             res.status(200).json({ success: true, data: findProduct });

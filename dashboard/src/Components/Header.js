@@ -33,9 +33,11 @@ const Header = () => {
     // setTimeout(() => {
     //   window.location.reload();
     // });
-    dispatch(resetPay());
+    // dispatch(resetPay());
     dispatch(resetUser());
-    dispatch(restProductSingle());
+    window.localStorage.clear()
+    window.location.reload()
+        // dispatch(restProductSingle());
    
   };
 

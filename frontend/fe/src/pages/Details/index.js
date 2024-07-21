@@ -34,10 +34,10 @@ const DetailsPage = (props) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [currentProduct, setCurrentProduct] = useState({});
   const context = useContext(MyContext);
-  const [prodCat, setProdCat] = useState({
-    parentCat: sessionStorage.getItem("parentCat"),
-    subCatName: sessionStorage.getItem("subCatName"),
-  });
+  // const [prodCat, setProdCat] = useState({
+  //   parentCat: sessionStorage.getItem("parentCat"),
+  //   subCatName: sessionStorage.getItem("subCatName"),
+  // });
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [rating, setRating] = useState(0.0);
   const [isAlreadyAddedInCart, setisAlreadyAddedInCart] = useState(false);
@@ -57,6 +57,7 @@ const DetailsPage = (props) => {
   const { data: detailProductRecommend, isLoading: isLoadingRecommend } = getListProductRecommend;
 
   const { data: detailProduct, isLoading, error } = getListQuery;
+  console.log("🚀 ~ DetailsPage ~ error:", error)
   const {
     data: dataReview,
     isLoading: isLoadingReview,
