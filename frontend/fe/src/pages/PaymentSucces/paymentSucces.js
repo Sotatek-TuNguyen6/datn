@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { resetCart } from "../../features/cart/cartSlice";
 
 const PaymentSuccess = () => {
   const location = useLocation();
@@ -14,19 +15,28 @@ const PaymentSuccess = () => {
   const responseCode = queryParams.get("vnp_ResponseCode");
   const message = responseCode === "00" ? "Transaction Successful" : "Transaction Failed";
 
+  const dispatch = useDispatch()
+  
   useEffect(() => {
-    const headers = {
-      Authorization: `Bearer ${user.access_token}`,
-    };
     const getResultVNPay = async () => {
+      const headers = {
+        Authorization: `Bearer ${user.access_token}`,
+      };
       const query = location.search;
-      const { data } = await axios.get(
-        `http://localhost:8000/api/v1/order/vnpay_return${query}`, { headers }
-      );
+
+      try {
+        const { data } = await axios.get(`http://localhost:8000/api/v1/order/vnpay_return${query}`, { headers });
+        if(data){
+          dispatch(resetCart())
+        }
+        return data;
+      } catch (error) {
+        console.error('Error fetching VNPay result:', error);
+      }
     };
 
     getResultVNPay();
-  }, []);
+  }, [location.search, user.access_token]); 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
       <Card style={{ maxWidth: 600, width: "100%", padding: 20 }}>

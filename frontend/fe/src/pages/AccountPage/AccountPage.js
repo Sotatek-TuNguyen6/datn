@@ -107,7 +107,7 @@ const AccountPage = () => {
   const history = useNavigate();
 
   const mutationChangeUser = useMutation({
-    mutationFn: ({ data, token }) => UserService.updateUser(data, token),
+    mutationFn: ({ id, data, token }) => UserService.updateUser(id, data, token),
     onSuccess: () => {
       handleGetDetailsUser(editUser.id, editUser.access_token);
     },
@@ -131,10 +131,10 @@ const AccountPage = () => {
         theme: "light",
         className: "custom-toast",
         transition: Bounce,
-        });
+      });
     },
     onError: (error) => {
-      if(error.response.status === 502){
+      if (error.response.status === 502) {
         toast.error('The system is busy at the moment. Please try again later.', {
           position: "bottom-center",
           autoClose: 5000,
@@ -169,7 +169,7 @@ const AccountPage = () => {
 
   const handleChangeUser = async () => {
     const { access_token, wishlist, username, id, position, roles, fullname, phone_number, ...userWithoutToken } = editUser;
-    mutationChangeUser.mutate({ data: userWithoutToken, token: access_token });
+    mutationChangeUser.mutate({ id, data: userWithoutToken, token: access_token });
   };
 
   const handleChangePassword = async () => {

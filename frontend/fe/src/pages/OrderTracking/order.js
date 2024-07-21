@@ -77,6 +77,22 @@ const MyOrdersPage = () => {
             // window.location.reload();
         },
     });
+
+    const muationUpdate = useMutation({
+        mutationFn: (data) => ShippingService.updateShipping(data),
+        onSuccess: () => {
+            if (!toast.isActive(toastId.current)) {
+                toastId.current = toast.success("Succes!", Toastobjects);
+            }
+            window.location.reload();
+        },
+        onError: (error) => {
+            if (!toast.isActive(toastId.current)) {
+                toastId.current = toast.error("Error!", Toastobjects);
+            }
+            // window.location.reload();
+        },
+    })
     const handleToggle = (id) => {
         setOpen((prevOpen) => ({
             ...prevOpen,
@@ -129,8 +145,12 @@ const MyOrdersPage = () => {
     };
 
     const handleSaveEdit = () => {
-        // Logic for saving edited order
-        console.log("Save edited order:", currentOrder);
+        muationUpdate.mutate({
+            id: currentOrder._id,
+            destination: currentOrder.destination,
+            access_token: user.access_token
+        })
+        // console.log(currentOrder)
         handleCloseEditModal();
     };
 
@@ -265,7 +285,7 @@ const MyOrdersPage = () => {
                         value={currentOrder?.destination || ''}
                         onChange={(e) => setCurrentOrder({ ...currentOrder, destination: e.target.value })}
                     />
-        
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseEditModal} color="primary">

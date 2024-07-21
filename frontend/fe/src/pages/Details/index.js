@@ -57,7 +57,7 @@ const DetailsPage = (props) => {
   const { data: detailProductRecommend, isLoading: isLoadingRecommend } = getListProductRecommend;
 
   const { data: detailProduct, isLoading, error } = getListQuery;
-  console.log("🚀 ~ DetailsPage ~ error:", error)
+  console.log("🚀 ~ DetailsPage ~ detailProduct:", detailProduct)
   const {
     data: dataReview,
     isLoading: isLoadingReview,
@@ -229,41 +229,41 @@ const DetailsPage = (props) => {
             <div className="container-fluid">
               <ul className="breadcrumb breadcrumb2 mb-0">
                 <li>
-                  <Link>Home</Link>{" "}
+                  <Link>Home</Link>
                 </li>
                 <li>
                   <Link
-                    to={`/cat/${prodCat.parentCat
-                      .split(" ")
-                      .join("-")
-                      .toLowerCase()}`}
-                    onClick={() =>
-                      sessionStorage.setItem(
-                        "cat",
-                        prodCat.parentCat.split(" ").join("-").toLowerCase()
-                      )
-                    }
+                    // to={`/cat/${detailProduct?.categoryName
+                    //   .split(" ")
+                    //   .join("-")
+                    //   .toLowerCase()}`}
+                    // onClick={() =>
+                    //   sessionStorage.setItem(
+                    //     "cat",
+                    //     detailProduct?.categoryName.split(" ").join("-").toLowerCase()
+                    //   )
+                    // }
                     className="text-capitalize"
                   >
-                    {prodCat.parentCat}
+                    {detailProduct?.data.categoryName}
                   </Link>{" "}
                 </li>
 
                 <li>
                   <Link
-                    to={`/cat/${prodCat.parentCat.toLowerCase()}/${prodCat.subCatName
-                      .replace(/\s/g, "-")
-                      .toLowerCase()}`}
-                    onClick={() =>
-                      sessionStorage.setItem(
-                        "cat",
-                        prodCat.subCatName.toLowerCase()
-                      )
-                    }
+                    // to={`/cat/${detailProduct?.categoryName.toLowerCase()}/${detailProduct?.data.subCategoryName
+                    //   .replace(/\s/g, "-")
+                    //   .toLowerCase()}`}
+                    // onClick={() =>
+                    //   sessionStorage.setItem(
+                    //     "cat",
+                    //     detailProduct?.data.subCategoryName.toLowerCase()
+                    //   )
+                    // }
                     className="text-capitalize"
                   >
-                    {prodCat.subCatName}
-                  </Link>{" "}
+                    {detailProduct?.data.subCategoryName}
+                  </Link>
                 </li>
                 <li>{detailProduct?.data?.productName}</li>
               </ul>

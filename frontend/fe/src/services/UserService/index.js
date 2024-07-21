@@ -80,13 +80,13 @@ export const addWishlist = async (data, access_token) => {
     }
 }
 
-export const updateUser = async (data, access_token) => {
+export const updateUser = async (id, data, access_token) => {
     try {
         const headers = {
             Authorization: `Bearer ${access_token}`,
         };
         const response = await axios.post(
-            `${API_URL}/api/v1/account`,
+            `${API_URL}/api/v1/account/${id}`,
             data,
             { headers }
         );

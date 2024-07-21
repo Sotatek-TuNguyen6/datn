@@ -38,7 +38,7 @@ app.use((err, req, res, next) => {
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
 
-  await consumeFromExchange("orderExchange", 'shippingQueue', 'order.create', async (message) => {
+  await consumeFromExchange("orderExchange", 'shippingQueue', 'order.update', async (message) => {
     const { addresses, orderId, amount, userId, emailUser, type } = message;
 
     try {

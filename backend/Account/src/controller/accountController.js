@@ -154,8 +154,14 @@ exports.getAccountById = async (req, res) => {
   }
 };
 exports.updateAccount = async (req, res) => {
+  const { id, role } = req.user
   const accountId = req.params.id;
+  console.log("---------id ", id);
+  console.log("---------accountId ", accountId == id);
   try {
+    if (role != "admin" && accountId !== id) {
+      return res.status(404).json({ message: "Helo Hacker!" })
+    }
     const allowedUpdates = ['name', 'email', 'phone', 'addresses', 'orders', 'wishlist', 'role'];
 
     const updates = Object.keys(req.body);
@@ -189,7 +195,7 @@ exports.updateAccount = async (req, res) => {
 
     const updatedAccount = await account.save();
 
-    res.status(200).json(updatedAccount);
+    res.status(200).json({status:true, message: "OK"});
     logger.info("Updated account:", updatedAccount);
   } catch (error) {
     res.status(500).json({ message: "Error updating account", error: error.message });

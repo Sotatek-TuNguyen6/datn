@@ -120,13 +120,13 @@ const Header = (props) => {
 
   const openNav = () => {
     setIsOpenNav(true);
-    context.setIsopenNavigation(true);
+    // context.setIsopenNavigation(true);
   };
 
   const closeNav = () => {
     setIsOpenNav(false);
     setisOpenAccDropDown(false);
-    context.setIsopenNavigation(false);
+    // context.setIsopenNavigation(false);
   };
 
   return (
