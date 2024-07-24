@@ -22,7 +22,7 @@ const ChatWindow = ({ onClose }) => {
         const response = await axios.get("http://localhost:8000/messages", {
           params: {
             userId: user.id,
-            adminId: "66946520e4f20286b4c09dec",
+            adminId: "669ba4366a24280a4f69257d",
           },
         });
         setMessages(response.data);
@@ -54,7 +54,7 @@ const ChatWindow = ({ onClose }) => {
     if (newMessage.trim() !== "") {
       const message = {
         sender: user.id,
-        receiver: "66946520e4f20286b4c09dec", // ID của admin
+        receiver: "669ba4366a24280a4f69257d", // ID của admin
         message: newMessage,
       };
       setMessages((prevMessages) => [...prevMessages, message]);

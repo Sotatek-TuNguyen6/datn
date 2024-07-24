@@ -7,7 +7,7 @@ const { publishToQueue } = require('../utils/amqp');
  * @param {Object} res - The response object
  */
 exports.createAction = async (req, res) => {
-    const { userId, productId, actionType, rating } = req.body;
+    const { userId, productId, actionType } = req.body;
     try {
         const existingAction = await Action.findOne({ userId, productId, actionType });
 
@@ -15,7 +15,7 @@ exports.createAction = async (req, res) => {
             return res.status(400).json({ message: 'Action already exists' });
         }
 
-        const newAction = await Action.create({ userId, productId, actionType, rating });
+        const newAction = await Action.create({ userId, productId, actionType });
 
         const allActions = await Action.find();
 
@@ -60,7 +60,26 @@ const productIds = [
     { _id: '6671afe8abcdcba57f9fe5c5' }, { _id: '6671afe8abcdcba57f9fe5c6' }, { _id: '6671afe8abcdcba57f9fe5c7' },
     { _id: '6671afe8abcdcba57f9fe5c8' }, { _id: '6671afe8abcdcba57f9fe5c9' }, { _id: '6671afe8abcdcba57f9fe5ca' },
     { _id: '6671afe8abcdcba57f9fe5cb' }, { _id: '6671afe8abcdcba57f9fe5cc' }, { _id: '6671afe8abcdcba57f9fe5cd' },
-    { _id: '6671afe8abcdcba57f9fe5ce' }, { _id: '6671afe8abcdcba57f9fe5cf' }
+    { _id: '6671afe8abcdcba57f9fe5ce' }, { _id: '6671afe8abcdcba57f9fe5cf' }, { _id: '6671afe8abcdcba57f9fe5d0' },
+    { _id: '6671afe8abcdcba57f9fe5d1' },
+    { _id: '6671afe8abcdcba57f9fe5d2' },
+    { _id: '6671afe8abcdcba57f9fe5d3' },
+    { _id: '6671afe8abcdcba57f9fe5d4' },
+    { _id: '6671b02eabcdcba57f9fe5d7' },
+    { _id: '6671b02eabcdcba57f9fe5d8' },
+    { _id: '6671b02eabcdcba57f9fe5d9' },
+    { _id: '6671b02eabcdcba57f9fe5da' },
+    { _id: '6671b02eabcdcba57f9fe5db' },
+    { _id: '6671b02eabcdcba57f9fe5dc' },
+    { _id: '6671b02eabcdcba57f9fe5dd' },
+    { _id: '6671b02eabcdcba57f9fe5de' },
+    { _id: '6671b02eabcdcba57f9fe5df' },
+    { _id: '6671b02eabcdcba57f9fe5e0' },
+    { _id: '6671b02eabcdcba57f9fe5e1' },
+    { _id: '6671b02eabcdcba57f9fe5e2' },
+    { _id: '6671b02eabcdcba57f9fe5e3' },
+    { _id: '6671b02eabcdcba57f9fe5e4' },
+    { _id: '6671b02eabcdcba57f9fe5e5' }
 ];
 
 const actionTypes = ['watching', 'add_to_cart', 'purchase'];

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Grid, Typography, Card, CardContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Collapse, Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/system';
@@ -14,6 +15,8 @@ import Toast from "../../components/Toast/Toast";
 import { useMutation } from '@tanstack/react-query';
 import * as ShippingService from "../../services/Shipping/shippingService"
 import "./order.css"
+import { useQueryClient } from '@tanstack/react-query';
+
 const StyledSection = styled('section')(({ theme }) => ({
     backgroundColor: '#f5f5f5',
     padding: theme.spacing(4),
@@ -61,20 +64,19 @@ const MyOrdersPage = () => {
     useEffect(() => {
         window.scrollTo(0, 0)
     }, []);
-
+    const queryClient = useQueryClient();
     const mutationDelete = useMutation({
         mutationFn: (data) => ShippingService.deleteShipping(data),
         onSuccess: () => {
             if (!toast.isActive(toastId.current)) {
                 toastId.current = toast.success("Succes!", Toastobjects);
             }
-            window.location.reload();
+            queryClient.invalidateQueries(['shipping', user?.access_token]);
         },
         onError: (error) => {
             if (!toast.isActive(toastId.current)) {
                 toastId.current = toast.error("Error!", Toastobjects);
             }
-            // window.location.reload();
         },
     });
 
@@ -84,13 +86,13 @@ const MyOrdersPage = () => {
             if (!toast.isActive(toastId.current)) {
                 toastId.current = toast.success("Succes!", Toastobjects);
             }
-            window.location.reload();
+            queryClient.invalidateQueries(['shipping', user?.access_token]);
+
         },
         onError: (error) => {
             if (!toast.isActive(toastId.current)) {
                 toastId.current = toast.error("Error!", Toastobjects);
             }
-            // window.location.reload();
         },
     })
     const handleToggle = (id) => {
@@ -102,20 +104,9 @@ const MyOrdersPage = () => {
 
     const handleEdit = (order) => {
         if (order.status !== "pending") {
-            // toast.error('You cannot change because the order has already been shipped', {
-            //     position: "top-center",
-            //     autoClose: 5000,
-            //     hideProgressBar: false,
-            //     closeOnClick: true,
-            //     pauseOnHover: true,
-            //     draggable: true,
-            //     progress: undefined,
-            //     theme: "colored",
-            //     transition: Bounce,
-            //     className: "custom-toast",
-            // });
+
             if (!toast.isActive(toastId.current)) {
-                toastId.current = toast.error("You cannot change because the order has already been shipped!", Toastobjects);
+                toastId.current = toast.success("You cannot change because the order has already been shipped!", Toastobjects);
             }
         }
         else {
@@ -136,7 +127,6 @@ const MyOrdersPage = () => {
             id: order._id,
             access_token: user.access_token
         })
-        console.log("Delete order:", order);
     };
 
     const handleCloseEditModal = () => {
@@ -156,7 +146,7 @@ const MyOrdersPage = () => {
 
     return (
         <>
-            <Toast />
+            {/* <Toast /> */}
             {
                 isLoading ? (
                     <div>Loading.......</div>
@@ -191,6 +181,7 @@ const MyOrdersPage = () => {
                                                     <TableBody>
                                                         {data && data?.map((order, index) => (
                                                             <React.Fragment key={order._id}>
+                                                                {console.log(order)}
                                                                 <TableRow>
                                                                     <TableCell>
                                                                         <IconButton
@@ -198,7 +189,7 @@ const MyOrdersPage = () => {
                                                                             size="medium"
                                                                             onClick={() => handleToggle(order._id)}
                                                                         >
-                                                                            {open[order._id] ? <ExpandMoreIcon style={{ fontSize: "27px" }} /> : <ExpandMoreIcon style={{ fontSize: "27px" }} />}
+                                                                            {open[order._id] ? <ExpandLessIcon style={{ fontSize: "27px" }} /> : <ExpandMoreIcon style={{ fontSize: "27px" }} />}
                                                                         </IconButton>
                                                                     </TableCell>
                                                                     <TableCell component="th" scope="row">
@@ -219,7 +210,7 @@ const MyOrdersPage = () => {
                                                                 </TableRow>
                                                                 <TableRow>
                                                                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-                                                                        <Collapse in={open[order.id]} timeout="auto" unmountOnExit>
+                                                                        <Collapse in={open[order._id]} timeout="auto" unmountOnExit>
                                                                             <Box margin={1}>
                                                                                 <Typography variant="h6" gutterBottom component="div">
                                                                                     Order Details

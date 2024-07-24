@@ -219,7 +219,7 @@ const DetailsPage = (props) => {
 
   return (
     <>
-      <Toast />
+      {/* <Toast /> */}
       {isLoading && (
         <div className="loader">
           <img src={Loader} />
@@ -766,7 +766,7 @@ const DetailsPage = (props) => {
           <br />
 
           <div className="relatedProducts homeProductsRow2  pt-5 pb-4">
-            <h2 class="hd mb-0 mt-0">Related products</h2>
+            <h2 class="hd mb-0 mt-0">Recommend products</h2>
             <br className="res-hide" />
             {!isLoadingRecommend && <Slider {...related} className="prodSlider">
               {detailProductRecommend?.length !== 0 &&

@@ -26,6 +26,7 @@ import PaymentSuccess from "./pages/PaymentSucces/paymentSucces";
 import ChatButton from "./components/Chatbot/ChatButton";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import Toast from "./components/Toast/Toast";
 
 const MyContext = createContext();
 
@@ -51,6 +52,7 @@ function App() {
       ) : (
         <BrowserRouter>
           {/* <MyContext.Provider value={value}> */}
+          <Toast />
           <Header data={data.productData} />
           <Routes>
             <Route

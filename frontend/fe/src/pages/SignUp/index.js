@@ -9,13 +9,24 @@ import { useState } from "react";
 import * as UserService from "../../services/UserService/index";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import { useSelector } from "react-redux";
+import Toast from "../../components/Toast/Toast";
 
 const SignUp = () => {
   const history = useNavigate();
+  const toastId = React.useRef(null);
+  const Toastobjects = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  };
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword1, setShowPassword1] = useState(false);
   const userLogin = useSelector((state) => state.user);
@@ -31,34 +42,16 @@ const SignUp = () => {
 
   const onSuccess = (data) => {
     setShowLoader(false);
-    toast("Sign Up Success!", {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-      className: "custom-toast", // Apply the custom CSS class
-    });
+    if (!toast.isActive(toastId.current)) {
+      toastId.current = toast.error("Sign Up Failed", Toastobjects);
+    }
   };
 
   const onError = () => {
     setShowLoader(false);
-    toast.error("Sign Up Failed", {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-      className: "custom-toast", // Apply the custom CSS class
-    });
+    if (!toast.isActive(toastId.current)) {
+      toastId.current = toast.error("Sign Up Failed", Toastobjects);
+    }
   };
 
   const mutation = useMutationHooks(
@@ -79,34 +72,16 @@ const SignUp = () => {
     const userData = { ...otherFields, name: fullname };
 
     if (Object.values(formFields).some((field) => field === "")) {
-      toast.error("Please fill all the details", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        className: "custom-toast", // Apply the custom CSS class
-      });
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Please fill all the details", Toastobjects);
+      }
       return;
     }
 
     if (formFields.password !== formFields.conformPassword) {
-      toast.error("Passwords do not match", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        className: "custom-toast",
-      });
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Passwords do not match", Toastobjects);
+      }
       return;
     }
 
@@ -131,7 +106,6 @@ const SignUp = () => {
 
   return (
     <>
-      <ToastContainer />
       <section className="signIn mb-5">
         <div class="breadcrumbWrapper res-hide">
           <div class="container-fluid">

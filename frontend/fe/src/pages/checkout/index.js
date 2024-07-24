@@ -13,11 +13,12 @@ import { Add as AddIcon } from "@mui/icons-material";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { formatMoneyVND } from "../../functions/formatVND";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as VoucherService from "../../services/Voucher/VoucherService";
 import { useMutation } from "@tanstack/react-query";
 import Decimal from 'decimal.js';
+import Toast from "../../components/Toast/Toast";
 
 const Checkout = () => {
   const user = useSelector((state) => state.user);
@@ -35,6 +36,17 @@ const Checkout = () => {
   const [selectedAddresses, setSelectedAddresses] = useState([]);
   const [discount, setDiscount] = useState(0)
   const [finalAmount, setFinalAmount] = useState(0);
+
+  const toastId = React.useRef(null);
+  const Toastobjects = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  };
 
   useEffect(() => {
     const calculateTotalAmount = () => {
@@ -78,17 +90,9 @@ const Checkout = () => {
   const mutation = useMutation({
     mutationFn: (data) => VoucherService.applyVoucher(data),
     onSuccess: (data) => {
-      toast("Success!", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.success("Success!", Toastobjects);
+      }
       setDiscount(data.discount)
     },
     onError: (error) => {
@@ -97,18 +101,10 @@ const Checkout = () => {
         error.response.status === 502
           ? "The system is busy at the moment. Please try again later."
           : error.response.data.error;
-      toast.error(message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-        className: "custom-toast",
-      });
+
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error(message, Toastobjects);
+      }
     },
   });
 
@@ -134,18 +130,10 @@ const Checkout = () => {
       formFields.pincode === "" ||
       formFields.phoneNumber === ""
     ) {
-      toast.error("All fields are required", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        className: "custom-toast",
-      });
+
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("All fields are required", Toastobjects);
+      }
       return false;
     }
     const orderDetails = listCart.map((item) => ({
@@ -213,7 +201,7 @@ const Checkout = () => {
 
   return (
     <>
-      <ToastContainer />
+      {/* <Toast /> */}
 
       <section className="cartSection mb-5 checkoutPage">
         <div className="container">

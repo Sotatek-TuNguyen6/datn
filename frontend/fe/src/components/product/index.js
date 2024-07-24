@@ -8,15 +8,26 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import * as ActionsService from "../../services/Actions/actionService";
 import * as UserService from "../../services/UserService/index";
-import { Bounce, toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { formatMoneyVND } from "../../functions/formatVND";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice";
 import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "../../features/userSlice/userSlice";
+import Toast from "../Toast/Toast";
 
 const Product = (props) => {
+  const toastId = React.useRef(null);
+  const Toastobjects = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  };
   const [productData, setProductData] = useState();
   const [isAdded, setIsadded] = useState(false);
   const dispatch = useDispatch()
@@ -64,10 +75,16 @@ const Product = (props) => {
     mutationFn: ({ wishlist }) =>
       UserService.addWishlist(wishlist, access_token),
     onSuccess: () => {
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.success("Success!", Toastobjects);
+      }
       handleGetDetailsUser(idUser, access_token);
     },
     onError: (error) => {
-      console.error("Error submitting review:", error);
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Error!", Toastobjects);
+      }
+      // console.error("Error submitting review:", error);
     },
   });
 
@@ -106,7 +123,7 @@ const Product = (props) => {
 
   return (
     <>
-      <ToastContainer />
+      {/* <Toast /> */}
       <div className="productThumb" onClick={setProductCat}>
         {props.tag !== null && props.tag !== undefined && (
           <span className={`badge ${props.tag}`}>{props.tag}</span>

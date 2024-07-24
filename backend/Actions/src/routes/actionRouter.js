@@ -3,7 +3,7 @@ const { createAction, genrenterAction } = require("../controller/actionControlle
 const router = express.Router();
 
 router.post("/", createAction);
-router.post("/genrenterAction", genrenterAction);
+router.get("/genrenterAction", genrenterAction);
 
 
 module.exports = router;

@@ -7,7 +7,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { Button } from "@mui/material";
 import { useState } from "react";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -16,9 +16,20 @@ import { useMutationHooks } from "../../hooks/useMutationHook";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../features/userSlice/userSlice";
+import Toast from "../../components/Toast/Toast";
 
 const SignIn = () => {
   window.scrollTo(0, 0)
+  const toastId = React.useRef(null);
+  const Toastobjects = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  };
   const [showPassword, setShowPassword] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [formFields, setFormFields] = useState({
@@ -41,33 +52,16 @@ const SignIn = () => {
   };
 
   const onSuccess = (data) => {
-    toast("Login Success!", {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+    if (!toast.isActive(toastId.current)) {
+      toastId.current = toast.success("Login Success!", Toastobjects);
+    }
     setShowLoader(false);
   };
 
   const onError = (error) => {
-    toast.error("Login Fail", {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-      className: "custom-toast",
-    });
+    if (!toast.isActive(toastId.current)) {
+      toastId.current = toast.error("Login Fail!", Toastobjects);
+    }
     setShowLoader(false);
   };
 
@@ -130,7 +124,7 @@ const SignIn = () => {
 
   return (
     <>
-      <ToastContainer />
+      {/* <Toast /> */}
 
       <section className="signIn mb-5">
         <div className="breadcrumbWrapper">

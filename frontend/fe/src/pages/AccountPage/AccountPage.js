@@ -32,6 +32,7 @@ import { resetUser, updateUser } from "../../features/userSlice/userSlice";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; // Import icon giỏ hàng
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Toast from "../../components/Toast/Toast";
 
 const StyledSection = styled("section")(({ theme }) => ({
   backgroundColor: "#f5f5f5",
@@ -54,6 +55,17 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const AccountPage = () => {
+  const toastId = React.useRef(null);
+  const Toastobjects = {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  };
+
   const user = useSelector((state) => state.user);
   const [editUser, setEditUser] = useState(user);
   const [passwordOld, setPasswordOld] = useState("")
@@ -125,80 +137,36 @@ const AccountPage = () => {
     },
     onError: (error) => {
       if (error.response.status === 502) {
-        toast.error('The system is busy at the moment. Please try again later.', {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-          className: "custom-toast",
-        });
+        if (!toast.isActive(toastId.current)) {
+          toastId.current = toast.error('The system is busy at the moment. Please try again later!', Toastobjects);
+        }
         return;
       }
-      toast.error("Update Fail", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-        className: "custom-toast",
-      });
+
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error('Update Fail!', Toastobjects);
+      }
     },
   });
 
   const mutationChangePassword = useMutation({
     mutationFn: ({ data, token }) => UserService.updatePassword(data, token),
     onSuccess: () => {
-      // handleGetDetailsUser(editUser.id, editUser.access_token);
-      toast.success('🦄 Update Success!', {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        className: "custom-toast",
-        transition: Bounce,
-      });
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.success('Update Success!', Toastobjects);
+      }
     },
     onError: (error) => {
       if (error.response.status === 502) {
-        toast.error('The system is busy at the moment. Please try again later.', {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-          className: "custom-toast",
-        });
+        if (!toast.isActive(toastId.current)) {
+          toastId.current = toast.error('The system is busy at the moment. Please try again later.', Toastobjects);
+        }
         return;
       }
-      toast.error(error.response.data.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-        className: "custom-toast",
-      });
+
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error(error.response.data.message, Toastobjects);
+      }
     },
   });
 
@@ -212,33 +180,15 @@ const AccountPage = () => {
 
   const handleChangePassword = async () => {
     if (!passwordOld || !passwordNew || !confirmPassword) {
-      toast.error('Please enter all required information', {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-        className: "custom-toast",
-      });
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Please enter all required information!", Toastobjects);
+      }
       return
     }
-    if (passwordNew !== confirmPassword) {
-      toast.error('New password and confirmation do not match', {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-        className: "custom-toast",
-      });
+    if (passwordNew !== confirmPassword) {  
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("New password and confirmation do not match!", Toastobjects);
+      }
       return
     }
     const { access_token, ...userWithoutToken } = editUser;
@@ -257,7 +207,7 @@ const AccountPage = () => {
 
   return (
     <>
-      <ToastContainer />
+      {/* <Toast /> */}
       <StyledSection>
         <Typography variant="h4" component="h1" gutterBottom>
           My Account

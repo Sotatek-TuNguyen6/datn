@@ -1,64 +1,50 @@
-import React, { useState } from 'react';
-import { TextField, Button, CircularProgress, Backdrop } from '@mui/material';
-import { ToastContainer, toast, Bounce } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import * as UserService from "../../services/UserService/index"
-
+import React, { useState } from "react";
+import { TextField, Button, CircularProgress, Backdrop } from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import * as UserService from "../../services/UserService/index";
+import Toast from "../../components/Toast/Toast";
 
 const ForgotPassword = ({ showLoader }) => {
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const toastId = React.useRef(null);
+    const Toastobjects = {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    };
 
     const mutationSendRestPassword = useMutation({
         mutationFn: ({ email }) => UserService.forgotPassword(email),
         onSuccess: () => {
-            toast("Please check your email for the password reset link.", {
-                position: "bottom-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-            });
+            if (!toast.isActive(toastId.current)) {
+                toastId.current = toast.success("Please check your email for the password reset link.", Toastobjects);
+            }
         },
         onError: (error) => {
             if (error.response.status === 502) {
-                toast.error('The system is busy at the moment. Please try again later.', {
-                    position: "bottom-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                    className: "custom-toast",
-                });
+                if (!toast.isActive(toastId.current)) {
+                    toastId.current = toast.error("The system is busy at the moment. Please try again later.", Toastobjects);
+                }
                 return;
             }
-            toast.error(error.response.data.message, {
-                position: "bottom-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                className: "custom-toast",
-            });
+            if (!toast.isActive(toastId.current)) {
+                toastId.current = toast.error(error.response.data.message, Toastobjects);
+            }
+            return;
         },
     });
     const handleForgotPassword = async (email) => {
         mutationSendRestPassword.mutate({ email: email });
-    }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -66,7 +52,7 @@ const ForgotPassword = ({ showLoader }) => {
         try {
             await handleForgotPassword(email);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         } finally {
             setLoading(false);
         }
@@ -74,7 +60,7 @@ const ForgotPassword = ({ showLoader }) => {
 
     return (
         <>
-            <ToastContainer />
+            {/* <Toast /> */}
 
             <section className="forgotPassword mb-5">
                 <div className="breadcrumbWrapper">
@@ -119,7 +105,7 @@ const ForgotPassword = ({ showLoader }) => {
                                     type="submit"
                                     disabled={loading}
                                 >
-                                    {loading ? 'Sending...' : 'Send Reset Link'}
+                                    {loading ? "Sending..." : "Send Reset Link"}
                                 </Button>
                             </div>
 
