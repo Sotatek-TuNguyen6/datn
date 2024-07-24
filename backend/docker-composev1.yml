@@ -242,12 +242,9 @@ services:
       - RABBITMQ_URL=amqp://rabbitmq:5672
       - JWT_SECRET=9aFb3cH1iLp2sO8qR
     depends_on:
-      mongo:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+      - mongo
+      - redis
+      - rabbitmq
   shipping:
     image: ntu11022002/shipping:latest
     ports:
@@ -262,12 +259,9 @@ services:
       - RABBITMQ_URL=amqp://rabbitmq:5672
       - JWT_SECRET=9aFb3cH1iLp2sO8qR
     depends_on:
-      mongo:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy   
+      - mongo
+      - redis
+      - rabbitmq
   apigateway:
     image: ntu11022002/apigateway:latest
     ports:
