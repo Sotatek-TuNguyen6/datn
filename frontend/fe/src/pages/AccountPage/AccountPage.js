@@ -109,10 +109,48 @@ const AccountPage = () => {
   const mutationChangeUser = useMutation({
     mutationFn: ({ id, data, token }) => UserService.updateUser(id, data, token),
     onSuccess: () => {
+      toast.success('Update Success!', {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        className: "custom-toast",
+        transition: Bounce,
+      });
       handleGetDetailsUser(editUser.id, editUser.access_token);
     },
     onError: (error) => {
-      console.error("Error submitting review:", error);
+      if (error.response.status === 502) {
+        toast.error('The system is busy at the moment. Please try again later.', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          className: "custom-toast",
+        });
+        return;
+      }
+      toast.error("Update Fail", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+        className: "custom-toast",
+      });
     },
   });
 

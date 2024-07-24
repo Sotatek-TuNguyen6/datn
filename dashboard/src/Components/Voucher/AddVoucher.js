@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Toast from "../LoadingError/Toast";
-import { useMutationHooks } from "../../hooks/useMutationHooks";
 import * as VoucherService from "../../Services/VoucherService";
-import * as ProductService from "../../Services/ProductService";
-import axios from "axios";
+import { useMutation } from "react-query";
 
 const AddVoucherMain = () => {
-  const [user, setUser] = useState("");
-  const [product, setProduct] = useState("");
-  const [rating, setRating] = useState("");
-  const [comment, setContentReview] = useState("");
-  const [listProduct, setListProduct] = useState([]);
+  const [code, setCode] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [percent, setPercent] = useState("");
+  const [expirationDate, setExpirationDate] = useState("");
+  const [isActive, setIsActive] = useState(false);
   const toastId = React.useRef(null);
   const Toastobjects = {
     position: "top-right",
@@ -23,78 +21,42 @@ const AddVoucherMain = () => {
     draggable: true,
     progress: undefined,
   };
-  const [images, setImages] = useState([]);
 
-  const handleFileInputChange = (event) => {
-    const selectedImages = Array.from(event.target.files);
-    setImages(selectedImages);
-  };
-  const mutationAddCategory = useMutationHooks((data) => {
-    const { access_token, ...rests } = data;
-    const res = VoucherService.createReview(rests);
-    return res;
-  });
-
-  const hangldeGetAllProdut = async () => {
-    const resProduct = await ProductService.getAll();
-    if (resProduct) {
-      setListProduct(resProduct);
-    }
-  };
-
-  const submitHandler = async (event) => {
-    event.preventDefault();
-    if (user === "" && product === "" && rating === "" && comment === "") {
-      if (!toast.isActive(toastId.current)) {
-        toastId.current = toast.error("Không được để trống!", Toastobjects);
-      }
-    } else {
-      let uploadedImageUrls;
-
-      try {
-        for (const image of images) {
-          const formData = new FormData();
-          formData.append("file", image);
-          formData.append("upload_preset", "Project1");
-
-          const response = await axios.post(
-            `https://api.cloudinary.com/v1_1/dgeeyhyzq/image/upload`,
-            formData
-          );
-          uploadedImageUrls = (response.data.secure_url);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      mutationAddCategory.mutate({
-        user,
-        product,
-        rating,
-        comment,
-        thumbnail: uploadedImageUrls
-      });
-    }
-  };
-
-  const { error, isLoading, isSuccess, isError } = mutationAddCategory;
-  useEffect(() => {
-    if (!error && isSuccess) {
+  const mutationAddVoucher = useMutation({
+    mutationFn: (data) => VoucherService.createVoucher(data),
+    onSuccess: () => {
       if (!toast.isActive(toastId.current)) {
         toastId.current = toast.success("Thành công!", Toastobjects);
       }
-    } else if (error) {
+    },
+    onError: (error) => {
       if (!toast.isActive(toastId.current)) {
         toastId.current = toast.error(
           error.response.data.message,
           Toastobjects
         );
       }
-    }
-  }, [error, isSuccess]);
+    },
+  });
 
-  useEffect(() => {
-    hangldeGetAllProdut();
-  }, []);
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    if (code === "" || quantity === "" || percent === "" || expirationDate === "") {
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Không được để trống!", Toastobjects);
+      }
+    } else {
+      mutationAddVoucher.mutate({
+        code,
+        usageCount: quantity,
+        discount: percent,
+        expirationDate,
+        isActive,
+        maxUsage: quantity
+      });
+    }
+  };
+
   return (
     <>
       <Toast />
@@ -106,7 +68,7 @@ const AddVoucherMain = () => {
             </Link>
             <h2 className="content-title">Thêm mã giảm giá</h2>
             <div>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" disabled={!code || !quantity || !percent || !expirationDate}>
                 Xác nhận thêm
               </button>
             </div>
@@ -116,8 +78,6 @@ const AddVoucherMain = () => {
             <div className="col-xl-12 col-lg-12">
               <div className="card mb-4 shadow-sm">
                 <div className="card-body">
-                  {/* {error && <Message variant="alert-danger">{error}</Message>}
-                  {loading && <Loading />} */}
                   <div className="mb-4">
                     <label htmlFor="code" className="form-label">
                       Mã giảm giá
@@ -127,11 +87,11 @@ const AddVoucherMain = () => {
                       placeholder="Mã giảm giá"
                       className="form-control"
                       required
-                      onChange={(e) => setUser(e.target.value)}
+                      onChange={(e) => setCode(e.target.value)}
                     />
                   </div>
                   <div className="mb-4">
-                    <label htmlFor="discount" className="form-label">
+                    <label htmlFor="quantity" className="form-label">
                       Số lượng
                     </label>
                     <input
@@ -139,11 +99,11 @@ const AddVoucherMain = () => {
                       placeholder="Số lượng"
                       className="form-control"
                       required
-                      onChange={(e) => setUser(e.target.value)}
+                      onChange={(e) => setQuantity(e.target.value)}
                     />
                   </div>
                   <div className="mb-4">
-                    <label htmlFor="discount" className="form-label">
+                    <label htmlFor="percent" className="form-label">
                       Phần trăm giảm
                     </label>
                     <input
@@ -151,24 +111,35 @@ const AddVoucherMain = () => {
                       placeholder="Phần trăm giảm"
                       className="form-control"
                       required
-                      onChange={(e) => setUser(e.target.value)}
+                      onChange={(e) => setPercent(e.target.value)}
                     />
                   </div>
                   <div className="mb-4">
-                    <label htmlFor="expiryDays" className="form-label">
+                    <label htmlFor="expirationDate" className="form-label">
                       Ngày hết hạn
                     </label>
                     <input
                       type="date"
                       placeholder="Type here"
                       className="form-control"
-                      id="expiryDays"
+                      id="expirationDate"
                       required
-                      value={rating}
-                      onChange={(e) => setRating(e.target.value)}
+                      onChange={(e) => setExpirationDate(e.target.value)}
                     />
                   </div>
-
+                  <div className="mb-4">
+                  
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="isActive"
+                      checked={isActive}
+                      onChange={(e) => setIsActive(e.target.checked)}
+                    />
+                    <label htmlFor="isActive" className="form-check-label">
+                      Kích hoạt
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -178,4 +149,5 @@ const AddVoucherMain = () => {
     </>
   );
 };
+
 export default AddVoucherMain;

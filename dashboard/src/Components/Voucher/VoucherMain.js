@@ -12,7 +12,6 @@ const VoucherMain = () => {
     const getListQuery = useGetListVoucher();
 
     const { data, isLoading, isError } = getListQuery
-
     return (
         <>
             <section className="content-main">
@@ -28,7 +27,7 @@ const VoucherMain = () => {
                             ) : isError ? (
                                 <Message variant="alert-danger">{isError}</Message>
                             ) : (
-                                <Voucher data={data.data} search={search} />
+                                <Voucher data={data} search={search} />
                             )}
                         </div>
                     </div>

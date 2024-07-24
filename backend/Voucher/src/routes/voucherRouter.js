@@ -1,20 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controller/voucherController'); // Adjust the path as needed
+const voucherController = require('../controller/voucherController'); // Adjust the path as needed
+const { protect } = require('../middleware/AuthMiddleware');
 
-// Get all orders
-router.get('/', orderController.getAllVouchers);
+router.get('/', voucherController.getAllVouchers);
 
-// Get a single order by ID
-router.get('/:id', orderController.createVoucher);
+router.get('/:id', voucherController.createVoucher);
 
-// Create a new order
-router.post('/', orderController.createOrder);
+router.post('/', voucherController.createVoucher);
+router.post('/useVoucher', protect, voucherController.useVoucher);
 
-// Update an existing order by ID
-router.put('/:id', orderController.updateOrderById);
+router.put('/:id', voucherController.updateVoucherById);
 
-// Delete an order by ID
-router.delete('/:id', orderController.deleteOrderById);
+router.delete('/:id', voucherController.deleteVoucherById);
 
 module.exports = router;

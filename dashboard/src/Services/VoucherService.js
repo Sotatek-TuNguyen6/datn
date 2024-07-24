@@ -6,7 +6,7 @@ export const createVoucher = async (data, access_token) => {
     const headers = {
         Authorization: `Bearer ${access_token}`,
     };
-    const res = await axiosJWT.post(`${API}/api/v1/voucher/create`, data, {
+    const res = await axiosJWT.post(`${API}/api/v1/voucher`, data, {
         headers,
     });
     return res.data;

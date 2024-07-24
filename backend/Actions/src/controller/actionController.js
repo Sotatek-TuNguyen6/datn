@@ -1,6 +1,11 @@
 const Action = require("../model/actionModel")
 const { publishToQueue } = require('../utils/amqp');
 
+/**
+ * 
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.createAction = async (req, res) => {
     const { userId, productId, actionType, rating } = req.body;
     try {
@@ -64,6 +69,11 @@ function getRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+/**
+ * 
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.genrenterAction = async (req, res) => {
     try {
         const actions = userIds.map(userId => {

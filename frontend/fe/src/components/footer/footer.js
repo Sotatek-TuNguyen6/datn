@@ -127,15 +127,15 @@ const Footer = () => {
                 <br />
 
                 <p>
-                  <LocationOnOutlinedIcon /> <strong>Address</strong>: 5171 W
-                  Campbell Ave undefined Kent, Utah 53127 United States
+                  <LocationOnOutlinedIcon /> <strong>Address</strong>:
+                   DONG ANH HA NOI
                 </p>
                 <p>
                   <HeadphonesOutlinedIcon /> <strong>Call Us:</strong> (+91) -
-                  540-025-124553{" "}
+                   0988597401
                 </p>
                 <p>
-                  <EmailOutlinedIcon /> <strong>Email:</strong> sale@Nest.com
+                  <EmailOutlinedIcon /> <strong>Email:</strong> sale@shoptu.com
                 </p>
                 <p>
                   <WatchLaterOutlinedIcon /> <strong>Hours:</strong> 10:00 -

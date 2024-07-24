@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -7,19 +7,22 @@ import {
   Radio,
   RadioGroup,
   FormLabel,
-  Checkbox
+  Checkbox,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { resetCart } from "../../features/cart/cartSlice";
 import { formatMoneyVND } from "../../functions/formatVND";
-import { Bounce, toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import * as VoucherService from "../../services/Voucher/VoucherService";
+import { useMutation } from "@tanstack/react-query";
+import Decimal from 'decimal.js';
+
 const Checkout = () => {
   const user = useSelector((state) => state.user);
   const { listCart } = useSelector((state) => state.cart);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [formFields, setFormFields] = useState({
     name: user.name,
     pincode: "10000",
@@ -27,9 +30,33 @@ const Checkout = () => {
     phoneNumber: user.phone,
     paymentMethod: "credit_card",
   });
+  const [voucher, setVoucher] = useState("");
   const [addresses, setAddresses] = useState(user.addresses);
   const [selectedAddresses, setSelectedAddresses] = useState([]);
+  const [discount, setDiscount] = useState(0)
+  const [finalAmount, setFinalAmount] = useState(0);
 
+  useEffect(() => {
+    const calculateTotalAmount = () => {
+      let totalAmount = listCart
+        ?.map((item) => new Decimal(item.priceSale).mul(item.quantity))
+        .reduce((total, value) => total.add(value), new Decimal(0));
+
+      if (discount && discount > 0) {
+        const discountDecimal = new Decimal(discount);
+        const discountAmount = totalAmount.mul(discountDecimal.div(100));
+        totalAmount = totalAmount.sub(discountAmount);
+
+        if (totalAmount.lessThan(0)) {
+          totalAmount = new Decimal(0);
+        }
+      }
+
+      setFinalAmount(totalAmount);
+    };
+
+    calculateTotalAmount();
+  }, [listCart, discount]);
   const handleChangeInput = (index, event) => {
     const newAddresses = [...addresses];
     newAddresses[index] = event.target.value;
@@ -48,19 +75,66 @@ const Checkout = () => {
     }
   };
 
+  const mutation = useMutation({
+    mutationFn: (data) => VoucherService.applyVoucher(data),
+    onSuccess: (data) => {
+      toast("Success!", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      setDiscount(data.discount)
+    },
+    onError: (error) => {
+      console.log("errorrr", error);
+      const message =
+        error.response.status === 502
+          ? "The system is busy at the moment. Please try again later."
+          : error.response.data.error;
+      toast.error(message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+        className: "custom-toast",
+      });
+    },
+  });
+
+  const applyVoucherCode = () => {
+    try {
+      mutation.mutate({
+        access_token: user.access_token,
+        code: voucher,
+      });
+    } catch (error) {
+      console.error("Error applying voucher:", error);
+    }
+  };
+
   const totalAmount = listCart
     ?.map((item) => parseInt(item.priceSale) * item.quantity)
     .reduce((total, value) => total + value, 0);
 
   const placeOrder = () => {
-
     if (
       formFields.name === "" ||
       selectedAddresses.length === 0 ||
       formFields.pincode === "" ||
       formFields.phoneNumber === ""
     ) {
-      toast.error('All fields are required', {
+      toast.error("All fields are required", {
         position: "bottom-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -79,7 +153,7 @@ const Checkout = () => {
       quantity: item.quantity,
       price: item.price,
       productName: item.productName,
-      mainImage: item.mainImage
+      mainImage: item.mainImage,
     }));
 
     createPaymentUrl(orderDetails);
@@ -97,36 +171,44 @@ const Checkout = () => {
     const headers = {
       Authorization: `Bearer ${user.access_token}`,
     };
-    if (formFields.paymentMethod == "credit_card") {
-      const { data } = await axios.post("http://localhost:8000/api/v1/order", {
-        userId: user.id,
-        amount: totalAmount,
-        bankCode: "NCB",
-        language: "vn",
-        products: orderDetails,
-        addresses: addresses[selectedAddresses]
-      }, {
-        headers
-      });
-      if (data.code === "00") {
-        window.location.href = data.data;
+
+    try {
+      const response =
+        formFields.paymentMethod === "credit_card"
+          ? await axios.post(
+            "http://localhost:8000/api/v1/order",
+            {
+              userId: user.id,
+              amount: finalAmount,
+              bankCode: "NCB",
+              language: "vn",
+              products: orderDetails,
+              addresses: addresses[selectedAddresses],
+            },
+            { headers }
+          )
+          : await axios.post(
+            "http://localhost:8000/api/v1/order/create",
+            {
+              userId: user.id,
+              amount: finalAmount,
+              bankCode: "NCB",
+              language: "vn",
+              products: orderDetails,
+              addresses,
+            },
+            { headers }
+          );
+
+      if (response.data.code === "00" && formFields.paymentMethod === "credit_card") {
+        window.location.href = response.data.data;
       }
-    }
-    else {
-      await axios.post("http://localhost:8000/api/v1/order/create", {
-        userId: user.id,
-        amount: totalAmount,
-        bankCode: "NCB",
-        language: "vn",
-        products: orderDetails,
-        addresses
-      }, {
-        headers
-      });
+    } catch (error) {
+      console.error("Error creating payment URL:", error);
     }
 
-    // //clear cart ...
-    // dispatch(resetCart())
+    // Clear cart ...
+    // dispatch(resetCart());
   };
 
   return (
@@ -170,7 +252,7 @@ const Checkout = () => {
                     </div>
                     <div className="form-group mb-3">
                       <TextField
-                        label="Enter Phone Number."
+                        label="Enter Phone Number"
                         variant="outlined"
                         className="w-100"
                         value={formFields.phoneNumber}
@@ -206,6 +288,7 @@ const Checkout = () => {
                       color="primary"
                       onClick={handleAddAddress}
                       startIcon={<AddIcon />}
+                      style={{ fontSize: "18px" }}
                     >
                       Add Address
                     </Button>
@@ -251,9 +334,16 @@ const Checkout = () => {
                     </div>
 
                     <div className="d-flex align-items-center mb-4">
+                      <h5 className="mb-0 text-light">Voucher</h5>
+                      <h3 className="ml-auto mb-0 font-weight-bold">
+                        <span>{discount}%</span>
+                      </h3>
+                    </div>
+
+                    <div className="d-flex align-items-center mb-4">
                       <h5 className="mb-0 text-light">Total</h5>
                       <h3 className="ml-auto mb-0 font-weight-bold">
-                        <span className="text-g">{formatMoneyVND(totalAmount)}</span>
+                        <span className="text-g">{formatMoneyVND(finalAmount)}</span>
                       </h3>
                     </div>
 
@@ -269,15 +359,16 @@ const Checkout = () => {
                         label="Enter Voucher Code"
                         variant="outlined"
                         className="w-100"
-                        value={formFields.voucherCode}
-                        onChange={changeInput}
+                        value={voucher}
+                        onChange={(e) => setVoucher(e.target.value)}
                         name="voucherCode"
                       />
                       <Button
                         variant="contained"
                         color="secondary"
-                        // onClick={applyVoucherCode}
+                        onClick={applyVoucherCode}
                         className="mt-2"
+                        style={{ fontSize: "18px" }}
                       >
                         Apply Voucher
                       </Button>
@@ -291,7 +382,6 @@ const Checkout = () => {
       </section>
     </>
   );
-
 };
 
 export default Checkout;

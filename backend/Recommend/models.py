@@ -52,19 +52,6 @@ class RecommenderSystem:
         # Calculate Precision, Recall, F1-score
         self.precision, self.recall, self.f1 = self.calculate_precision_recall_f1(predictions)
 
-    def calculate_precision_recall_f1(self, predictions):
-        y_true = [pred.r_ui for pred in predictions]
-        y_pred = [pred.est for pred in predictions]
-        
-        y_pred_binary = [1 if rating >= 3 else 0 for rating in y_pred]
-        y_true_binary = [1 if rating >= 3 else 0 for rating in y_true]
-        
-        precision = precision_score(y_true_binary, y_pred_binary, zero_division=0)
-        recall = recall_score(y_true_binary, y_pred_binary, zero_division=0)
-        f1 = f1_score(y_true_binary, y_pred_binary, zero_division=0)
-        
-        return precision, recall, f1
-
     def get_content_based_recommendations(self, user_id):
         user_interactions = self.df_interactions[self.df_interactions['userId'] == user_id]
         user_items = user_interactions['productId'].tolist()
@@ -119,3 +106,16 @@ class RecommenderSystem:
             results.append(product_info)
         
         return results
+
+    def calculate_precision_recall_f1(self, predictions):
+        y_true = [pred.r_ui for pred in predictions]
+        y_pred = [pred.est for pred in predictions]
+        
+        y_pred_binary = [1 if rating >= 3 else 0 for rating in y_pred]
+        y_true_binary = [1 if rating >= 3 else 0 for rating in y_true]
+        
+        precision = precision_score(y_true_binary, y_pred_binary, zero_division=0)
+        recall = recall_score(y_true_binary, y_pred_binary, zero_division=0)
+        f1 = f1_score(y_true_binary, y_pred_binary, zero_division=0)
+        
+        return precision, recall, f1

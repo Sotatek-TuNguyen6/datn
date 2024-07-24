@@ -34,6 +34,11 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(helmet());
 
+/**
+ * Controller for creating a new account
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 app.get('/chat-users', async (req, res) => {
     const { adminId } = req.query;
 
@@ -61,6 +66,11 @@ app.get('/chat-users', async (req, res) => {
     }
 });
 
+/**
+ * Controller for creating a new account
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 app.get('/messages', async (req, res) => {
     const { userId, adminId } = req.query;
 
@@ -77,6 +87,11 @@ app.get('/messages', async (req, res) => {
     }
 });
 
+/**
+ * Controller for creating a new account
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 app.post('/messages', async (req, res) => {
     const { sender, receiver, message } = req.body;
 

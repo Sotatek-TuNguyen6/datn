@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import Toast from "../../components/Toast/Toast";
 import { useMutation } from '@tanstack/react-query';
 import * as ShippingService from "../../services/Shipping/shippingService"
+import "./order.css"
 const StyledSection = styled('section')(({ theme }) => ({
     backgroundColor: '#f5f5f5',
     padding: theme.spacing(4),
@@ -56,7 +57,6 @@ const MyOrdersPage = () => {
         isLoading,
         isError,
     } = getListQuery;
-
     const { orders } = useSelector((state) => state.user);
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -190,15 +190,15 @@ const MyOrdersPage = () => {
                                                     </TableHead>
                                                     <TableBody>
                                                         {data && data?.map((order, index) => (
-                                                            <React.Fragment key={order.id}>
+                                                            <React.Fragment key={order._id}>
                                                                 <TableRow>
                                                                     <TableCell>
                                                                         <IconButton
                                                                             aria-label="expand row"
-                                                                            size="small"
-                                                                            onClick={() => handleToggle(order.id)}
+                                                                            size="medium"
+                                                                            onClick={() => handleToggle(order._id)}
                                                                         >
-                                                                            {open[order.id] ? <ExpandMoreIcon /> : <ExpandMoreIcon />}
+                                                                            {open[order._id] ? <ExpandMoreIcon style={{ fontSize: "27px" }} /> : <ExpandMoreIcon style={{ fontSize: "27px" }} />}
                                                                         </IconButton>
                                                                     </TableCell>
                                                                     <TableCell component="th" scope="row">
@@ -210,10 +210,10 @@ const MyOrdersPage = () => {
                                                                     <TableCell align="right">{order.status}</TableCell>
                                                                     <TableCell align="right">
                                                                         <IconButton aria-label="edit" onClick={() => handleEdit(order)}>
-                                                                            <EditIcon />
+                                                                            <EditIcon style={{ fontSize: "27px" }} />
                                                                         </IconButton>
                                                                         <IconButton aria-label="delete" onClick={() => handleDelete(order)}>
-                                                                            <DeleteIcon />
+                                                                            <DeleteIcon style={{ fontSize: "27px" }} />
                                                                         </IconButton>
                                                                     </TableCell>
                                                                 </TableRow>

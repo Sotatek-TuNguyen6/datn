@@ -1,11 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/AcountModels");
-/**
- * Middleware to protect routes by verifying JWT token
- * @param {Object} req - The request object
- * @param {Object} res - The response object
- * @param {Function} next - The next middleware function
- */
+// const User = require("../models/AcountModels");
 const protect = async (req, res, next) => {
   let token;
 
@@ -18,7 +12,7 @@ const protect = async (req, res, next) => {
       
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 1221212121);
 
-      req.user = await User.findById(decoded.id).select("-password");
+      req.user = decoded;
       next();
     } catch (error) {
       console.log(error);
@@ -29,13 +23,6 @@ const protect = async (req, res, next) => {
     res.status(401).json({ message: "Not authorized, no token" });
   }
 };
-
-/**
- * Middleware to protect routes by verifying JWT token
- * @param {Object} req - The request object
- * @param {Object} res - The response object
- * @param {Function} next - The next middleware function
- */
 const admin = async (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();

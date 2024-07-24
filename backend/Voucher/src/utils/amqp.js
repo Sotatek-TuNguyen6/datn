@@ -1,36 +1,32 @@
 const amqp = require('amqplib');
 const logger = require('./logger');
-/**
- * Publishes a message to a specified exchange
- * @param {string} exchangeName - The name of the exchange
- * @param {string} routingKey - The routing key to use
- * @param {Object} message - The message content to publish
- */
+
+let connection;
+let channel;
+
+async function connectRabbitMQ() {
+  if (!connection || connection.connection.stream.destroyed) {
+    connection = await amqp.connect(process.env.RABBITMQ_URL);
+  }
+  if (!channel || channel.connection.stream.destroyed) {
+    channel = await connection.createChannel();
+  }
+}
 async function publishToExchange(exchangeName, routingKey, message) {
   try {
-    const connection = await amqp.connect(process.env.RABBITMQ_URL);
-    const channel = await connection.createChannel();
+    await connectRabbitMQ();
     await channel.assertExchange(exchangeName, 'topic', { durable: true });
     channel.publish(exchangeName, routingKey, Buffer.from(JSON.stringify(message)));
     logger.info(`Message sent to exchange: ${exchangeName} with routingKey: ${routingKey}`, { message });
-    await channel.close();
-    await connection.close();
+  
   } catch (error) {
     logger.error(`Error publishing to exchange: ${exchangeName}`, { error: error.message });
   }
 }
 
-/**
- * Consumes messages from a specified exchange
- * @param {string} exchangeName - The name of the exchange
- * @param {string} queueName - The name of the queue
- * @param {string} bindingKey - The binding key to use
- * @param {Function} callback - The callback function to handle the message
- */
 async function consumeFromExchange(exchangeName, queueName, bindingKey, callback) {
   try {
-    const connection = await amqp.connect(process.env.RABBITMQ_URL);
-    const channel = await connection.createChannel();
+    await connectRabbitMQ();
     await channel.assertExchange(exchangeName, 'topic', { durable: true });
     await channel.assertQueue(queueName, { durable: true });
     await channel.bindQueue(queueName, exchangeName, bindingKey);
@@ -51,18 +47,13 @@ async function consumeFromExchange(exchangeName, queueName, bindingKey, callback
   }
 }
 
-/**
- * Publishes a message to a specified queue
- * @param {string} queueName - The name of the queue
- * @param {Object} message - The message content to publish
- */
 async function publishToQueue(queueName, message) {
   try {
     const connection = await amqp.connect(process.env.RABBITMQ_URL);
     const channel = await connection.createChannel();
     await channel.assertQueue(queueName, { durable: true });
     channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
-    logger.info(`Message sent to queue: ${queueName}`, message);
+    logger.info(`Message sent to queue: ${queueName}`);
     await channel.close();
     await connection.close();
   } catch (error) {
@@ -70,11 +61,6 @@ async function publishToQueue(queueName, message) {
   }
 }
 
-/**
- * Consumes messages from a specified queue
- * @param {string} queueName - The name of the queue
- * @param {Function} callback - The callback function to handle the message
- */
 async function consumeQueue(queueName, callback) {
   try {
     const connection = await amqp.connect(process.env.RABBITMQ_URL);
@@ -97,50 +83,29 @@ async function consumeQueue(queueName, callback) {
   }
 }
 
-/**
- * Publishes a message to a specified queue with a callback for responses
- * @param {string} queueName - The name of the queue
- * @param {Object} message - The message content to publish
- * @param {Function} callback - The callback function to handle the response
- */
-async function publishToQueueV2(queueName, message, callback) {
+async function consumeQueueV2(queueName, callback) {
   try {
     const connection = await amqp.connect(process.env.RABBITMQ_URL);
     const channel = await connection.createChannel();
-    const { queue } = await channel.assertQueue('', { exclusive: true });
+    await channel.assertQueue(queueName, { durable: true });
 
-    const correlationId = generateUuid();
-
-    channel.consume(queue, (msg) => {
-      if (msg.properties.correlationId === correlationId) {
+    channel.consume(queueName, async (msg) => {
+      if (msg !== null) {
         const messageContent = JSON.parse(msg.content.toString());
-        logger.info(`Message received from temporary queue: ${queue}`, { messageContent });
-        callback(messageContent);
+        logger.info(`Message received from queue: ${queueName}`, { messageContent });
+        const response = await callback(messageContent);
+        channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(response)), {
+          correlationId: msg.properties.correlationId
+        });
         channel.ack(msg);
-        setTimeout(() => {
-          channel.close();
-          connection.close();
-        }, 500);
       }
     }, { noAck: false });
 
-    await channel.assertQueue(queueName, { durable: true });
-    channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)), {
-      correlationId,
-      replyTo: queue
-    });
-    logger.info(`Message sent to queue: ${queueName}`, { message });
-
+    logger.info(`Started consuming queue: ${queueName}`);
   } catch (error) {
-    logger.error(`Error publishing to queue: ${queueName}`, { error: error.message });
+    logger.error(`Error consuming queue: ${queueName}`, { error: error.message });
+    throw error;
   }
 }
 
-/**
- * Generates a UUID
- * @returns {string} - A UUID string
- */
-function generateUuid() {
-  return Math.random().toString() + Math.random().toString() + Math.random().toString();
-}
-module.exports = { publishToQueue, consumeQueue, publishToQueueV2, publishToExchange, consumeFromExchange };
+module.exports = { publishToQueue, consumeQueue, consumeFromExchange, publishToExchange, consumeQueueV2 };

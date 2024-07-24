@@ -6,10 +6,14 @@ const redis = require('redis');
 const util = require('util');
 const redisClient = require("../utils/redisClient");
 const { publishToQueue, consumeQueue, publishToExchange, publishToQueueV2 } = require("../utils/amqp");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 const crypto = require('crypto');
 
-// Controller for creating a new account
+/**
+ * Controller for creating a new account
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.createAccount = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string()
@@ -32,12 +36,14 @@ exports.createAccount = async (req, res) => {
     addresses: Joi.array(),
     phone: Joi.string()
   });
+  
   const { error } = schema.validate(req.body);
   if (error) {
     return res.status(400).json({
       message: error.details[0].message,
     });
   }
+  
   try {
     const { email, password, username, name } = req.body;
 
@@ -47,14 +53,15 @@ exports.createAccount = async (req, res) => {
       return res.status(409).json({
         message: "Email is exits",
         error: true
-      })
+      });
     }
     if (checkuserName) {
       return res.status(409).json({
         message: "UserName is exits",
         error: true
-      })
+      });
     }
+    
     const newAccount = new Account(req.body);
     const savedAccount = await newAccount.save();
     res.status(201).json(savedAccount);
@@ -64,7 +71,7 @@ exports.createAccount = async (req, res) => {
       type: 'email',
       recipientEmail: savedAccount,
       message: `Welcome ${savedAccount.name}! Your account has been successfully created.`,
-      userToken: '' // Nếu bạn muốn gửi thông báo đẩy, bạn cần token của thiết bị người dùng.
+      userToken: '' // If you want to send push notifications, you need the user's device token.
     };
     await publishToExchange('notification_exchange', 'account.created', message);
 
@@ -74,6 +81,11 @@ exports.createAccount = async (req, res) => {
   }
 };
 
+/**
+ * Controller for logging in a user
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.login = async (req, res) => {
   try {
     const { username, password, role } = req.body;
@@ -90,7 +102,7 @@ exports.login = async (req, res) => {
 
       return res.json({
         status: "OK",
-        message: "SUCESS",
+        message: "SUCCESS",
         access_token,
       });
     } else {
@@ -98,29 +110,18 @@ exports.login = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: "Error login account", error: error.message });
-
     logger.error("Error login account:", error);
   }
-}
+};
 
+/**
+ * Controller for getting all accounts
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.getAllAccounts = async (req, res) => {
   try {
-
-    // const cachedAccounts = await redisClient.get('accounts').select("-password");
-
-    // if (cachedAccounts) {
-    //   const accounts = JSON.parse(cachedAccounts);
-    //   if (accounts.length > 0) {
-    //     res.status(200).json(accounts);
-    //     logger.info("Retrieved all accounts from cache");
-    //     return;
-    //   }
-    // }
-
     const accounts = await Account.find();
-
-    // await redisClient.setEx('accounts', 5, JSON.stringify(accounts));
-
     res.status(200).json(accounts);
     logger.info("Retrieved all accounts from database:", accounts);
   } catch (error) {
@@ -129,10 +130,15 @@ exports.getAllAccounts = async (req, res) => {
   }
 };
 
+/**
+ * Controller for getting an account by ID
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.getAccountById = async (req, res) => {
   const accountId = req.params.id;
   try {
-    const account = await Account.findById(accountId).select('-password');;
+    const account = await Account.findById(accountId).select('-password');
     if (!account) {
       return res.status(404).json({ message: "Account not found" });
     }
@@ -149,13 +155,19 @@ exports.getAccountById = async (req, res) => {
     logger.error("Error retrieving account by ID:", error);
   }
 };
+
+/**
+ * Controller for updating an account
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.updateAccount = async (req, res) => {
-  const { id, role } = req.user
+  const { id, role } = req.user;
   const accountId = req.params.id;
 
   try {
     if (role != "admin" && accountId !== id) {
-      return res.status(404).json({ message: "Helo Hacker!" })
+      return res.status(404).json({ message: "Helo Hacker!" });
     }
     const allowedUpdates = ['name', 'email', 'phone', 'addresses', 'orders', 'wishlist', 'role'];
 
@@ -198,6 +210,11 @@ exports.updateAccount = async (req, res) => {
   }
 };
 
+/**
+ * Controller for deleting an account
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.deleteAccount = async (req, res) => {
   const accountId = req.params.id;
   try {
@@ -214,6 +231,11 @@ exports.deleteAccount = async (req, res) => {
   }
 };
 
+/**
+ * Controller for updating a user's wishlist
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.updateWishlist = async (req, res) => {
   try {
     const accountId = req.user._id;
@@ -237,8 +259,13 @@ exports.updateWishlist = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error updating wishlist", error: error.message });
   }
-}
+};
 
+/**
+ * Controller for updating a user's password
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.updatePassword = async (req, res) => {
   try {
     const { passwordOld, passwordNew } = req.body;
@@ -271,47 +298,11 @@ exports.updatePassword = async (req, res) => {
   }
 };
 
-exports.restPassword = async (req, res) => {
-  try {
-
-  } catch (error) {
-
-  }
-}
-
-exports.forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const account = await Account.findOne({ email });
-
-    if (!account) {
-      return res.status(404).json({ message: "Account not found" });
-    }
-
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetPasswordExpire = Date.now() + 10 * 60 * 1000;
-
-    account.resetPasswordToken = resetToken;
-    account.resetPasswordExpire = resetPasswordExpire;
-
-    await account.save();
-
-    const resetUrl = `http://localhost:3006/reset-password/${resetToken}`;
-
-    const message = {
-      type: 'restPass',
-      recipientEmail: account,
-      message: resetUrl,
-    };
-
-    await publishToExchange('notification_resetPassword', 'account.restPassword', message);
-    res.status(200).json({ message: "Password reset link sent to your email" });
-  } catch (error) {
-    res.status(500).json({ message: "Error sending password reset link", error: error.message });
-    logger.error("Error sending password reset link:", error);
-  }
-};
-
+/**
+ * Controller for resetting a password
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
@@ -341,5 +332,43 @@ exports.resetPassword = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error resetting password", error: error.message });
     logger.error("Error resetting password:", error);
+  }
+};
+
+/**
+ * Controller for forgotPassword 
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const account = await Account.findOne({ email });
+
+    if (!account) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+    account.resetPasswordToken = resetToken;
+    account.resetPasswordExpire = resetPasswordExpire;
+
+    await account.save();
+
+    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+
+    const message = {
+      type: 'restPass',
+      recipientEmail: account,
+      message: resetUrl,
+    };
+
+    await publishToExchange('notification_resetPassword', 'account.restPassword', message);
+    res.status(200).json({ message: "Password reset link sent to your email" });
+  } catch (error) {
+    res.status(500).json({ message: "Error sending password reset link", error: error.message });
+    logger.error("Error sending password reset link:", error);
   }
 };

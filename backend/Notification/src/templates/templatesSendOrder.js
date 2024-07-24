@@ -4,7 +4,7 @@ module.exports = function (messageContent) {
     let productRows = products.map(product => {
         return `
             <tr>
-                <td>${product.name}</td>
+                <td>${product.productName}</td>
                 <td>${product.quantity}</td>
                 <td>$${product.price.toFixed(2)}</td>
             </tr>

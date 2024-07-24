@@ -1,6 +1,10 @@
 const Category = require("../models/categoryModel.js");
 
-// Tạo danh mục mới
+/**
+ * 
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.createCategory = async (req, res, next) => {
     try {
         const { categoryName, subCategories } = req.body;
@@ -14,7 +18,11 @@ exports.createCategory = async (req, res, next) => {
     }
 };
 
-// Lấy tất cả danh mục
+/**
+ * 
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.getAllCategories = async (req, res, next) => {
     try {
         const categories = await Category.find({});
@@ -24,7 +32,11 @@ exports.getAllCategories = async (req, res, next) => {
     }
 };
 
-// Lấy chi tiết danh mục theo ID
+/**
+ * 
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.getCategoryById = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -40,7 +52,11 @@ exports.getCategoryById = async (req, res, next) => {
     }
 };
 
-// Cập nhật danh mục theo ID
+/**
+ * 
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.updateCategory = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -58,7 +74,11 @@ exports.updateCategory = async (req, res, next) => {
     }
 };
 
-// Xóa danh mục theo ID
+/**
+ * 
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 exports.deleteCategory = async (req, res, next) => {
     try {
         const { id } = req.params;

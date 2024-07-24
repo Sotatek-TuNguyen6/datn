@@ -3,6 +3,11 @@ const Account = require('../models/AcountModels');
 const logger = require('../utils/logger');
 const amqp = require('amqplib');
 
+/**
+ * Handles account details request for given user IDs
+ * @param {Object} request - The request object containing user IDs
+ * @param {Array<string>} request.userIds - Array of user IDs to fetch account details for
+ */
 async function handleAccountRequest({ userIds }) {
     try {
         logger.info(`Handling account details request for userIds: ${userIds.join(', ')}`);

@@ -80,15 +80,15 @@ exports.useVoucher = async (req, res) => {
             return res.status(400).send({ error: 'Voucher usage limit reached' });
         }
 
-        if (voucher.usedBy.includes(req.user._id)) {
+        if (voucher.usedBy.includes(req.user.id)) {
             return res.status(400).send({ error: 'User has already used this voucher' });
         }
 
-        voucher.usedBy.push(req.user._id);
+        voucher.usedBy.push(req.user.id);
         voucher.usageCount += 1;
 
         await voucher.save();
-        res.status(200).send(voucher);
+        res.status(200).send({ discount: voucher.discount });
     } catch (error) {
         res.status(500).send(error);
     }

@@ -31,8 +31,8 @@ const voucherSchema = new mongoose.Schema({
         default: Date.now
     },
     usedBy: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type: String,
+        // ref: 'User'
     }]
 });
 
