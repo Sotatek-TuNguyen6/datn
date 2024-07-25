@@ -8,6 +8,8 @@ RUN npm config set registry https://registry.npmjs.org/ \
   && npm cache clean --force
 COPY src src
 COPY index.js  package.json ./
+COPY .env ./
+
 # COPY exemple.env ./.env
 RUN npm install 
 EXPOSE 5003

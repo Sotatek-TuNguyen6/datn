@@ -4,7 +4,7 @@ WORKDIR /app
 COPY src src
 COPY logs logs
 COPY index.js package.json ./
-
+COPY .env ./
 # Cài đặt các dependencies
 RUN npm install
 

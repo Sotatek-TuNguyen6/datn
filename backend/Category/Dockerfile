@@ -10,6 +10,8 @@ RUN npm config set registry https://registry.npmjs.org/ \
 COPY src src
 COPY logs logs
 COPY index.js package.json ./
+COPY .env ./
+
 # COPY exemple.env ./.env
 RUN npm install
 EXPOSE 5002

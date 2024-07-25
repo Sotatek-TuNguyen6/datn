@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   mongo:
     image: mongo:latest
     ports:
@@ -53,7 +54,7 @@ services:
       replicas: 1
 
   account:
-    image: ntu11022002/account:latest
+    image: ntu11022002/Account:latest
     ports:
       - "5000:5000"
     volumes:
@@ -74,7 +75,7 @@ services:
       replicas: 2
 
   notification:
-    image: ntu11022002/notification:latest
+    image: ntu11022002/Notification:latest
     ports:
       - "5009:5009"
     volumes:
@@ -94,7 +95,7 @@ services:
       replicas: 2
 
   chat:
-    image: ntu11022002/chat:latest
+    image: ntu11022002/Chat:latest
     ports:
       - "5003:5003"
     volumes:
@@ -115,7 +116,7 @@ services:
       replicas: 2
 
   order:
-    image: ntu11022002/order:latest
+    image: ntu11022002/Order:latest
     ports:
       - "5004:5004"
     volumes:
@@ -136,7 +137,7 @@ services:
       replicas: 2
 
   payment:
-    image: ntu11022002/payment:latest
+    image: ntu11022002/Payment:latest
     ports:
       - "5006:5006"
     volumes:
@@ -161,7 +162,7 @@ services:
       replicas: 2
 
   product:
-    image: ntu11022002/product:latest
+    image: ntu11022002/Product:latest
     ports:
       - "5001:5001"
     volumes:
@@ -181,7 +182,7 @@ services:
       replicas: 2
 
   review:
-    image: ntu11022002/review:latest
+    image: ntu11022002/Review:latest
     ports:
       - "5005:5005"
     volumes:
@@ -199,7 +200,7 @@ services:
       replicas: 2
 
   actions:
-    image: ntu11022002/actions:latest
+    image: ntu11022002/Actions:latest
     ports:
       - "5007:5007"
     volumes:
@@ -207,6 +208,9 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongo:27017/actions
       - PORT=5007
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       - mongo
     networks:
@@ -215,7 +219,7 @@ services:
       replicas: 2
 
   recommender:
-    image: ntu11022002/recommender:latest
+    image: ntu11022002/Recommender:latest
     ports:
       - "5008:5008"
     volumes:
@@ -229,7 +233,7 @@ services:
     deploy:
       replicas: 2
   voucher:
-    image: ntu11022002/voucher:latest
+    image: ntu11022002/Voucher:latest
     ports:
       - "5010:5010"
     volumes:
@@ -246,7 +250,7 @@ services:
       - redis
       - rabbitmq
   shipping:
-    image: ntu11022002/shipping:latest
+    image: ntu11022002/Shipping:latest
     ports:
       - "5011:5011"
     volumes:
@@ -263,7 +267,7 @@ services:
       - redis
       - rabbitmq
   apigateway:
-    image: ntu11022002/apigateway:latest
+    image: ntu11022002/Apigateway:latest
     ports:
       - "8000:8000"
     volumes:
@@ -289,6 +293,10 @@ services:
 volumes:
   mongo-data:
   redis-data:
+  vol3:
+    driver: vieux/sshfs
+    name: vol3
+    driver_opts:
 
 networks:
   my_network:

@@ -4,7 +4,7 @@ WORKDIR /app
 COPY src src
 COPY logs logs
 COPY index.js package.json ./
-# COPY exemple.env ./.env
+COPY .env ./
 
 RUN npm install
 EXPOSE 5001
